@@ -1,12 +1,14 @@
 package com.onedeepath.balanccapp.ui.screens.detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,6 +34,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -50,6 +54,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -69,7 +74,7 @@ fun MonthsDetailScreen(
     navController: NavController,
     balanceViewModel: BalanceViewModel = hiltViewModel(),
     yearMonthViewModel: YearMonthViewModel
-    ) {
+) {
 
     val year by yearMonthViewModel.selectedYear.collectAsState()
     val month by yearMonthViewModel.selectedMonthIndex.collectAsState()
@@ -83,76 +88,82 @@ fun MonthsDetailScreen(
     val expenses by balanceViewModel.expenseBalance.collectAsState()
     val totalBalance = balanceViewModel.getTotalBalance()
 
-    Box (
-        modifier =  Modifier.fillMaxSize().padding(top=16.dp),
+    Scaffold (
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFBBF3BE)),
+        containerColor = Color(0xFFD8D3EF),
+        floatingActionButton = { AddIncomeOrExpenseFAB(navController = navController) }
     ) {
         Column(
-            Modifier.fillMaxSize().padding(16.dp),
+            Modifier
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(Modifier.height(8.dp))
-            Text(text = month, fontSize = 45.sp, fontWeight = FontWeight.Bold, color = Color.Black)
-            Spacer(Modifier.height(8.dp))
-            Text(text = year, fontSize = 25.sp, fontWeight = FontWeight.Bold, color = Color.Black)
-            Spacer(Modifier.height(8.dp))
-
-            Card (
-                modifier = Modifier.padding(16.dp).height(80.dp).width(250.dp),
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.LightGray)
-            ) {
-                Column(
-                    Modifier.padding(8.dp).fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = if(totalBalance > 0) {
-                            totalBalance.toString()}
-                        else if (totalBalance < 0){
-                            "-" + totalBalance.toString()
-                        } else{
-                            totalBalance.toString()
-                        },
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (totalBalance > 0) {Color.Green} else if(totalBalance < 0) {Color.Red} else {Color.Black},
-                        modifier = Modifier)
-                    Spacer(Modifier.height(8.dp))
-                }
-            }
-            TabRowIncomesExpenses(incomes = incomes , expenses =  expenses, viewModel = balanceViewModel)
-        }
-    }
-    AddIncomeOrExpenseFAB(navController)
-}
-
-@Composable
-fun AddIncomeOrExpenseFAB(navController: NavController) {
-
-    Box(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        contentAlignment = Alignment.BottomEnd
-    ){
-        FloatingActionButton(
-            onClick = {
-                navController.navigate(AppScreens.AddIncomeOrExpenseScreen.route)
-            },
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add",
-                tint = Color.White
+            Spacer(Modifier.padding(top = 64.dp))
+            Text(
+                text = month,
+                fontSize = 35.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color.Black,
             )
+            Spacer(Modifier.height(4.dp))
+            Text(text = year, fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.Black)
+            Spacer(Modifier.height(16.dp))
+
+            //---------- Section 1
+            Column(
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = if (totalBalance > 0) {
+                       "+" + totalBalance.toString()
+                    } else {
+                        "-" + totalBalance.toString()
+                    },
+                    fontSize = 50.sp,
+                    fontWeight = FontWeight.Black,
+                    color = if (totalBalance > 0) {
+                        Color.Green
+                    } else if (totalBalance < 0) {
+                        Color.Red
+                    } else {
+                        Color.Black
+                    }
+                )
+                Spacer(Modifier.padding(bottom = 24.dp))
+            }
+            //------- Section 2
+            Card(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = Color.White,
+                        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+                    )
+                    .padding(8.dp),
+                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+            ) {
+                TabRowIncomesExpenses(
+                    incomes = incomes,
+                    expenses = expenses,
+                    viewModel = balanceViewModel
+                )
+            }
+            AddIncomeOrExpenseFAB(navController = navController)
         }
     }
 }
 
+
 @Composable
-fun TabRowIncomesExpenses(incomes: List<BalanceModel>, expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
+fun TabRowIncomesExpenses(
+    incomes: List<BalanceModel>,
+    expenses: List<BalanceModel>,
+    viewModel: BalanceViewModel
+) {
 
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
 
@@ -174,37 +185,43 @@ fun TabRowIncomesExpenses(incomes: List<BalanceModel>, expenses: List<BalanceMod
     }
 
 
-    TabRow (
+    TabRow(
         selectedTabIndex = selectedTabIndex,
-        modifier = Modifier.background(color = Color.White).clip(RoundedCornerShape(50)).padding(1.dp)
+        modifier = Modifier.height(45.dp),
+        indicator = {},
+        divider = {}
     ) {
         tabItems.forEachIndexed { index, item ->
-            val selected = selectedTabIndex  == index
+            val selected = selectedTabIndex == index
             Tab(
-                modifier = if (selected) Modifier.
-                    clip(RoundedCornerShape(50))
+                modifier = if (selected) Modifier
+                    .clip(RoundedCornerShape(20))
                     .background(Color.White)
-                else Modifier.
-                    clip(RoundedCornerShape(50))
+                else Modifier
+                    .clip(RoundedCornerShape(20))
                     .background(Color(0xff1E76DA)),
                 selected = selected,     //index == selectedTabIndex
                 onClick = {
                     selectedTabIndex = index
                 },
                 text = { Text(text = item.title, color = Color(0xff6FAAEE)) },
-            )
+
+                )
         }
     }
-    Spacer(Modifier.padding(8.dp))
     HorizontalPager(
         state = pagerState,
-        modifier = Modifier.fillMaxWidth().height(500.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
     ) { index ->
         when (index) {
-                0 -> IncomePage(incomes, viewModel)
-                1 -> ExpensePage(expenses, viewModel)
+            0 -> IncomePage(incomes, viewModel)
+            1 -> ExpensePage(expenses, viewModel)
         }
     }
+
+
 }
 
 @Composable
@@ -213,26 +230,53 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
     val totalIncomes = viewModel.totalIncomes.collectAsState()
 
     Column(
-        Modifier.fillMaxSize().background(Color.White, shape = RoundedCornerShape(16.dp)).padding(top = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        Modifier
+            .fillMaxSize()
+            .background(Color.White, shape = RoundedCornerShape(8.dp))
+            .padding(top = 8.dp),
         verticalArrangement = Arrangement.Center
     ) {
+        Spacer(Modifier.padding(vertical = 8.dp))
+        Text(
+            text = "Total Incomes",
+            fontSize = 25.sp,
+            fontWeight = Bold,
+            color = Color.Black,
+            modifier = Modifier.padding(start = 16.dp)
+        )
         Card(
             onClick = {},
-            modifier = Modifier.width(250.dp).height(100.dp),
-            shape = RoundedCornerShape(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)
+                .padding(horizontal = 16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(Color(0xFFBBF3BE))
         ) {
             Column(
-                Modifier.fillMaxWidth().padding(16.dp),
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Total incomes", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 25.sp)
-                Text(text = totalIncomes.value.toString(), color = Color.Green, fontWeight = FontWeight.Bold, fontSize = 30.sp)
+                Text(
+                    text = totalIncomes.value.toString(),
+                    color = Color(0xFF429D46),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 35.sp
+                )
             }
 
         }
         Spacer(Modifier.padding(8.dp))
+        Text(
+            text = "Incomes",
+            color = Color.Black,
+            fontWeight = Bold,
+            fontSize = 25.sp,
+            modifier = Modifier.padding(start = 16.dp)
+        )
         IncomeList(incomes, viewModel)
     }
 }
@@ -243,25 +287,53 @@ fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
     val totalExpenses = viewModel.totalExpenses.collectAsState()
 
     Column(
-        Modifier.fillMaxSize().background(Color.White, shape = RoundedCornerShape(16.dp)),
-        horizontalAlignment = Alignment.CenterHorizontally
+        Modifier
+            .fillMaxSize()
+            .background(Color.White, shape = RoundedCornerShape(16.dp))
+            .padding(top = 8.dp),
+        verticalArrangement = Arrangement.Center
     ) {
+        Spacer(Modifier.padding(vertical = 8.dp))
+        Text(
+            text = "Total Incomes",
+            fontWeight = FontWeight.Bold,
+            fontSize = 25.sp,
+            color = Color.Black,
+            modifier = Modifier.padding(start = 16.dp)
+        )
         Card(
             onClick = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
-            shape = RoundedCornerShape(16.dp)
+                .height(100.dp)
+                .padding(horizontal = 16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(Color.Red)
         ) {
             Column(
-                Modifier.fillMaxWidth(),
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = totalExpenses.value.toString(), color = Color.Red, fontWeight = FontWeight.Bold, fontSize = 35.sp)
-                Text(text = "total expenses", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+
+                Text(
+                    text = totalExpenses.value.toString(),
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 35.sp
+                )
             }
         }
+        Spacer(Modifier.padding(vertical = 8.dp))
+        Text(
+            text = "Expenses",
+            color = Color.Black,
+            fontSize = 25.sp,
+            fontWeight = Bold,
+            modifier = Modifier.padding(start = 16.dp)
+        )
         ExpenseList(expenses, viewModel)
     }
 }
@@ -276,11 +348,11 @@ fun IncomeList(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
     ) {
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-        } else{
+        } else {
             if (incomes.isEmpty()) {
                 Text("No incomes")
             } else {
-                LazyColumn (
+                LazyColumn(
                     Modifier.fillMaxWidth()
                 ) {
                     items(incomes.size) { income ->
@@ -298,17 +370,17 @@ fun ExpenseList(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
     val isLoading by viewModel.isLoadingExpense.collectAsState()
 
     Column(
-        Modifier.fillMaxWidth()
+        Modifier.fillMaxSize()
     ) {
 
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-        } else{
+        } else {
             if (expenses.isEmpty()) {
                 Text("No expenses")
-            }else {
-                LazyColumn (
-                    Modifier.fillMaxWidth().background(Color.Red),
+            } else {
+                LazyColumn(
+                    Modifier.fillMaxWidth(),
                 ) {
                     items(expenses.size) { expense ->
                         ExpenseCard(expenses[expense], viewModel)
@@ -318,6 +390,7 @@ fun ExpenseList(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
         }
     }
 }
+
 @Composable
 fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
 
@@ -328,29 +401,48 @@ fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .height(120.dp)
+            .padding(horizontal = 8.dp, vertical = 8.dp),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(containerColor = categoryProperties.color)
     ) {
-        Row (
-            Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Row(
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(painter = painterResource(categoryProperties.icon),
+            Icon(
+                painter = painterResource(categoryProperties.icon),
                 tint = Color.Black,
                 contentDescription = "Add",
-                modifier = Modifier.size(28.dp))
-            Spacer(Modifier.width(8.dp))
-            Column (
+                modifier = Modifier.size(38.dp)
+            )
+            Spacer(Modifier.width(16.dp))
+            Column(
                 Modifier.weight(1f)
             ) {
-                Text(text = income.category, color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(
+                    text = income.category,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp
+                )
                 Spacer(Modifier.height(6.dp))
-                Text(text = income.description, fontSize = 14.sp, maxLines = 1,  )
+                Text(
+                    text = income.description,
+                    fontSize = 11.sp,
+                    maxLines = 1
+                )
             }
 
-            Text(text = income.amount.toString(), fontSize = 16.sp, fontWeight = Bold, color = Color.Black)
+            Text(
+                text = income.amount.toString(),
+                fontSize = 18.sp,
+                fontWeight = Bold,
+                color = Color.Black,
+            )
 //            Button(
 //                onClick = {
 //                    viewModel.deleteBalance(income.id)
@@ -377,37 +469,77 @@ fun ExpenseCard(expense: BalanceModel, viewModel: BalanceViewModel) {
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            .height(120.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(containerColor = categoryProperties.color)
     ) {
-        Row (
-            Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.Center,
+        Row(
+            Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(painter = painterResource(categoryProperties.icon), tint = Color.Black, contentDescription = "Add", modifier = Modifier.height(32.dp).width(32.dp))
-            Spacer(Modifier.weight(1f))
-            Column (
-                Modifier.width(200.dp)
+            Icon(
+                painter = painterResource(categoryProperties.icon),
+                tint = Color.Black, contentDescription = "Add",
+                modifier = Modifier.size(38.dp)
+            )
+            Spacer(Modifier.width(16.dp))
+            Column(
+                Modifier
+                    .width(150.dp)
             ) {
-                Text(text = expense.category, color = Color.Black)
-                HorizontalDivider(Modifier.padding(vertical = 8.dp))
-                Text(text = expense.description)
-            }
-            Spacer(Modifier.weight(1f))
-            Text(text = expense.amount.toString())
-            Button(
-                onClick = {
-                    viewModel.deleteBalance(expense.id)
-                }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_trash),
-                    contentDescription = ""
+                Text(
+                    text = expense.category,
+                    color = Color.Black,
+                    fontWeight = Bold,
+                    fontSize = 16.sp
+                )
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    text = expense.description,
+                    fontSize = 11.sp,
+                    maxLines = 1
                 )
             }
+            Spacer(Modifier.weight(1f))
+            Text(
+                text = expense.amount.toString(),
+                fontSize = 18.sp,
+                fontWeight = Bold,
+                color = Color.Black
+            )
+//            Button(
+//                onClick = {
+//                    viewModel.deleteBalance(expense.id)
+//                }
+//            ) {
+//                Icon(
+//                    painter = painterResource(R.drawable.ic_trash),
+//                    contentDescription = ""
+//                )
+//            }
         }
     }
+}
+
+@Composable
+fun AddIncomeOrExpenseFAB(navController: NavController) {
+
+        FloatingActionButton(
+            onClick = {
+                navController.navigate(AppScreens.AddIncomeOrExpenseScreen.route)
+            },
+            containerColor = MaterialTheme.colorScheme.primary,
+            shape = RoundedCornerShape(50)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add",
+                tint = Color.White,
+                modifier = Modifier.size(32.dp)
+
+            )
+        }
+
 }
