@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.onedeepath.balanccapp.R
+import com.onedeepath.balanccapp.core.formatCurrency
 import com.onedeepath.balanccapp.ui.presentation.model.BalanceModel
 import com.onedeepath.balanccapp.ui.screens.AppScreens
 import com.onedeepath.balanccapp.ui.presentation.model.TabItem
@@ -86,7 +87,13 @@ fun MonthsDetailScreen(
 
     val incomes by balanceViewModel.incomeBalance.collectAsState()
     val expenses by balanceViewModel.expenseBalance.collectAsState()
-    val totalBalance = balanceViewModel.getTotalBalance()
+  //  val totalBalance = balanceViewModel.getTotalBalance()
+
+    val totalBalance = remember(incomes, expenses) {
+        val totalInc = incomes.sumOf { it.amount }
+        val totalExp = expenses.sumOf { it.amount }
+        totalInc - totalExp
+    }
 
     Scaffold (
         modifier = Modifier
@@ -94,7 +101,7 @@ fun MonthsDetailScreen(
             .background(Color(0xFFBBF3BE)),
         containerColor = Color(0xFFD8D3EF),
         floatingActionButton = { AddIncomeOrExpenseFAB(navController = navController) }
-    ) {
+    ) { padding ->
         Column(
             Modifier
                 .fillMaxSize(),
@@ -117,21 +124,12 @@ fun MonthsDetailScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+                val sign = if (totalBalance > 0) "+" else if (totalBalance < 0) "-" else ""
                 Text(
-                    text = if (totalBalance > 0) {
-                       "+" + totalBalance.toString()
-                    } else {
-                        "-" + totalBalance.toString()
-                    },
-                    fontSize = 50.sp,
-                    fontWeight = FontWeight.Black,
-                    color = if (totalBalance > 0) {
-                        Color.Green
-                    } else if (totalBalance < 0) {
-                        Color.Red
-                    } else {
-                        Color.Black
-                    }
+                    text = sign + formatCurrency(totalBalance),
+                    fontSize = 35.sp,
+                    fontWeight = Bold,
+                    color = if (totalBalance > 0) Color.Green else if (totalBalance < 0) Color.Red else Color.Black
                 )
                 Spacer(Modifier.padding(bottom = 24.dp))
             }
@@ -261,7 +259,7 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = totalIncomes.value.toString(),
+                    text = formatCurrency(totalIncomes.value),
                     color = Color(0xFF429D46),
                     fontWeight = FontWeight.Bold,
                     fontSize = 35.sp
@@ -319,7 +317,7 @@ fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
             ) {
 
                 Text(
-                    text = totalExpenses.value.toString(),
+                    text = formatCurrency(totalExpenses.value),
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 35.sp
@@ -438,7 +436,7 @@ fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
             }
 
             Text(
-                text = income.amount.toString(),
+                text = formatCurrency(income.amount),
                 fontSize = 18.sp,
                 fontWeight = Bold,
                 color = Color.Black,
@@ -504,7 +502,7 @@ fun ExpenseCard(expense: BalanceModel, viewModel: BalanceViewModel) {
             }
             Spacer(Modifier.weight(1f))
             Text(
-                text = expense.amount.toString(),
+                text = formatCurrency(expense.amount),
                 fontSize = 18.sp,
                 fontWeight = Bold,
                 color = Color.Black

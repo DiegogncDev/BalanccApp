@@ -45,15 +45,15 @@ android {
 
 dependencies {
 
+    // MPAndroidCharts
+    implementation(libs.mpAndroidCharts)
+
     //gson
     implementation("com.google.code.gson:gson:2.10.1")
 
     //Material 3 Calendar / Core
     implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.3.0")
     implementation("com.maxkeppeler.sheets-compose-dialogs:calendar:1.3.0")
-
-    // Ycharts
-    implementation("co.yml:ycharts:2.1.0")
 
     // Room
     implementation("androidx.room:room-runtime:2.7.2")

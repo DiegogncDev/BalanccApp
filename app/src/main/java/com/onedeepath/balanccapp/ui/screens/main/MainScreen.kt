@@ -1,8 +1,12 @@
 package com.onedeepath.balanccapp.ui.screens.main
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +24,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -31,14 +36,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import com.onedeepath.balanccapp.core.formatCurrency
 import com.onedeepath.balanccapp.ui.presentation.model.BalanceByMonthEntity
 import com.onedeepath.balanccapp.ui.presentation.model.MonthsCardModel
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.BalanceViewModel
@@ -70,17 +80,18 @@ fun MainScreen(
         Spacer(modifier = Modifier.height(32.dp))
         Text(
             text = "BalanccApp",
-            fontSize = 30.sp,
+            fontSize = 45.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier.padding(start = 16.dp)
         )
-        Spacer(modifier = Modifier.height(32.dp))
-        Text("SortBy", fontSize = 22.sp,
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            "SortBy", fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier.padding(start = 16.dp)
-            )
+        )
         Spacer(Modifier.height(32.dp))
         YearFilter(
             selectedYear = selectedYear,
@@ -92,13 +103,12 @@ fun MainScreen(
             year = selectedYear,
             onMonthClick = { index ->
                 yearMonthViewModel.setMonthIndex(index)
-            }, navController = navController)
+            }, navController = navController
+        )
         Spacer(Modifier.height(32.dp))
     }
 
 }
-
-
 
 
 @Composable
@@ -115,7 +125,7 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
             .fillMaxWidth()
             .padding(16.dp),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF7B6DD5))
     ) {
         Column(
             Modifier.padding(16.dp)
@@ -124,33 +134,42 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
                 text = item.monthName,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = Color.Black,
+                fontSize = 22.sp
             )
             Spacer(Modifier.height(8.dp))
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Income")
-                Text("${item.incomeAmount}", color = Color.Green)
+                Text("Income", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                Text(formatCurrency(item.incomeAmount),
+                    color = Color.Green,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp)
             }
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Expenses")
-                Text("${item.expenseAmount}", color = Color.Red)
+                Text("Expenses", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                Text(
+                    formatCurrency(item.expenseAmount),
+                    color = Color.Red,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp)
             }
             HorizontalDivider(Modifier.padding(vertical = 8.dp))
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Balance")
+                Text("Balance", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 Text(
-                    text = "${balance}",
+                    text = formatCurrency(balance),
                     color = if (balance >= 0) Color.Green else Color.Red,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
                 )
 
             }
@@ -199,27 +218,7 @@ fun MonthsCards(
     }
 
 }
-@Preview
-@Composable
-fun YearFilter2() {
 
-    var showDialog by remember { mutableStateOf(false) }
-
-    TextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .clickable { showDialog = true },
-        value = "hola",
-        onValueChange = {},
-        readOnly = true,
-        shape = RoundedCornerShape(50),
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color(0xFF7B6DD5),
-            unfocusedContainerColor = Color(0xFF7B6DD5)
-        )
-    )
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -227,20 +226,39 @@ fun YearFilter(selectedYear: String, onYearSelected: (String) -> Unit) {
 
     var showDialog by remember { mutableStateOf(false) }
 
-    TextField(
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .clickable { showDialog = true },
-        value = selectedYear,
-        onValueChange = {},
-        readOnly = true,
-        shape = RoundedCornerShape(50),
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color(0xFF7B6DD5),
-            unfocusedContainerColor = Color(0xFF7B6DD5)
+            .fillMaxWidth().padding(horizontal = 16.dp)
+    ){
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            value = selectedYear,
+            onValueChange = {},
+            readOnly = true,
+            singleLine = true,
+            textStyle = LocalTextStyle.current.copy(
+                textAlign = TextAlign.Center,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            ),
+            shape = RoundedCornerShape(50),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFF7B6DD5),
+                unfocusedContainerColor = Color(0xFF7B6DD5)
+            )
         )
-    )
+
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clip(RoundedCornerShape(50))
+                .clickable { showDialog = true }
+
+        )
+    }
+
 
     if (showDialog) {
         YearPickerDialog(
@@ -258,32 +276,129 @@ fun YearPickerDialog(
     onDismiss: () -> Unit
 ) {
     val currentYear = remember { java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) }
-    val years = remember { (currentYear..(currentYear + 1000)).toList() }
+    val years = remember { (currentYear..(currentYear + 200)).toList() }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Selecciona un año") },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp),
-        text = {
-            LazyColumn {
-                items(years) { year ->
+
+    Dialog(
+        onDismissRequest = onDismiss
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth().padding(32.dp)
+        ){
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(vertical = 24.dp).fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Text(
-                        text = year.toString(),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onYearSelected(year)
-                                onDismiss()
-                            }
-                            .padding(8.dp)
+                        text = "Select a year",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 16.dp)
                     )
+
+                    LazyColumn(
+                        modifier = Modifier.height(280.dp)
+                            .padding(horizontal = 8.dp)
+                    ) {
+
+                        items(years) { year ->
+                            YearItem(
+                                year = year,
+                                onClick = {
+                                    onYearSelected(year)
+                                    onDismiss()
+                                    }
+                            )
+                        }
+                    }
+
+
+
+
+
                 }
+
+
+
             }
-        },
-        confirmButton = {}
-    )
+
+
+        }
+
+    }
+
+
+
+//    AlertDialog(
+//        onDismissRequest = onDismiss,
+//        title = { Text("Selecciona un año") },
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .height(300.dp),
+//        text = {
+//            LazyColumn {
+//                items(years) { year ->
+//                    Text(
+//                        text = year.toString(),
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .clickable {
+//                                onYearSelected(year)
+//                                onDismiss()
+//                            }
+//                            .padding(8.dp)
+//                    )
+//                }
+//            }
+//        },
+//        confirmButton = {}
+//    )
 }
 
 
+@Composable
+fun YearItem(
+    year: Int,
+    onClick: () -> Unit
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    var isPressed by remember { mutableStateOf(false) }
+
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isPressed) Color(0xFFEDEDED) else Color.Transparent,
+        animationSpec = tween(150), label = ""
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+            .background(backgroundColor, shape = RoundedCornerShape(14.dp))
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {
+                isPressed = true
+                onClick()
+            }
+            .padding(vertical = 12.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = year.toString(),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF444444)
+            )
+        )
+    }
+}
