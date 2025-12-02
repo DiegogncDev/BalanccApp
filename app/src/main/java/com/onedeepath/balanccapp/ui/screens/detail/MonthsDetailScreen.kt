@@ -1,13 +1,10 @@
 package com.onedeepath.balanccapp.ui.screens.detail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,17 +22,13 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -54,21 +47,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.onedeepath.balanccapp.R
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.onedeepath.balanccapp.core.formatCurrency
 import com.onedeepath.balanccapp.ui.presentation.model.BalanceModel
-import com.onedeepath.balanccapp.ui.screens.AppScreens
 import com.onedeepath.balanccapp.ui.presentation.model.TabItem
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.BalanceViewModel
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlin.math.exp
-import kotlin.math.max
+import com.onedeepath.balanccapp.ui.screens.AppScreens
 
 @Composable
 fun MonthsDetailScreen(
@@ -87,7 +80,7 @@ fun MonthsDetailScreen(
 
     val incomes by balanceViewModel.incomeBalance.collectAsState()
     val expenses by balanceViewModel.expenseBalance.collectAsState()
-  //  val totalBalance = balanceViewModel.getTotalBalance()
+    //  val totalBalance = balanceViewModel.getTotalBalance()
 
     val totalBalance = remember(incomes, expenses) {
         val totalInc = incomes.sumOf { it.amount }
@@ -155,6 +148,59 @@ fun MonthsDetailScreen(
     }
 }
 
+@Composable
+fun DonutChart(
+    entries: List<PieEntry>,
+    colors: List<Int>,
+    centerText: String   // Aquí pasas el total formateado
+) {
+    AndroidView(
+        factory = { context ->
+            PieChart(context).apply {
+
+                // --- Configuración del donut ---
+                description.isEnabled = false
+                setUsePercentValues(false)
+
+                isDrawHoleEnabled = true
+                holeRadius = 60f            // Tamaño del agujero → donut
+                transparentCircleRadius = 65f
+
+                setHoleColor(android.graphics.Color.WHITE)
+
+                // Texto en el centro
+                setDrawCenterText(true)
+                centerTextRadiusPercent = 100f
+                setCenterTextColor(android.graphics.Color.BLACK)
+                setCenterTextSize(20f)
+
+                legend.isEnabled = false
+
+                animateY(900)
+            }
+        },
+        update = { chart ->
+
+            val dataSet = PieDataSet(entries, "")
+            dataSet.colors = colors
+            dataSet.sliceSpace = 2f
+
+            // Opcional: para que los valores no salgan sobre el donut
+            dataSet.setDrawValues(false)
+
+            val data = PieData(dataSet)
+
+            // Asignar datos al chart
+            chart.data = data
+            chart.centerText = centerText
+            chart.invalidate()
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .padding(horizontal = 16.dp)
+    )
+}
 
 @Composable
 fun TabRowIncomesExpenses(
@@ -227,6 +273,17 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
 
     val totalIncomes = viewModel.totalIncomes.collectAsState()
 
+    val pieChartEntries = incomes.map {
+        PieEntry(it.amount.toFloat(), it.category)
+    }
+    val pieColors = listOf(
+        android.graphics.Color.parseColor("#4CAF50"),
+        android.graphics.Color.parseColor("#81C784"),
+        android.graphics.Color.parseColor("#A5D6A7"),
+        android.graphics.Color.parseColor("#C8E6C9"),
+    )
+
+
     Column(
         Modifier
             .fillMaxSize()
@@ -234,37 +291,36 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
             .padding(top = 8.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        Spacer(Modifier.padding(vertical = 8.dp))
-        Text(
-            text = "Total Incomes",
-            fontSize = 25.sp,
-            fontWeight = Bold,
-            color = Color.Black,
-            modifier = Modifier.padding(start = 16.dp)
-        )
+        Spacer(Modifier.padding(vertical = 4.dp))
         Card(
             onClick = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(300.dp)
                 .padding(horizontal = 16.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(Color(0xFFBBF3BE))
         ) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = formatCurrency(totalIncomes.value),
-                    color = Color(0xFF429D46),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 35.sp
-                )
-            }
+            DonutChart(
+                entries = pieChartEntries,
+                colors = pieColors,
+                centerText = formatCurrency(totalIncomes.value)
+
+            )
+//            Column(
+//                Modifier
+//                    .fillMaxSize()
+//                    .padding(16.dp),
+//                horizontalAlignment = Alignment.CenterHorizontally,
+//                verticalArrangement = Arrangement.Center
+//            ) {
+//                Text(
+//                    text = formatCurrency(totalIncomes.value),
+//                    color = Color(0xFF429D46),
+//                    fontWeight = FontWeight.Bold,
+//                    fontSize = 35.sp
+//                )
+//            }
 
         }
         Spacer(Modifier.padding(8.dp))
