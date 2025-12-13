@@ -10,6 +10,42 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
+//
+/**
+ * App color palette
+ * Centralized colors following Material 3 semantics
+ */
+
+// Primary brand colors
+val Primary = Color(0xFF88199A)
+val OnPrimary = Color(0xFFFFFFFF)
+
+
+// Secondary / supporting colors
+val Secondary = Color(0xFF67316F)
+val OnSecondary = Color(0xFFFFFFFF)
+
+
+// Tertiary / accent colors
+val Tertiary = Color(0xFFB872C1)
+val OnTertiary = Color(0xFF000000)
+
+
+// Surface & background
+val SurfaceVariant = Color(0xFF741387)
+val Background = Color(0xFFFFFFFF)
+
+
+// Text / emphasis colors
+val TextPrimary = Color(0xFF640A76)
+val TextSecondary = Color(0xE98A64D2)
+
+
+// Status / utility
+val Outline = Color(0xFFCCCCCC)
+
+
+// CATEGORIES COLOR
 val InvestmentColor = Color(0xFFB2EBF2)
 val WorkColor = Color(0xFFFFF9C4)
 val GiftColor = Color(0xFFF8BBD0)
