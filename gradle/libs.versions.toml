@@ -11,6 +11,7 @@ composeBom = "2024.09.00"
 navigationCompose = "2.7.5"
 roomRuntimeAndroid = "2.7.2"
 navigationRuntimeAndroid = "2.9.6"
+foundation = "1.10.0"
 
 
 [libraries]
@@ -32,6 +33,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "roomRuntimeAndroid" }
 androidx-navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroid" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 
 
 

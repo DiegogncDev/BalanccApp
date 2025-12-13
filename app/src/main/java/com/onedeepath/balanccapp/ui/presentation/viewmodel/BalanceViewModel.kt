@@ -1,9 +1,12 @@
 package com.onedeepath.balanccapp.ui.presentation.viewmodel
 
+import android.R
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.onedeepath.balanccapp.data.database.entity.BalanceEntity
+import com.onedeepath.balanccapp.data.repository.CategoryRepository
 import com.onedeepath.balanccapp.domain.DeleteBalanceUseCase
 import com.onedeepath.balanccapp.domain.GetAllBalancesUseCase
 import com.onedeepath.balanccapp.domain.GetBalanceByExpense
@@ -13,6 +16,7 @@ import com.onedeepath.balanccapp.domain.InsertBalanceUseCase
 import com.onedeepath.balanccapp.ui.presentation.model.BalanceByMonthEntity
 import com.onedeepath.balanccapp.ui.presentation.model.BalanceModel
 import com.onedeepath.balanccapp.ui.presentation.model.Categories
+import com.onedeepath.balanccapp.ui.presentation.model.CategoryProperties
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.annotation.meta.When
 import javax.inject.Inject
+import androidx.core.graphics.toColorInt
 
 
 @HiltViewModel
@@ -29,7 +34,8 @@ class BalanceViewModel @Inject constructor(
     private val getBalanceByExpenseUseCase: GetBalanceByExpense,
     private val insertBalanceUseCase: InsertBalanceUseCase,
     private val deleteBalanceUseCase: DeleteBalanceUseCase,
-    private val getBalanceByYearUseCase: GetBalancesByYearUseCase
+    private val getBalanceByYearUseCase: GetBalancesByYearUseCase,
+    private val categoryRepository: CategoryRepository
 
 ) : ViewModel() {
 
@@ -53,6 +59,23 @@ class BalanceViewModel @Inject constructor(
 
     private var _balancesByYear = MutableStateFlow<List<BalanceByMonthEntity>>(emptyList())
     val balancesByYear: StateFlow<List<BalanceByMonthEntity>> = _balancesByYear
+
+
+    suspend fun getCategoryProperties(category: String): CategoryProperties {
+        val category = categoryRepository.getCategoryByName(category)
+
+        return if (category != null){
+            CategoryProperties(
+                color = Color(category.colorHex.toColorInt()),
+                icon = category.iconRes
+            )
+        }else {
+            CategoryProperties(
+                color = Color("#000000".toColorInt()),
+                icon = R.drawable.ic_menu_info_details
+            )
+        }
+    }
 
     fun getBalanceByYear(year: String) {
 

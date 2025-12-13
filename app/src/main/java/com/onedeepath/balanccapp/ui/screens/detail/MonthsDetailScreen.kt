@@ -43,10 +43,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -88,6 +95,24 @@ fun MonthsDetailScreen(
         totalInc - totalExp
     }
 
+    var donutChartHeight by remember {
+        mutableStateOf(200.dp)
+    }
+
+
+    val connection = object : NestedScrollConnection {
+        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+            val delta = available.y
+            val newHeight = donutChartHeight + delta.dp
+            val oldHeight = donutChartHeight
+            donutChartHeight = newHeight.coerceIn(0.dp, 200.dp)
+            val consumed = donutChartHeight - oldHeight
+
+            return Offset(0f, consumed.value)
+        }
+    }
+
+
     Scaffold (
         modifier = Modifier
             .fillMaxSize()
@@ -97,7 +122,8 @@ fun MonthsDetailScreen(
     ) { padding ->
         Column(
             Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .nestedScroll(connection),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(Modifier.padding(top = 64.dp))
@@ -110,7 +136,6 @@ fun MonthsDetailScreen(
             Spacer(Modifier.height(4.dp))
             Text(text = year, fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.Black)
             Spacer(Modifier.height(16.dp))
-
             //---------- Section 1
             Column(
                 Modifier.fillMaxWidth(),
@@ -140,7 +165,8 @@ fun MonthsDetailScreen(
                 TabRowIncomesExpenses(
                     incomes = incomes,
                     expenses = expenses,
-                    viewModel = balanceViewModel
+                    viewModel = balanceViewModel,
+                    donutChartHeight
                 )
             }
             AddIncomeOrExpenseFAB(navController = navController)
@@ -196,8 +222,7 @@ fun DonutChart(
             chart.invalidate()
         },
         modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
+            .fillMaxSize()
             .padding(horizontal = 16.dp)
     )
 }
@@ -206,7 +231,8 @@ fun DonutChart(
 fun TabRowIncomesExpenses(
     incomes: List<BalanceModel>,
     expenses: List<BalanceModel>,
-    viewModel: BalanceViewModel
+    viewModel: BalanceViewModel,
+    donutChartHeight: Dp
 ) {
 
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
@@ -260,8 +286,8 @@ fun TabRowIncomesExpenses(
             .fillMaxHeight()
     ) { index ->
         when (index) {
-            0 -> IncomePage(incomes, viewModel)
-            1 -> ExpensePage(expenses, viewModel)
+            0 -> IncomePage(incomes, viewModel, donutChartHeight)
+            1 -> ExpensePage(expenses, viewModel, donutChartHeight)
         }
     }
 
@@ -269,19 +295,19 @@ fun TabRowIncomesExpenses(
 }
 
 @Composable
-fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
+fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel, donutChartHeight: Dp) {
 
     val totalIncomes = viewModel.totalIncomes.collectAsState()
 
     val pieChartEntries = incomes.map {
+
         PieEntry(it.amount.toFloat(), it.category)
+
     }
-    val pieColors = listOf(
-        android.graphics.Color.parseColor("#4CAF50"),
-        android.graphics.Color.parseColor("#81C784"),
-        android.graphics.Color.parseColor("#A5D6A7"),
-        android.graphics.Color.parseColor("#C8E6C9"),
-    )
+    val pieColors = incomes.map {
+      //  viewModel.getColorCategoryNew(it).color.toArgb()
+        viewModel.getColorCategory(it).color.toArgb()
+    }
 
 
     Column(
@@ -296,7 +322,7 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
             onClick = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp)
+                .height(donutChartHeight)
                 .padding(horizontal = 16.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(Color(0xFFBBF3BE))
@@ -305,22 +331,7 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
                 entries = pieChartEntries,
                 colors = pieColors,
                 centerText = formatCurrency(totalIncomes.value)
-
             )
-//            Column(
-//                Modifier
-//                    .fillMaxSize()
-//                    .padding(16.dp),
-//                horizontalAlignment = Alignment.CenterHorizontally,
-//                verticalArrangement = Arrangement.Center
-//            ) {
-//                Text(
-//                    text = formatCurrency(totalIncomes.value),
-//                    color = Color(0xFF429D46),
-//                    fontWeight = FontWeight.Bold,
-//                    fontSize = 35.sp
-//                )
-//            }
 
         }
         Spacer(Modifier.padding(8.dp))
@@ -336,7 +347,7 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
 }
 
 @Composable
-fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
+fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel, donutChartHeight: Dp) {
 
     val totalExpenses = viewModel.totalExpenses.collectAsState()
 

@@ -25,4 +25,11 @@ object RoomModule {
     @Provides
     fun provideBalanceDao(db: BalanceDatabase) = db.getBalanceDao()
 
+    @Singleton
+    @Provides
+    fun provideCategoryDao(db: BalanceDatabase) = db.getCategoryDao()
+
+
+
+
 }

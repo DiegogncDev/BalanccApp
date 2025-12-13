@@ -1,8 +1,7 @@
 package com.onedeepath.balanccapp.ui.presentation.model
 
-import android.graphics.drawable.Icon
-import androidx.compose.ui.graphics.Color
 import com.onedeepath.balanccapp.R
+import androidx.compose.ui.graphics.Color
 import com.onedeepath.balanccapp.ui.theme.EducationColor
 import com.onedeepath.balanccapp.ui.theme.EntertainmentColor
 import com.onedeepath.balanccapp.ui.theme.FoodColor
@@ -23,7 +22,7 @@ sealed class Categories(
     val icon: Int,
     val color: Color
 ) {
-    object Investment : Categories("Investments", R.drawable.ic_investments, InvestmentColor)
+    object Investment : Categories("Investments",   R.drawable.ic_investments, InvestmentColor)
     object Work : Categories("Work", R.drawable.ic_work, WorkColor)
     object Gift : Categories("Gift", R.drawable.ic_gift, GiftColor)
     object Grocery : Categories("Grocery", R.drawable.ic_grocery, GroceryColor)

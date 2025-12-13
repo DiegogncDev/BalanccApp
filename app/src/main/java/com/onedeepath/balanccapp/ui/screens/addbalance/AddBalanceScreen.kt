@@ -1,8 +1,9 @@
 package com.onedeepath.balanccapp.ui.screens.addbalance
 
-import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +28,8 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -28,11 +37,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -43,7 +56,11 @@ import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
+import com.onedeepath.balanccapp.core.cleanAmountForStorage
+import com.onedeepath.balanccapp.core.formatAmountForDisplay
+import com.onedeepath.balanccapp.core.formatCurrency
 import com.onedeepath.balanccapp.ui.presentation.model.Categories
+import com.onedeepath.balanccapp.ui.presentation.model.TabItem
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.BalanceViewModel
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import java.time.LocalDate
@@ -82,26 +99,23 @@ fun AddIncomeOrExpenseScreen(
     var details by remember { mutableStateOf("") }
     var selectedDay by remember { mutableStateOf("") }
 
-
-
-
     Column(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         Spacer(Modifier.height(32.dp))
-        Text("Add", fontSize = 30.sp, fontWeight = FontWeight.Bold)
-        Spacer(Modifier.height(32.dp))
+        Text("Add", fontSize = 45.sp, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(8.dp))
 
-        IncomeExpenseRB(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
-        Spacer(Modifier.height(32.dp))
+        //IncomeExpenseRB(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
+        IncomeExpenseTabview(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
+        Spacer(Modifier.height(8.dp))
 
         AddAmountTF(amount = amount, onAmountChange = {amount = it})
         Spacer(Modifier.height(32.dp))
 
-        AddCategorySelector(selectedCategory = category, onCategoryChange = {category = it
-        })
+        AddCategorySelector(selectedCategory = category, onCategoryChange = {category = it})
         Spacer(Modifier.height(32.dp))
 
         DatePickerSelector(selectedYear.toInt(), selectedMonth) { date ->
@@ -112,7 +126,9 @@ fun AddIncomeOrExpenseScreen(
         DetailsTF(details = details, onDetailsChange = {details = it})
         Spacer(Modifier.height(32.dp))
 
-        Button(onClick = {
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
             if (amount.isNotBlank()){
                 balanceViewModel.addBalance(
                     type = if (typeIncomeOrExpense) "income" else "expense",
@@ -124,13 +140,12 @@ fun AddIncomeOrExpenseScreen(
                     description = details
                     )
                 Toast.makeText(context, "Balance Added Successfully", Toast.LENGTH_SHORT).show()
-
             }else {
                 Toast.makeText(context, "Please enter an amount", Toast.LENGTH_SHORT).show()
                  }
             }
         ) {
-            Text("Add")
+            Text("Add", fontSize = 24.sp, fontWeight = FontWeight.Bold)
         }
     }
 
@@ -182,11 +197,11 @@ fun DatePickerSelector(
     val startDate = LocalDate.of(selectedYear, selectedMonthMapped + 1, 1)
     val endDate = YearMonth.of(selectedYear, selectedMonthMapped + 1).atEndOfMonth()
 
-    var currentDay by remember {mutableStateOf("")}
+    var currentDay by remember { mutableStateOf("") }
 
-    Row (
+    Row(
         Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
 
         CalendarDialog(
@@ -202,21 +217,22 @@ fun DatePickerSelector(
                 currentDay = date.dayOfMonth.toString()
             }
         )
+
         Button(
             onClick = {
-                calendarState.show()
+                    calendarState.show()
             }
         ) {
-            Text(text = if (currentDay.isEmpty()) "Elegir día" else currentDay, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = if (currentDay.isEmpty()) "Elegir día" else currentDay, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         }
         Spacer(Modifier.width(16.dp))
-        Text(text = selectedMonth , fontWeight = FontWeight.Bold, fontSize = 24.sp)
+        Text(text = selectedMonth, fontWeight = FontWeight.Bold, fontSize = 24.sp)
         Spacer(Modifier.width(16.dp))
         Text("$selectedYear", fontWeight = FontWeight.Bold, fontSize = 24.sp)
 
     }
-
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -225,7 +241,8 @@ fun AddCategorySelector(selectedCategory: Categories, onCategoryChange: (Categor
     var isExpanded by remember { mutableStateOf(false) }
 
     Box(
-        Modifier.fillMaxWidth()
+        Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
     ) {
         ExposedDropdownMenuBox(
             expanded = isExpanded,
@@ -264,9 +281,10 @@ fun AddCategorySelector(selectedCategory: Categories, onCategoryChange: (Categor
                         painter = painterResource(id = category.icon),
                         contentDescription = "icons",
                         tint = category.color
-                    ) }
-                )
-            }
+                            )
+                        }
+                    )
+                }
             }
         }
     }
@@ -275,50 +293,85 @@ fun AddCategorySelector(selectedCategory: Categories, onCategoryChange: (Categor
 @Composable
 fun AddAmountTF(amount: String, onAmountChange: (String) -> Unit) {
 
+    val cleanedAmount = cleanAmountForStorage(amount)
+
+    val formattedAmount = formatAmountForDisplay(cleanedAmount)
+
     OutlinedTextField(
-        value = amount,
-        onValueChange = onAmountChange,
+        modifier = Modifier.fillMaxWidth().height(90.dp),
+        value = formattedAmount,
+        singleLine = true,
+        maxLines = 15,
+        textStyle = TextStyle(fontSize = 35.sp, fontWeight = FontWeight.Bold),
+        onValueChange = { newValue ->
+            // Clean the input to only allow digits
+            val newCleanedValue = newValue.replace(Regex("[^0-9]"), "")
+
+            // Limit the input to 15 characters if the values are no digits
+            if (newCleanedValue.length > 15) return@OutlinedTextField
+
+            if (newCleanedValue != cleanedAmount) {
+                onAmountChange(newCleanedValue)
+            }
+
+                        },
         label = {
             Text(
-                "Enter Amount")
+                "Amount", fontSize = 18.sp
+            )
         },
         placeholder = {
-            Text("Amount")
+            Text(text = "Enter Amount", fontWeight = FontWeight.Bold, fontSize = 35.sp)
         },
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Decimal
+            keyboardType = KeyboardType.Number
         )
     )
 }
 
+
 @Composable
-fun IncomeExpenseRB(isIncome: Boolean, onCheckedChange: (Boolean) -> Unit) {
+fun IncomeExpenseTabview(isIncome: Boolean, onCheckedChange: (Boolean) -> Unit) {
 
+    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
 
-    Row(
-        Modifier.fillMaxWidth()
+    val tabItems = listOf(
+        TabItem("Incomes", Icons.Outlined.KeyboardArrowUp, Icons.Filled.KeyboardArrowUp),
+        TabItem("Expenses", Icons.Outlined.KeyboardArrowDown, Icons.Filled.KeyboardArrowDown)
+    )
+
+    TabRow(
+        selectedTabIndex = selectedTabIndex,
+        modifier = Modifier.height(120.dp),
+        indicator = {},
+        divider = {}
     ) {
-        listOf("Income", "Expense").forEach { label ->
-            val selectedType = if (label == "Income") isIncome else !isIncome
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .clickable {
-                            onCheckedChange(label == "Income")
-                    }
-                    .padding(end = 8.dp)
+        tabItems.forEachIndexed { index, item ->
+            val selected = selectedTabIndex == index
+            Tab(
+                modifier = if (selected) Modifier
+                    .clip(RoundedCornerShape(5))
+                    .background(Color(0xff1E76DA))
+                else Modifier
+                    .clip(RoundedCornerShape(5))
+                    .background(Color.White),
+                selected = selected,     //index == selectedTabIndex
+                onClick = {
+                    selectedTabIndex = index
+                    onCheckedChange(index == 0)
+                }
 
             ) {
-                RadioButton(
-                    selected = selectedType,
-                    onClick = {
-                        onCheckedChange(label == "Income")
+                Text(
+                    text = item.title,
+                    color = Color(0xff6FAAEE),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp)
 
-                    }
-                )
-                Text(text = label)
             }
         }
+
     }
 }
+
 
