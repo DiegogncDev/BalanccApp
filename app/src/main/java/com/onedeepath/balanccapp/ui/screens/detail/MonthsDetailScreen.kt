@@ -117,7 +117,7 @@ fun MonthsDetailScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFBBF3BE)),
-        containerColor = Color(0xFFD8D3EF),
+        containerColor = Color(0xFF88199A),
         floatingActionButton = { AddIncomeOrExpenseFAB(navController = navController) }
     ) { padding ->
         Column(
@@ -156,7 +156,7 @@ fun MonthsDetailScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        color = Color.White,
+                        color = Color(0xFFD8D3EF),
                         shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
                     )
                     .padding(8.dp),
@@ -186,7 +186,7 @@ fun DonutChart(
 
                 // --- Configuración del donut ---
                 description.isEnabled = false
-                setUsePercentValues(false)
+                setUsePercentValues(true)
 
                 isDrawHoleEnabled = true
                 holeRadius = 60f            // Tamaño del agujero → donut
@@ -266,15 +266,15 @@ fun TabRowIncomesExpenses(
             Tab(
                 modifier = if (selected) Modifier
                     .clip(RoundedCornerShape(20))
-                    .background(Color.White)
+                    .background(Color(0xFF88199A))
                 else Modifier
                     .clip(RoundedCornerShape(20))
-                    .background(Color(0xff1E76DA)),
+                    .background(Color.White),
                 selected = selected,     //index == selectedTabIndex
                 onClick = {
                     selectedTabIndex = index
                 },
-                text = { Text(text = item.title, color = Color(0xff6FAAEE)) },
+                text = { Text(text = item.title, color = Color(0xE98A64D2)) },
 
                 )
         }
@@ -351,6 +351,16 @@ fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel, donut
 
     val totalExpenses = viewModel.totalExpenses.collectAsState()
 
+    val pieChartEntries = expenses.map {
+
+        PieEntry(it.amount.toFloat(), it.category)
+
+    }
+    val pieColors = expenses.map {
+        //  viewModel.getColorCategoryNew(it).color.toArgb()
+        viewModel.getColorCategory(it).color.toArgb()
+    }
+
     Column(
         Modifier
             .fillMaxSize()
@@ -358,40 +368,25 @@ fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel, donut
             .padding(top = 8.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        Spacer(Modifier.padding(vertical = 8.dp))
-        Text(
-            text = "Total Incomes",
-            fontWeight = FontWeight.Bold,
-            fontSize = 25.sp,
-            color = Color.Black,
-            modifier = Modifier.padding(start = 16.dp)
-        )
+        Spacer(Modifier.padding(vertical = 4.dp))
         Card(
             onClick = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(donutChartHeight)
                 .padding(horizontal = 16.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(Color.Red)
+            colors = CardDefaults.cardColors(Color(0xFFF10E3C))
         ) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
+            DonutChart(
+                entries = pieChartEntries,
+                colors = pieColors,
+                centerText = formatCurrency(totalExpenses.value)
+            )
 
-                Text(
-                    text = formatCurrency(totalExpenses.value),
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 35.sp
-                )
-            }
         }
-        Spacer(Modifier.padding(vertical = 8.dp))
+        Spacer(Modifier.padding(8.dp))
+
         Text(
             text = "Expenses",
             color = Color.Black,

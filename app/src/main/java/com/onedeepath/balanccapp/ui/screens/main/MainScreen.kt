@@ -227,12 +227,12 @@ fun YearFilter(selectedYear: String, onYearSelected: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 16.dp).clip(RoundedCornerShape(50))
     ) {
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp).clip(RoundedCornerShape(50)),
             value = selectedYear,
             onValueChange = {},
             readOnly = true,
@@ -245,7 +245,9 @@ fun YearFilter(selectedYear: String, onYearSelected: (String) -> Unit) {
             shape = RoundedCornerShape(50),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF7B6DD5),
-                unfocusedContainerColor = Color(0xFF7B6DD5)
+                unfocusedContainerColor = Color(0xFF7B6DD5),
+                disabledIndicatorColor = Color.Transparent,
+                errorIndicatorColor = Color.Transparent
             )
         )
 

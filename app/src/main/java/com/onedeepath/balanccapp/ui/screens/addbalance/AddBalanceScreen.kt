@@ -1,5 +1,6 @@
 package com.onedeepath.balanccapp.ui.screens.addbalance
 
+import android.graphics.drawable.Icon
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,17 +22,27 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -48,6 +59,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -90,7 +102,6 @@ fun AddIncomeOrExpenseScreen(
     val selectedYear:String by yearMonthViewModel.selectedYear.collectAsState()
     val selectedMonth:String by yearMonthViewModel.selectedMonthIndex.collectAsState()
 
-
     val context = LocalContext.current
 
     var typeIncomeOrExpense by remember { mutableStateOf(true) }
@@ -105,12 +116,10 @@ fun AddIncomeOrExpenseScreen(
             .padding(16.dp)
     ) {
         Spacer(Modifier.height(32.dp))
-        Text("Add", fontSize = 45.sp, fontWeight = FontWeight.Bold)
-        Spacer(Modifier.height(8.dp))
+        Text("Add", fontSize = 55.sp, fontWeight = FontWeight.Bold)
 
         //IncomeExpenseRB(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
         IncomeExpenseTabview(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
-        Spacer(Modifier.height(8.dp))
 
         AddAmountTF(amount = amount, onAmountChange = {amount = it})
         Spacer(Modifier.height(32.dp))
@@ -128,6 +137,10 @@ fun AddIncomeOrExpenseScreen(
 
         Button(
             modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF88199A),
+                contentColor = Color.White
+            ),
             onClick = {
             if (amount.isNotBlank()){
                 balanceViewModel.addBalance(
@@ -199,37 +212,63 @@ fun DatePickerSelector(
 
     var currentDay by remember { mutableStateOf("") }
 
-    Row(
-        Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-
-        CalendarDialog(
-            state = calendarState,
-            config = CalendarConfig(
-                monthSelection = false,
-                yearSelection = false,
-                style = CalendarStyle.MONTH,
-                boundary = startDate..endDate,
-            ),
-            selection = CalendarSelection.Date { date ->
-                onDateSelected(date)
-                currentDay = date.dayOfMonth.toString()
-            }
+    Card(
+        modifier = Modifier
+            .fillMaxWidth().height(90.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFB872C1)
         )
-
-        Button(
-            onClick = {
-                    calendarState.show()
-            }
+    ) {
+        Row(
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = 32.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-                Text(text = if (currentDay.isEmpty()) "Elegir día" else currentDay, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        }
-        Spacer(Modifier.width(16.dp))
-        Text(text = selectedMonth, fontWeight = FontWeight.Bold, fontSize = 24.sp)
-        Spacer(Modifier.width(16.dp))
-        Text("$selectedYear", fontWeight = FontWeight.Bold, fontSize = 24.sp)
 
+            CalendarDialog(
+                state = calendarState,
+                config = CalendarConfig(
+                    monthSelection = false,
+                    yearSelection = false,
+                    style = CalendarStyle.MONTH,
+                    boundary = startDate..endDate,
+                ),
+                selection = CalendarSelection.Date { date ->
+                    onDateSelected(date)
+                    currentDay = date.dayOfMonth.toString()
+                }
+            )
+
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF88199A),
+                    contentColor = Color.White
+                ),
+                onClick = {
+                    calendarState.show()
+                }
+            ) {
+                Text(
+                    text = if (currentDay.isEmpty()) "Day" else currentDay,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Spacer(Modifier.weight(1f))
+            Text(text = selectedMonth,
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+                color = Color(0xFF640A76)
+            )
+            Spacer(Modifier.weight(1f))
+            Text("$selectedYear",
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+                color = Color(0xFF640A76)
+            )
+        }
     }
 }
 
@@ -241,20 +280,33 @@ fun AddCategorySelector(selectedCategory: Categories, onCategoryChange: (Categor
     var isExpanded by remember { mutableStateOf(false) }
 
     Box(
-        Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White).clip(RoundedCornerShape(50)),
         contentAlignment = Alignment.Center
     ) {
         ExposedDropdownMenuBox(
             expanded = isExpanded,
             onExpandedChange = { isExpanded = !isExpanded},
-
         ) {
             TextField(
                 value = selectedCategory.name,
                 onValueChange = {},
                 readOnly = true,
+                shape = RoundedCornerShape(50),
+                textStyle = LocalTextStyle.current.copy(
+                    textAlign = TextAlign.Center,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = selectedCategory.color
+                ),
                 trailingIcon = {ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)},
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color(0xFF67316F),
+                    unfocusedContainerColor = Color(0xFF67316F),
+                    disabledIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Transparent
+                    ),
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth(),
@@ -264,13 +316,14 @@ fun AddCategorySelector(selectedCategory: Categories, onCategoryChange: (Categor
                         contentDescription = "",
                         tint = selectedCategory.color
                     )
-                }
+                },
             )
             ExposedDropdownMenu(
                 expanded = isExpanded,
                 onDismissRequest = {isExpanded = false}
             ) { categories.forEachIndexed { index, category ->
                 DropdownMenuItem(
+                    modifier = Modifier.background(Color(0xFF741387)),
                     text = {Text(text = category.name, fontWeight = FontWeight.Bold, color = category.color)},
                     onClick = {
                         onCategoryChange(category)
@@ -282,7 +335,7 @@ fun AddCategorySelector(selectedCategory: Categories, onCategoryChange: (Categor
                         contentDescription = "icons",
                         tint = category.color
                             )
-                        }
+                        },
                     )
                 }
             }
@@ -298,11 +351,13 @@ fun AddAmountTF(amount: String, onAmountChange: (String) -> Unit) {
     val formattedAmount = formatAmountForDisplay(cleanedAmount)
 
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth().height(90.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(90.dp),
         value = formattedAmount,
         singleLine = true,
         maxLines = 15,
-        textStyle = TextStyle(fontSize = 35.sp, fontWeight = FontWeight.Bold),
+        textStyle = TextStyle(fontSize = 35.sp),
         onValueChange = { newValue ->
             // Clean the input to only allow digits
             val newCleanedValue = newValue.replace(Regex("[^0-9]"), "")
@@ -321,7 +376,7 @@ fun AddAmountTF(amount: String, onAmountChange: (String) -> Unit) {
             )
         },
         placeholder = {
-            Text(text = "Enter Amount", fontWeight = FontWeight.Bold, fontSize = 35.sp)
+            Text(text = "Enter Amount", fontSize = 35.sp)
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number
@@ -342,33 +397,33 @@ fun IncomeExpenseTabview(isIncome: Boolean, onCheckedChange: (Boolean) -> Unit) 
 
     TabRow(
         selectedTabIndex = selectedTabIndex,
-        modifier = Modifier.height(120.dp),
+        modifier = Modifier
+            .height(120.dp)
+            .fillMaxWidth(),
         indicator = {},
         divider = {}
     ) {
+
         tabItems.forEachIndexed { index, item ->
             val selected = selectedTabIndex == index
             Tab(
                 modifier = if (selected) Modifier
-                    .clip(RoundedCornerShape(5))
-                    .background(Color(0xff1E76DA))
+                    .clip(RoundedCornerShape(25))
+                    .background(Color(0xFF88199A))
                 else Modifier
-                    .clip(RoundedCornerShape(5))
+                    .clip(RoundedCornerShape(25))
                     .background(Color.White),
                 selected = selected,     //index == selectedTabIndex
                 onClick = {
                     selectedTabIndex = index
                     onCheckedChange(index == 0)
-                }
-
-            ) {
-                Text(
-                    text = item.title,
-                    color = Color(0xff6FAAEE),
+                },
+                text = {Text(item.title,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp)
+                    color = Color(0xE98A64D2), fontSize = 24.sp) },
 
-            }
+
+            )
         }
 
     }
