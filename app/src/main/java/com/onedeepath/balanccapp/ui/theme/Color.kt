@@ -37,7 +37,7 @@ val Background = Color(0xFFFFFFFF)
 
 
 // Text / emphasis colors
-val TextPrimary = Color(0xFF640A76)
+val TextPrimary = Color(0xFF4B094C)
 val TextSecondary = Color(0xE98A64D2)
 
 

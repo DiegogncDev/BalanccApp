@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.onedeepath.balanccapp.ui.navigation.AppNavigation
+import com.onedeepath.balanccapp.ui.theme.AppTheme
 import com.onedeepath.balanccapp.ui.theme.BalanccAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -14,7 +15,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            BalanccAppTheme {
+            AppTheme() {
 
                     AppNavigation()
 

@@ -33,6 +33,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.OutlinedTextField
@@ -62,6 +63,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.maxkeppeker.sheets.core.models.base.UseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -113,10 +115,15 @@ fun AddIncomeOrExpenseScreen(
     Column(
         Modifier
             .fillMaxSize()
+            .background(
+                MaterialTheme.colorScheme.surface)
             .padding(16.dp)
+
     ) {
         Spacer(Modifier.height(32.dp))
-        Text("Add", fontSize = 55.sp, fontWeight = FontWeight.Bold)
+        Text("Add", fontSize = 55.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface)
 
         //IncomeExpenseRB(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
         IncomeExpenseTabview(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
@@ -138,8 +145,8 @@ fun AddIncomeOrExpenseScreen(
         Button(
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF88199A),
-                contentColor = Color.White
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onSurface
             ),
             onClick = {
             if (amount.isNotBlank()){
@@ -172,13 +179,23 @@ fun DetailsTF(details: String, onDetailsChange: (String) -> Unit) {
     OutlinedTextField(
         value = details,
         onValueChange = onDetailsChange,
-        label = { Text("Details") },
-        placeholder = { Text("Enter more information...") },
+        textStyle = TextStyle(
+            fontSize = 18.sp,
+            color = MaterialTheme.colorScheme.onSurface
+        ),
+        label = { Text("Details", color = MaterialTheme.colorScheme.onSurface) },
+        placeholder = { Text("Enter more information...", color = MaterialTheme.colorScheme.onSurface) },
         modifier = Modifier
             .fillMaxWidth()
             .height(120.dp), // altura más grande para parecer un "text area"
         maxLines = 5,
-        singleLine = false
+        singleLine = false,
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            disabledIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent
+        )
     )
 }
 
@@ -216,7 +233,7 @@ fun DatePickerSelector(
         modifier = Modifier
             .fillMaxWidth().height(90.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFB872C1)
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
         Row(
@@ -238,13 +255,13 @@ fun DatePickerSelector(
                 selection = CalendarSelection.Date { date ->
                     onDateSelected(date)
                     currentDay = date.dayOfMonth.toString()
-                }
+                },
             )
 
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF88199A),
-                    contentColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.primary ,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 onClick = {
                     calendarState.show()
@@ -260,13 +277,13 @@ fun DatePickerSelector(
             Text(text = selectedMonth,
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
-                color = Color(0xFF640A76)
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(Modifier.weight(1f))
             Text("$selectedYear",
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
-                color = Color(0xFF640A76)
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -282,7 +299,8 @@ fun AddCategorySelector(selectedCategory: Categories, onCategoryChange: (Categor
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White).clip(RoundedCornerShape(50)),
+            .background(MaterialTheme.colorScheme.surface)
+            .clip(RoundedCornerShape(50)),
         contentAlignment = Alignment.Center
     ) {
         ExposedDropdownMenuBox(
@@ -302,8 +320,8 @@ fun AddCategorySelector(selectedCategory: Categories, onCategoryChange: (Categor
                 ),
                 trailingIcon = {ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)},
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color(0xFF67316F),
-                    unfocusedContainerColor = Color(0xFF67316F),
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                     disabledIndicatorColor = Color.Transparent,
                     errorIndicatorColor = Color.Transparent
                     ),
@@ -323,8 +341,11 @@ fun AddCategorySelector(selectedCategory: Categories, onCategoryChange: (Categor
                 onDismissRequest = {isExpanded = false}
             ) { categories.forEachIndexed { index, category ->
                 DropdownMenuItem(
-                    modifier = Modifier.background(Color(0xFF741387)),
-                    text = {Text(text = category.name, fontWeight = FontWeight.Bold, color = category.color)},
+                    modifier = Modifier.background(
+                        MaterialTheme.colorScheme.surfaceVariant),
+                    text = {Text(text = category.name,
+                        fontWeight = FontWeight.Bold,
+                        color = category.color)},
                     onClick = {
                         onCategoryChange(category)
                         isExpanded = false
@@ -357,7 +378,8 @@ fun AddAmountTF(amount: String, onAmountChange: (String) -> Unit) {
         value = formattedAmount,
         singleLine = true,
         maxLines = 15,
-        textStyle = TextStyle(fontSize = 35.sp),
+        textStyle = TextStyle(fontSize = 35.sp,
+            color = MaterialTheme.colorScheme.onSurface),
         onValueChange = { newValue ->
             // Clean the input to only allow digits
             val newCleanedValue = newValue.replace(Regex("[^0-9]"), "")
@@ -368,18 +390,21 @@ fun AddAmountTF(amount: String, onAmountChange: (String) -> Unit) {
             if (newCleanedValue != cleanedAmount) {
                 onAmountChange(newCleanedValue)
             }
-
                         },
         label = {
             Text(
-                "Amount", fontSize = 18.sp
+                "Amount", fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurface
             )
         },
         placeholder = {
-            Text(text = "Enter Amount", fontSize = 35.sp)
+            Text(text = "Enter Amount", fontSize = 35.sp, color = MaterialTheme.colorScheme.onSurface)
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number
+        ),
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
         )
     )
 }
@@ -398,7 +423,6 @@ fun IncomeExpenseTabview(isIncome: Boolean, onCheckedChange: (Boolean) -> Unit) 
     TabRow(
         selectedTabIndex = selectedTabIndex,
         modifier = Modifier
-            .height(120.dp)
             .fillMaxWidth(),
         indicator = {},
         divider = {}
@@ -409,10 +433,12 @@ fun IncomeExpenseTabview(isIncome: Boolean, onCheckedChange: (Boolean) -> Unit) 
             Tab(
                 modifier = if (selected) Modifier
                     .clip(RoundedCornerShape(25))
-                    .background(Color(0xFF88199A))
+                    .background(MaterialTheme.colorScheme.primary)
+                    .fillMaxSize()
                 else Modifier
                     .clip(RoundedCornerShape(25))
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.background)
+                    .fillMaxSize(),
                 selected = selected,     //index == selectedTabIndex
                 onClick = {
                     selectedTabIndex = index
@@ -420,12 +446,13 @@ fun IncomeExpenseTabview(isIncome: Boolean, onCheckedChange: (Boolean) -> Unit) 
                 },
                 text = {Text(item.title,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xE98A64D2), fontSize = 24.sp) },
-
-
+                    fontSize = 20.sp,
+                    color = if (selected) MaterialTheme.colorScheme.onPrimary
+                    else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                },
             )
         }
-
     }
 }
 

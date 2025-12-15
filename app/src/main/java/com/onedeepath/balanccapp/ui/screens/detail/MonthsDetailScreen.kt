@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -22,11 +23,14 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -45,6 +49,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.R
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -52,6 +58,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.font.Typeface
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
@@ -69,6 +76,9 @@ import com.onedeepath.balanccapp.ui.presentation.model.TabItem
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.BalanceViewModel
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.AppScreens
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.math.exp
 
 @Composable
 fun MonthsDetailScreen(
@@ -115,9 +125,8 @@ fun MonthsDetailScreen(
 
     Scaffold (
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFBBF3BE)),
-        containerColor = Color(0xFF88199A),
+            .fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.primary,
         floatingActionButton = { AddIncomeOrExpenseFAB(navController = navController) }
     ) { padding ->
         Column(
@@ -131,10 +140,12 @@ fun MonthsDetailScreen(
                 text = month,
                 fontSize = 35.sp,
                 fontWeight = FontWeight.ExtraBold,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(Modifier.height(4.dp))
-            Text(text = year, fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color.Black)
+            Text(text = year, fontSize = 20.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface)
             Spacer(Modifier.height(16.dp))
             //---------- Section 1
             Column(
@@ -142,12 +153,15 @@ fun MonthsDetailScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                val sign = if (totalBalance > 0) "+" else if (totalBalance < 0) "-" else ""
+                val sign = if (totalBalance > 0) "+" else if (totalBalance < 0) "" else ""
                 Text(
                     text = sign + formatCurrency(totalBalance),
                     fontSize = 35.sp,
                     fontWeight = Bold,
-                    color = if (totalBalance > 0) Color.Green else if (totalBalance < 0) Color.Red else Color.Black
+                    color =
+                        if (totalBalance > 0) Color.Green
+                        else if (totalBalance < 0) Color.Red
+                        else Color.Black
                 )
                 Spacer(Modifier.padding(bottom = 24.dp))
             }
@@ -156,7 +170,7 @@ fun MonthsDetailScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        color = Color(0xFFD8D3EF),
+                        color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
                     )
                     .padding(8.dp),
@@ -178,27 +192,35 @@ fun MonthsDetailScreen(
 fun DonutChart(
     entries: List<PieEntry>,
     colors: List<Int>,
-    centerText: String   // Aquí pasas el total formateado
+    centerText: String,
+    type: String,
+    nestedHeight: Dp// Aquí pasas el total formateado
 ) {
+    val surfaceColor = MaterialTheme.colorScheme.surface.toArgb()
     AndroidView(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(nestedHeight),
         factory = { context ->
             PieChart(context).apply {
-
                 // --- Configuración del donut ---
                 description.isEnabled = false
                 setUsePercentValues(true)
 
                 isDrawHoleEnabled = true
-                holeRadius = 60f            // Tamaño del agujero → donut
+                holeRadius = 80f            // Tamaño del agujero → donut
                 transparentCircleRadius = 65f
 
-                setHoleColor(android.graphics.Color.WHITE)
+                setHoleColor(surfaceColor)
 
                 // Texto en el centro
                 setDrawCenterText(true)
                 centerTextRadiusPercent = 100f
-                setCenterTextColor(android.graphics.Color.BLACK)
+                setCenterTextColor(
+                    if (type == "income") Color(0xFF64F667).toArgb()
+                    else Color(0xFFE53757).toArgb())
                 setCenterTextSize(20f)
+                setCenterTextTypeface(android.graphics.Typeface.DEFAULT_BOLD)
 
                 legend.isEnabled = false
 
@@ -210,6 +232,7 @@ fun DonutChart(
             val dataSet = PieDataSet(entries, "")
             dataSet.colors = colors
             dataSet.sliceSpace = 2f
+            dataSet.valueTextSize = 15f
 
             // Opcional: para que los valores no salgan sobre el donut
             dataSet.setDrawValues(false)
@@ -221,9 +244,7 @@ fun DonutChart(
             chart.centerText = centerText
             chart.invalidate()
         },
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
+
     )
 }
 
@@ -257,7 +278,9 @@ fun TabRowIncomesExpenses(
 
     TabRow(
         selectedTabIndex = selectedTabIndex,
-        modifier = Modifier.height(45.dp),
+        modifier = Modifier
+            .height(45.dp)
+            .background(MaterialTheme.colorScheme.surface),
         indicator = {},
         divider = {}
     ) {
@@ -269,13 +292,16 @@ fun TabRowIncomesExpenses(
                     .background(Color(0xFF88199A))
                 else Modifier
                     .clip(RoundedCornerShape(20))
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.surface),
                 selected = selected,     //index == selectedTabIndex
                 onClick = {
                     selectedTabIndex = index
                 },
-                text = { Text(text = item.title, color = Color(0xE98A64D2)) },
-
+                text = {
+                    Text(
+                        text = item.title,
+                        fontSize = 18.sp,
+                        color = MaterialTheme.colorScheme.onSurface)},
                 )
         }
     }
@@ -284,6 +310,7 @@ fun TabRowIncomesExpenses(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
+            .background(MaterialTheme.colorScheme.surface)
     ) { index ->
         when (index) {
             0 -> IncomePage(incomes, viewModel, donutChartHeight)
@@ -299,11 +326,17 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel, donutCh
 
     val totalIncomes = viewModel.totalIncomes.collectAsState()
 
-    val pieChartEntries = incomes.map {
 
-        PieEntry(it.amount.toFloat(), it.category)
+    val groupedIncomes = incomes
+        .groupBy { it.category }
+        .map { (category, items) ->
+            category to items.sumOf { it.amount }
+        }
 
+    val pieChartEntries = groupedIncomes.map { (category, total) ->
+        PieEntry(total.toFloat(), category)
     }
+
     val pieColors = incomes.map {
       //  viewModel.getColorCategoryNew(it).color.toArgb()
         viewModel.getColorCategory(it).color.toArgb()
@@ -313,31 +346,28 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel, donutCh
     Column(
         Modifier
             .fillMaxSize()
-            .background(Color.White, shape = RoundedCornerShape(8.dp))
+            .background(
+                MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(8.dp)
+            )
             .padding(top = 8.dp),
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(Modifier.padding(vertical = 4.dp))
-        Card(
-            onClick = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(donutChartHeight)
-                .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(Color(0xFFBBF3BE))
-        ) {
+
             DonutChart(
                 entries = pieChartEntries,
                 colors = pieColors,
-                centerText = formatCurrency(totalIncomes.value)
+                centerText = formatCurrency(totalIncomes.value),
+                type = "income",
+                nestedHeight = donutChartHeight
             )
 
-        }
+
         Spacer(Modifier.padding(8.dp))
         Text(
             text = "Incomes",
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
             fontWeight = Bold,
             fontSize = 25.sp,
             modifier = Modifier.padding(start = 16.dp)
@@ -351,10 +381,14 @@ fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel, donut
 
     val totalExpenses = viewModel.totalExpenses.collectAsState()
 
-    val pieChartEntries = expenses.map {
+    val groupedExpenses = expenses
+        .groupBy{ it.category}
+        .map { (category, items) ->
+            category to items.sumOf { it.amount }
+        }
 
-        PieEntry(it.amount.toFloat(), it.category)
-
+    val pieChartEntries = groupedExpenses.map { (category, total) ->
+        PieEntry(total.toFloat(), category)
     }
     val pieColors = expenses.map {
         //  viewModel.getColorCategoryNew(it).color.toArgb()
@@ -364,32 +398,27 @@ fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel, donut
     Column(
         Modifier
             .fillMaxSize()
-            .background(Color.White, shape = RoundedCornerShape(16.dp))
+            .background(
+                MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(16.dp)
+            )
             .padding(top = 8.dp),
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(Modifier.padding(vertical = 4.dp))
-        Card(
-            onClick = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(donutChartHeight)
-                .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(Color(0xFFF10E3C))
-        ) {
-            DonutChart(
-                entries = pieChartEntries,
-                colors = pieColors,
-                centerText = formatCurrency(totalExpenses.value)
-            )
+        DonutChart(
+            entries = pieChartEntries,
+            colors = pieColors,
+            centerText = formatCurrency(totalExpenses.value),
+            type = "expense",
+            nestedHeight = donutChartHeight
+        )
 
-        }
         Spacer(Modifier.padding(8.dp))
 
         Text(
             text = "Expenses",
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 25.sp,
             fontWeight = Bold,
             modifier = Modifier.padding(start = 16.dp)
@@ -404,7 +433,9 @@ fun IncomeList(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
     val isLoading by viewModel.isLoadingIncome.collectAsState()
 
     Column(
-        Modifier.fillMaxSize(),
+        Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface),
     ) {
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -413,7 +444,9 @@ fun IncomeList(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
                 Text("No incomes")
             } else {
                 LazyColumn(
-                    Modifier.fillMaxWidth()
+                    Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surface)
                 ) {
                     items(incomes.size) { income ->
                         IncomeCard(incomes[income], viewModel)
@@ -501,20 +534,25 @@ fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
                 text = formatCurrency(income.amount),
                 fontSize = 18.sp,
                 fontWeight = Bold,
-                color = Color.Black,
+                color = Color.Green,
             )
-//            Button(
-//                onClick = {
-//                    viewModel.deleteBalance(income.id)
-//                },
-//                modifier = Modifier.size(18.dp)
-//            ) {
-//                Icon(
-//                    painter = painterResource(R.drawable.ic_trash),
-//                    contentDescription = "",
-//                    modifier = Modifier.size(14.dp)
-//                )
-//            }
+            Spacer(Modifier.width(16.dp))
+            IconButton(
+                onClick = { viewModel.deleteBalance(income.id) },
+                modifier = Modifier
+                    .size(32.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape
+                    )
+            ) {
+                Icon(
+                    painter = painterResource(com.onedeepath.balanccapp.R.drawable.ic_trash),
+                    contentDescription = "Delete",
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.fillMaxSize().size(20.dp)
+                )
+            }
         }
     }
 }
@@ -562,23 +600,30 @@ fun ExpenseCard(expense: BalanceModel, viewModel: BalanceViewModel) {
                     maxLines = 1
                 )
             }
-            Spacer(Modifier.weight(1f))
-            Text(
+                 Spacer(Modifier.weight(1f))
+                    Text(
                 text = formatCurrency(expense.amount),
                 fontSize = 18.sp,
                 fontWeight = Bold,
-                color = Color.Black
-            )
-//            Button(
-//                onClick = {
-//                    viewModel.deleteBalance(expense.id)
-//                }
-//            ) {
-//                Icon(
-//                    painter = painterResource(R.drawable.ic_trash),
-//                    contentDescription = ""
-//                )
-//            }
+                color = Color.Red
+                )
+            Spacer(Modifier.width(16.dp))
+            IconButton(
+                onClick = { viewModel.deleteBalance(expense.id) },
+                modifier = Modifier
+                    .size(32.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape
+                    )
+            ) {
+                Icon(
+                    painter = painterResource(com.onedeepath.balanccapp.R.drawable.ic_trash),
+                    contentDescription = "Delete",
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.fillMaxSize().size(20.dp)
+                )
+            }
         }
     }
 }
@@ -591,12 +636,12 @@ fun AddIncomeOrExpenseFAB(navController: NavController) {
                 navController.navigate(AppScreens.AddIncomeOrExpenseScreen.route)
             },
             containerColor = MaterialTheme.colorScheme.primary,
-            shape = RoundedCornerShape(50)
+            shape = RoundedCornerShape(25)
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Add",
-                tint = Color.White,
+                tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(32.dp)
 
             )

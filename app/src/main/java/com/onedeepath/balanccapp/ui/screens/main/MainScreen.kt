@@ -69,7 +69,7 @@ fun MainScreen(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFFD8D3EF)),
+            .background(color = MaterialTheme.colorScheme.surface),
 
         ) {
         Spacer(modifier = Modifier.height(32.dp))
@@ -77,14 +77,14 @@ fun MainScreen(
             text = "BalanccApp",
             fontSize = 45.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(start = 16.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             "SortBy", fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(start = 16.dp)
         )
         Spacer(Modifier.height(32.dp))
@@ -120,7 +120,8 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
             .fillMaxWidth()
             .padding(16.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF7B6DD5))
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary)
     ) {
         Column(
             Modifier.padding(16.dp)
@@ -129,7 +130,7 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
                 text = item.monthName,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 22.sp
             )
             Spacer(Modifier.height(8.dp))
@@ -137,7 +138,10 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Income", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                Text("Income",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp)
                 Text(
                     formatCurrency(item.incomeAmount),
                     color = Color.Green,
@@ -149,7 +153,10 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Expenses", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                Text("Expenses",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp)
                 Text(
                     formatCurrency(item.expenseAmount),
                     color = Color.Red,
@@ -162,7 +169,10 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Balance", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text("Balance",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp)
                 Text(
                     text = formatCurrency(balance),
                     color = if (balance >= 0) Color.Green else Color.Red,
@@ -227,12 +237,14 @@ fun YearFilter(selectedYear: String, onYearSelected: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp).clip(RoundedCornerShape(50))
+            .padding(horizontal = 8.dp)
+            .clip(RoundedCornerShape(50))
     ) {
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp).clip(RoundedCornerShape(50)),
+                .padding(horizontal = 16.dp)
+                .clip(RoundedCornerShape(50)),
             value = selectedYear,
             onValueChange = {},
             readOnly = true,
@@ -240,12 +252,14 @@ fun YearFilter(selectedYear: String, onYearSelected: (String) -> Unit) {
             textStyle = LocalTextStyle.current.copy(
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+
             ),
             shape = RoundedCornerShape(50),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color(0xFF7B6DD5),
-                unfocusedContainerColor = Color(0xFF7B6DD5),
+                focusedContainerColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.primary,
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent
             )
@@ -279,7 +293,6 @@ fun YearPickerDialog(
     val currentYear = remember { java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) }
     val years = remember { (currentYear..(currentYear + 200)).toList() }
 
-
     Dialog(
         onDismissRequest = onDismiss
     ) {
@@ -291,7 +304,7 @@ fun YearPickerDialog(
             Card(
                 shape = RoundedCornerShape(24.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor =MaterialTheme.colorScheme.surface),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
@@ -304,7 +317,7 @@ fun YearPickerDialog(
                         text = "Select a year",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
 
@@ -312,6 +325,7 @@ fun YearPickerDialog(
                         modifier = Modifier
                             .height(280.dp)
                             .padding(horizontal = 8.dp)
+                            .background(MaterialTheme.colorScheme.surface)
                     ) {
 
                         items(years) { year ->
@@ -333,32 +347,6 @@ fun YearPickerDialog(
         }
 
     }
-
-
-//    AlertDialog(
-//        onDismissRequest = onDismiss,
-//        title = { Text("Selecciona un año") },
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(300.dp),
-//        text = {
-//            LazyColumn {
-//                items(years) { year ->
-//                    Text(
-//                        text = year.toString(),
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .clickable {
-//                                onYearSelected(year)
-//                                onDismiss()
-//                            }
-//                            .padding(8.dp)
-//                    )
-//                }
-//            }
-//        },
-//        confirmButton = {}
-//    )
 }
 
 
