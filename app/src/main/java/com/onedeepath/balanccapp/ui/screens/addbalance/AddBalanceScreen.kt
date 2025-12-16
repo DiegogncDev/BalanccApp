@@ -125,8 +125,11 @@ fun AddIncomeOrExpenseScreen(
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface)
 
+        Spacer(Modifier.height(16.dp))
         //IncomeExpenseRB(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
         IncomeExpenseTabview(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
+        Spacer(Modifier.height(16.dp))
+
 
         AddAmountTF(amount = amount, onAmountChange = {amount = it})
         Spacer(Modifier.height(32.dp))

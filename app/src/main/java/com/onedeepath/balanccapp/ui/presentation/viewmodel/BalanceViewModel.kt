@@ -1,7 +1,13 @@
 package com.onedeepath.balanccapp.ui.presentation.viewmodel
 
 import android.R
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.coerceIn
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -61,21 +67,7 @@ class BalanceViewModel @Inject constructor(
     val balancesByYear: StateFlow<List<BalanceByMonthEntity>> = _balancesByYear
 
 
-    suspend fun getCategoryProperties(category: String): CategoryProperties {
-        val category = categoryRepository.getCategoryByName(category)
 
-        return if (category != null){
-            CategoryProperties(
-                color = Color(category.colorHex.toColorInt()),
-                icon = category.iconRes
-            )
-        }else {
-            CategoryProperties(
-                color = Color("#000000".toColorInt()),
-                icon = R.drawable.ic_menu_info_details
-            )
-        }
-    }
 
     fun getBalanceByYear(year: String) {
 
@@ -86,9 +78,6 @@ class BalanceViewModel @Inject constructor(
         }
     }
 
-    fun getTotalBalance() : Double {
-        return totalIncomes.value - totalExpenses.value
-    }
 
     fun getColorCategory(balance: BalanceModel) : Categories {
 
@@ -137,7 +126,6 @@ class BalanceViewModel @Inject constructor(
             }
         }
     }
-
 
     fun deleteBalance(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {

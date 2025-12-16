@@ -23,8 +23,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -49,8 +47,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.R
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -58,7 +54,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.text.font.Typeface
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
@@ -76,9 +71,6 @@ import com.onedeepath.balanccapp.ui.presentation.model.TabItem
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.BalanceViewModel
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.AppScreens
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.math.exp
 
 @Composable
 fun MonthsDetailScreen(
@@ -105,24 +97,6 @@ fun MonthsDetailScreen(
         totalInc - totalExp
     }
 
-    var donutChartHeight by remember {
-        mutableStateOf(200.dp)
-    }
-
-
-    val connection = object : NestedScrollConnection {
-        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-            val delta = available.y
-            val newHeight = donutChartHeight + delta.dp
-            val oldHeight = donutChartHeight
-            donutChartHeight = newHeight.coerceIn(0.dp, 200.dp)
-            val consumed = donutChartHeight - oldHeight
-
-            return Offset(0f, consumed.value)
-        }
-    }
-
-
     Scaffold (
         modifier = Modifier
             .fillMaxSize(),
@@ -131,8 +105,7 @@ fun MonthsDetailScreen(
     ) { padding ->
         Column(
             Modifier
-                .fillMaxSize()
-                .nestedScroll(connection),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(Modifier.padding(top = 64.dp))
@@ -180,7 +153,6 @@ fun MonthsDetailScreen(
                     incomes = incomes,
                     expenses = expenses,
                     viewModel = balanceViewModel,
-                    donutChartHeight
                 )
             }
             AddIncomeOrExpenseFAB(navController = navController)
@@ -197,6 +169,7 @@ fun DonutChart(
     nestedHeight: Dp// Aquí pasas el total formateado
 ) {
     val surfaceColor = MaterialTheme.colorScheme.surface.toArgb()
+    val onSurfaceColor = MaterialTheme.colorScheme.onSurface.toArgb()
     AndroidView(
         modifier = Modifier
             .fillMaxWidth()
@@ -213,16 +186,21 @@ fun DonutChart(
 
                 setHoleColor(surfaceColor)
 
+                setDrawEntryLabels(false)
+                setEntryLabelColor(onSurfaceColor)
+
                 // Texto en el centro
                 setDrawCenterText(true)
                 centerTextRadiusPercent = 100f
                 setCenterTextColor(
-                    if (type == "income") Color(0xFF64F667).toArgb()
+                    if (type == "income") Color(0xFF2E7D32).toArgb()
                     else Color(0xFFE53757).toArgb())
                 setCenterTextSize(20f)
                 setCenterTextTypeface(android.graphics.Typeface.DEFAULT_BOLD)
 
+
                 legend.isEnabled = false
+                legend.textColor = onSurfaceColor
 
                 animateY(900)
             }
@@ -230,12 +208,10 @@ fun DonutChart(
         update = { chart ->
 
             val dataSet = PieDataSet(entries, "")
-            dataSet.colors = colors
-            dataSet.sliceSpace = 2f
-            dataSet.valueTextSize = 15f
-
-            // Opcional: para que los valores no salgan sobre el donut
             dataSet.setDrawValues(false)
+            dataSet.colors = colors
+            dataSet.sliceSpace = 4f
+            // Opcional: para que los valores no salgan sobre el donut
 
             val data = PieData(dataSet)
 
@@ -253,7 +229,6 @@ fun TabRowIncomesExpenses(
     incomes: List<BalanceModel>,
     expenses: List<BalanceModel>,
     viewModel: BalanceViewModel,
-    donutChartHeight: Dp
 ) {
 
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
@@ -313,8 +288,10 @@ fun TabRowIncomesExpenses(
             .background(MaterialTheme.colorScheme.surface)
     ) { index ->
         when (index) {
-            0 -> IncomePage(incomes, viewModel, donutChartHeight)
-            1 -> ExpensePage(expenses, viewModel, donutChartHeight)
+            0 ->{
+                IncomePage(incomes, viewModel)
+            }
+            1 -> ExpensePage(expenses, viewModel)
         }
     }
 
@@ -322,10 +299,22 @@ fun TabRowIncomesExpenses(
 }
 
 @Composable
-fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel, donutChartHeight: Dp) {
+fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
+
+    var donutChartHeight by remember {
+        mutableStateOf(200.dp)
+    }
+
+    val connection = object : NestedScrollConnection {
+        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+            donutChartHeight = (donutChartHeight + available.y.dp).coerceIn(80.dp, 200.dp)
+
+            return Offset.Zero
+        }
+    }
+
 
     val totalIncomes = viewModel.totalIncomes.collectAsState()
-
 
     val groupedIncomes = incomes
         .groupBy { it.category }
@@ -350,11 +339,12 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel, donutCh
                 MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(top = 8.dp),
+            .padding(top = 8.dp)
+            .nestedScroll(connection = connection),
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(Modifier.padding(vertical = 4.dp))
-
+        if (donutChartHeight > 90.dp) {
             DonutChart(
                 entries = pieChartEntries,
                 colors = pieColors,
@@ -362,7 +352,7 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel, donutCh
                 type = "income",
                 nestedHeight = donutChartHeight
             )
-
+        }
 
         Spacer(Modifier.padding(8.dp))
         Text(
@@ -377,7 +367,19 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel, donutCh
 }
 
 @Composable
-fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel, donutChartHeight: Dp) {
+fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
+
+    var donutChartHeight by remember {
+        mutableStateOf(200.dp)
+    }
+
+    val connection = object : NestedScrollConnection {
+        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+            donutChartHeight = (donutChartHeight + available.y.dp).coerceIn(80.dp, 200.dp)
+
+            return Offset.Zero
+        }
+    }
 
     val totalExpenses = viewModel.totalExpenses.collectAsState()
 
@@ -402,18 +404,21 @@ fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel, donut
                 MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(16.dp)
             )
-            .padding(top = 8.dp),
+            .padding(top = 8.dp)
+            .nestedScroll(
+                connection = connection),
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(Modifier.padding(vertical = 4.dp))
-        DonutChart(
-            entries = pieChartEntries,
-            colors = pieColors,
-            centerText = formatCurrency(totalExpenses.value),
-            type = "expense",
-            nestedHeight = donutChartHeight
-        )
-
+        if (donutChartHeight > 90.dp) {
+            DonutChart(
+                entries = pieChartEntries,
+                colors = pieColors,
+                centerText = formatCurrency(totalExpenses.value),
+                type = "expense",
+                nestedHeight = donutChartHeight
+            )
+        }
         Spacer(Modifier.padding(8.dp))
 
         Text(
@@ -519,14 +524,15 @@ fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
                 Text(
                     text = income.category,
                     color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
+                    fontWeight = Bold,
+                    fontSize = 18.sp
                 )
                 Spacer(Modifier.height(6.dp))
                 Text(
                     text = income.description,
-                    fontSize = 11.sp,
-                    maxLines = 1
+                    fontSize = 14.sp,
+                    maxLines = 1,
+                    color = Color.Black
                 )
             }
 
@@ -534,7 +540,7 @@ fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
                 text = formatCurrency(income.amount),
                 fontSize = 18.sp,
                 fontWeight = Bold,
-                color = Color.Green,
+                color = Color(0xFF2E7D32),
             )
             Spacer(Modifier.width(16.dp))
             IconButton(
@@ -591,13 +597,14 @@ fun ExpenseCard(expense: BalanceModel, viewModel: BalanceViewModel) {
                     text = expense.category,
                     color = Color.Black,
                     fontWeight = Bold,
-                    fontSize = 16.sp
+                    fontSize = 18.sp
                 )
                 Spacer(Modifier.height(6.dp))
                 Text(
                     text = expense.description,
-                    fontSize = 11.sp,
-                    maxLines = 1
+                    fontSize = 14.sp,
+                    maxLines = 1,
+                    color = Color.Black
                 )
             }
                  Spacer(Modifier.weight(1f))
