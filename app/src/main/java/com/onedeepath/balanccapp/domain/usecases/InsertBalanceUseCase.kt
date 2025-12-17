@@ -1,7 +1,7 @@
-package com.onedeepath.balanccapp.domain
+package com.onedeepath.balanccapp.domain.usecases
 
-import com.onedeepath.balanccapp.data.repository.BalanceRepository
 import com.onedeepath.balanccapp.data.database.entity.BalanceEntity
+import com.onedeepath.balanccapp.data.repository.BalanceRepository
 import javax.inject.Inject
 
 class InsertBalanceUseCase @Inject constructor(

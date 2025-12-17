@@ -52,8 +52,10 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
@@ -65,12 +67,18 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.onedeepath.balanccapp.R
 import com.onedeepath.balanccapp.core.formatCurrency
-import com.onedeepath.balanccapp.ui.presentation.model.BalanceModel
+import com.onedeepath.balanccapp.domain.model.BalanceModel
 import com.onedeepath.balanccapp.ui.presentation.model.TabItem
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.BalanceViewModel
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.AppScreens
+
+enum class ChartType{
+    INCOME,
+    EXPENSE
+}
 
 @Composable
 fun MonthsDetailScreen(
@@ -165,7 +173,7 @@ fun DonutChart(
     entries: List<PieEntry>,
     colors: List<Int>,
     centerText: String,
-    type: String,
+    type: ChartType,
     nestedHeight: Dp// Aquí pasas el total formateado
 ) {
     val surfaceColor = MaterialTheme.colorScheme.surface.toArgb()
@@ -193,7 +201,7 @@ fun DonutChart(
                 setDrawCenterText(true)
                 centerTextRadiusPercent = 100f
                 setCenterTextColor(
-                    if (type == "income") Color(0xFF2E7D32).toArgb()
+                    if (type == ChartType.INCOME) Color(0xFF2E7D32).toArgb()
                     else Color(0xFFE53757).toArgb())
                 setCenterTextSize(20f)
                 setCenterTextTypeface(android.graphics.Typeface.DEFAULT_BOLD)
@@ -234,8 +242,8 @@ fun TabRowIncomesExpenses(
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
 
     val tabItems = listOf(
-        TabItem("Incomes", Icons.Outlined.KeyboardArrowUp, Icons.Filled.KeyboardArrowUp),
-        TabItem("Expenses", Icons.Outlined.KeyboardArrowDown, Icons.Filled.KeyboardArrowDown)
+        TabItem(stringResource(R.string.incomes_tab), Icons.Outlined.KeyboardArrowUp, Icons.Filled.KeyboardArrowUp),
+        TabItem(stringResource(R.string.expenses_tab), Icons.Outlined.KeyboardArrowDown, Icons.Filled.KeyboardArrowDown)
     )
 
     val pagerState = rememberPagerState {
@@ -313,7 +321,6 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
         }
     }
 
-
     val totalIncomes = viewModel.totalIncomes.collectAsState()
 
     val groupedIncomes = incomes
@@ -331,7 +338,6 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
         viewModel.getColorCategory(it).color.toArgb()
     }
 
-
     Column(
         Modifier
             .fillMaxSize()
@@ -344,19 +350,19 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(Modifier.padding(vertical = 4.dp))
-        if (donutChartHeight > 90.dp) {
+        if (incomes.isNotEmpty() && donutChartHeight > 90.dp ) {
             DonutChart(
                 entries = pieChartEntries,
                 colors = pieColors,
                 centerText = formatCurrency(totalIncomes.value),
-                type = "income",
+                type = ChartType.INCOME,
                 nestedHeight = donutChartHeight
             )
         }
 
         Spacer(Modifier.padding(8.dp))
         Text(
-            text = "Incomes",
+            text = stringResource(R.string.incomes),
             color = MaterialTheme.colorScheme.onSurface,
             fontWeight = Bold,
             fontSize = 25.sp,
@@ -410,19 +416,19 @@ fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(Modifier.padding(vertical = 4.dp))
-        if (donutChartHeight > 90.dp) {
+        if (expenses.isNotEmpty() && donutChartHeight > 90.dp ) {
             DonutChart(
                 entries = pieChartEntries,
                 colors = pieColors,
                 centerText = formatCurrency(totalExpenses.value),
-                type = "expense",
+                type = ChartType.EXPENSE,
                 nestedHeight = donutChartHeight
             )
         }
         Spacer(Modifier.padding(8.dp))
 
         Text(
-            text = "Expenses",
+            text = stringResource(R.string.expenses),
             color = MaterialTheme.colorScheme.onSurface,
             fontSize = 25.sp,
             fontWeight = Bold,
@@ -443,10 +449,23 @@ fun IncomeList(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
             .background(MaterialTheme.colorScheme.surface),
     ) {
         if (isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .size(64.dp)
+                    .padding(64.dp)
+                    .align(Alignment.CenterHorizontally)
+
+            )
         } else {
             if (incomes.isEmpty()) {
-                Text("No incomes")
+                Text(text = stringResource(R.string.no_incomes),
+                    fontSize = 35.sp,
+                    fontWeight = Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.fillMaxSize().padding(vertical = 64.dp)
+                        ,
+                    textAlign = TextAlign.Center)
             } else {
                 LazyColumn(
                     Modifier
@@ -472,10 +491,21 @@ fun ExpenseList(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
     ) {
 
         if (isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize().size(64.dp)
+                    .padding(64.dp)
+                    .align(Alignment.CenterHorizontally))
         } else {
             if (expenses.isEmpty()) {
-                Text("No expenses")
+                Text(text = stringResource(R.string.no_expenses),
+                    fontSize = 35.sp,
+                    fontWeight = Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.fillMaxSize()
+                        .padding(vertical = 64.dp)
+                        .align(Alignment.CenterHorizontally),
+                    textAlign = TextAlign.Center)
             } else {
                 LazyColumn(
                     Modifier.fillMaxWidth(),
@@ -585,7 +615,7 @@ fun ExpenseCard(expense: BalanceModel, viewModel: BalanceViewModel) {
         ) {
             Icon(
                 painter = painterResource(categoryProperties.icon),
-                tint = Color.Black, contentDescription = "Add",
+                tint = Color.Black, contentDescription = "",
                 modifier = Modifier.size(38.dp)
             )
             Spacer(Modifier.width(16.dp))
@@ -626,7 +656,7 @@ fun ExpenseCard(expense: BalanceModel, viewModel: BalanceViewModel) {
             ) {
                 Icon(
                     painter = painterResource(com.onedeepath.balanccapp.R.drawable.ic_trash),
-                    contentDescription = "Delete",
+                    contentDescription = "",
                     tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.fillMaxSize().size(20.dp)
                 )
@@ -647,7 +677,7 @@ fun AddIncomeOrExpenseFAB(navController: NavController) {
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add",
+                contentDescription = "",
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(32.dp)
 

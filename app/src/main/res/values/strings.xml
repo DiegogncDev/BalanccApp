@@ -1,5 +1,85 @@
 <resources>
+    <!--- Titles  -->
     <string name="app_name">BalanccApp</string>
+    <string name="sort_by">Sort By</string>
+    <string name="add">Add</string>
+    <string name="incomes">Incomes</string>
+    <string name="expenses">Expenses</string>
+
+    <!--- Cards -->
+    <string name="balance">Balance</string>
+
+    <!--- Tabs-->
+    <string name="incomes_tab">Incomes</string>
+    <string name="expenses_tab">Expenses</string>
+
+    <!--- TextFields -->
+    <string name="amount">Amount</string>
+    <string name="details">Details</string>
+    <string name="enter_amount">Enter an amount</string>
+    <string name="enter_details">Enter details...</string>
+
+    <!-- Dialog -->
+    <string name="select_year">Select year</string>
+
+    <!--- Buttons -->
+    <string name="day">Day</string>
+
+    <!-- Empty Statements -->
+    <string name="no_expenses">No expenses</string>
+    <string name="no_incomes">No incomes</string>
+
+    <!--- Toast -->
+    <string name="balance_added">Balance Added Successfully</string>
+    <string name="please_enter_amount">Please enter an amount</string>
+
+    <!--- Categories -->
+    <string name="investment">Investment</string>
+    <string name="work">Work</string>
+    <string name="gift">Gift</string>
+    <string name="grocery">Grocery</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="transport">Transport</string>
+    <string name="utilities">Utilities</string>
+    <string name="rent">Rent</string>
+    <string name="health">Health</string>
+    <string name="travel">Travel</string>
+    <string name="food">Food</string>
+    <string name="education">Education</string>
+    <string name="other">Other</string>
+
+
+
+
+
+
+    <!--- Months -->
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+
+
+
+
+
+
+
+
+
+
+
+
 </resources>
+
+
 
 

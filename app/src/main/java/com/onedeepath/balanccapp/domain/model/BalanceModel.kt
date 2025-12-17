@@ -1,11 +1,11 @@
-package com.onedeepath.balanccapp.ui.presentation.model
+package com.onedeepath.balanccapp.domain.model
 
 import com.onedeepath.balanccapp.data.database.entity.BalanceEntity
 
 data class BalanceModel(
     val id: Int,
     val type: String,
-    val category: String,
+    val category: Category,
     val description: String,
     val amount: Double,
     val day: String,

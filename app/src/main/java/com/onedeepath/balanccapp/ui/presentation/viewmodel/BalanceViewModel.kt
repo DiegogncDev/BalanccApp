@@ -1,36 +1,25 @@
 package com.onedeepath.balanccapp.ui.presentation.viewmodel
 
-import android.R
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.coerceIn
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.onedeepath.balanccapp.data.database.entity.BalanceEntity
 import com.onedeepath.balanccapp.data.repository.CategoryRepository
-import com.onedeepath.balanccapp.domain.DeleteBalanceUseCase
-import com.onedeepath.balanccapp.domain.GetAllBalancesUseCase
-import com.onedeepath.balanccapp.domain.GetBalanceByExpense
-import com.onedeepath.balanccapp.domain.GetBalanceByIncome
-import com.onedeepath.balanccapp.domain.GetBalancesByYearUseCase
-import com.onedeepath.balanccapp.domain.InsertBalanceUseCase
+import com.onedeepath.balanccapp.domain.usecases.DeleteBalanceUseCase
+import com.onedeepath.balanccapp.domain.usecases.GetAllBalancesUseCase
+import com.onedeepath.balanccapp.domain.usecases.GetBalanceByExpense
+import com.onedeepath.balanccapp.domain.usecases.GetBalanceByIncome
+import com.onedeepath.balanccapp.domain.usecases.GetBalancesByYearUseCase
+import com.onedeepath.balanccapp.domain.usecases.InsertBalanceUseCase
 import com.onedeepath.balanccapp.ui.presentation.model.BalanceByMonthEntity
-import com.onedeepath.balanccapp.ui.presentation.model.BalanceModel
+import com.onedeepath.balanccapp.domain.model.BalanceModel
 import com.onedeepath.balanccapp.ui.presentation.model.Categories
-import com.onedeepath.balanccapp.ui.presentation.model.CategoryProperties
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.annotation.meta.When
 import javax.inject.Inject
-import androidx.core.graphics.toColorInt
+import kotlinx.coroutines.delay
 
 
 @HiltViewModel
@@ -98,15 +87,13 @@ class BalanceViewModel @Inject constructor(
             "Other" -> Categories.Other
             else -> Categories.Other
         }
-
-
-
     }
 
     fun getExpenseBalance(year: String, month: String) {
 
         viewModelScope.launch {
             _isLoadingExpense.value = true
+            delay(2000)
             getBalanceByExpenseUseCase.getExpenses(year = year, month = month).collect { expenses ->
                 _expenseBalance.value = expenses
                 _totalExpenses.value = expenses.sumOf { it.amount }
@@ -119,6 +106,7 @@ class BalanceViewModel @Inject constructor(
 
         viewModelScope.launch {
             _isLoadingIncome.value = true
+            delay(2000)
             getBalanceByIncomeUseCase.getIncomes(year = year, month = month).collect { incomes ->
                 _incomeBalance.value = incomes
                 _totalIncomes.value = incomes.sumOf { it.amount }

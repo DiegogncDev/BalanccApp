@@ -3,8 +3,8 @@ package com.onedeepath.balanccapp.data.repository
 import com.onedeepath.balanccapp.data.database.dao.BalanceDao
 import com.onedeepath.balanccapp.data.database.entity.BalanceEntity
 import com.onedeepath.balanccapp.ui.presentation.model.BalanceByMonthEntity
-import com.onedeepath.balanccapp.ui.presentation.model.BalanceModel
-import com.onedeepath.balanccapp.ui.presentation.model.toDomain
+import com.onedeepath.balanccapp.domain.model.BalanceModel
+import com.onedeepath.balanccapp.domain.model.toDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map

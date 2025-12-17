@@ -57,6 +57,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -70,6 +71,7 @@ import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
+import com.onedeepath.balanccapp.R
 import com.onedeepath.balanccapp.core.cleanAmountForStorage
 import com.onedeepath.balanccapp.core.formatAmountForDisplay
 import com.onedeepath.balanccapp.core.formatCurrency
@@ -121,7 +123,8 @@ fun AddIncomeOrExpenseScreen(
 
     ) {
         Spacer(Modifier.height(32.dp))
-        Text("Add", fontSize = 55.sp,
+        Text(text = stringResource(R.string.add),
+            fontSize = 55.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface)
 
@@ -129,7 +132,6 @@ fun AddIncomeOrExpenseScreen(
         //IncomeExpenseRB(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
         IncomeExpenseTabview(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
         Spacer(Modifier.height(16.dp))
-
 
         AddAmountTF(amount = amount, onAmountChange = {amount = it})
         Spacer(Modifier.height(32.dp))
@@ -168,7 +170,9 @@ fun AddIncomeOrExpenseScreen(
                  }
             }
         ) {
-            Text("Add", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Text(text = stringResource(R.string.add),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold)
         }
     }
 
@@ -186,8 +190,8 @@ fun DetailsTF(details: String, onDetailsChange: (String) -> Unit) {
             fontSize = 18.sp,
             color = MaterialTheme.colorScheme.onSurface
         ),
-        label = { Text("Details", color = MaterialTheme.colorScheme.onSurface) },
-        placeholder = { Text("Enter more information...", color = MaterialTheme.colorScheme.onSurface) },
+        label = { Text(stringResource(R.string.details), color = MaterialTheme.colorScheme.onSurface) },
+        placeholder = { Text(stringResource(R.string.enter_details), color = MaterialTheme.colorScheme.onSurface) },
         modifier = Modifier
             .fillMaxWidth()
             .height(120.dp), // altura más grande para parecer un "text area"
@@ -210,18 +214,18 @@ fun DatePickerSelector(
     onDateSelected: (LocalDate) -> Unit
 ) {
     val selectedMonthMapped = when (selectedMonth) {
-        "January" -> 0
-        "February" -> 1
-        "March" -> 2
-        "April" -> 3
-        "May" -> 4
-        "June" -> 5
-        "July" -> 6
-        "August" -> 7
-        "September" -> 8
-        "October" -> 9
-        "November" -> 10
-        "December" -> 11
+        stringResource(R.string.january) -> 0
+        stringResource(R.string.february) -> 1
+        stringResource(R.string.march) -> 2
+        stringResource(R.string.april) -> 3
+        stringResource(R.string.may) -> 4
+        stringResource(R.string.june) -> 5
+        stringResource(R.string.july) -> 6
+        stringResource(R.string.august) -> 7
+        stringResource(R.string.september) -> 8
+        stringResource(R.string.october) -> 9
+        stringResource(R.string.november) -> 10
+        stringResource(R.string.december) -> 11
         else -> 0
     }
 
@@ -271,7 +275,7 @@ fun DatePickerSelector(
                 }
             ) {
                 Text(
-                    text = if (currentDay.isEmpty()) "Day" else currentDay,
+                    text = if (currentDay.isEmpty()) stringResource(R.string.day) else currentDay,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -356,7 +360,7 @@ fun AddCategorySelector(selectedCategory: Categories, onCategoryChange: (Categor
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                     leadingIcon =  { Icon(
                         painter = painterResource(id = category.icon),
-                        contentDescription = "icons",
+                        contentDescription = "",
                         tint = category.color
                             )
                         },
@@ -396,11 +400,11 @@ fun AddAmountTF(amount: String, onAmountChange: (String) -> Unit) {
                         },
         label = {
             Text(
-                "Amount", fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurface
+                text = stringResource(R.string.amount), fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurface
             )
         },
         placeholder = {
-            Text(text = "Enter Amount", fontSize = 35.sp, color = MaterialTheme.colorScheme.onSurface)
+            Text(text = stringResource(R.string.enter_amount), fontSize = 35.sp, color = MaterialTheme.colorScheme.onSurface)
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number
@@ -419,8 +423,8 @@ fun IncomeExpenseTabview(isIncome: Boolean, onCheckedChange: (Boolean) -> Unit) 
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
 
     val tabItems = listOf(
-        TabItem("Incomes", Icons.Outlined.KeyboardArrowUp, Icons.Filled.KeyboardArrowUp),
-        TabItem("Expenses", Icons.Outlined.KeyboardArrowDown, Icons.Filled.KeyboardArrowDown)
+        TabItem(stringResource(R.string.incomes_tab), Icons.Outlined.KeyboardArrowUp, Icons.Filled.KeyboardArrowUp),
+        TabItem(stringResource(R.string.expenses_tab), Icons.Outlined.KeyboardArrowDown, Icons.Filled.KeyboardArrowDown)
     )
 
     TabRow(

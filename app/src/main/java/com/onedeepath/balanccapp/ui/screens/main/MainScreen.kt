@@ -38,18 +38,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import com.onedeepath.balanccapp.R
 import com.onedeepath.balanccapp.core.formatCurrency
 import com.onedeepath.balanccapp.ui.presentation.model.BalanceByMonthEntity
 import com.onedeepath.balanccapp.ui.presentation.model.MonthsCardModel
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.BalanceViewModel
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.AppScreens
+
 
 
 @Composable
@@ -74,7 +77,7 @@ fun MainScreen(
         ) {
         Spacer(modifier = Modifier.height(32.dp))
         Text(
-            text = "BalanccApp",
+            text = stringResource(R.string.app_name),
             fontSize = 45.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface,
@@ -82,7 +85,8 @@ fun MainScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            "SortBy", fontSize = 22.sp,
+            text = stringResource(R.string.sort_by),
+            fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(start = 16.dp)
@@ -138,7 +142,7 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Income",
+                Text(stringResource(R.string.incomes),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp)
@@ -153,7 +157,7 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Expenses",
+                Text(stringResource(R.string.expenses),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp)
@@ -169,7 +173,7 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Balance",
+                Text(stringResource(R.string.balance),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp)
@@ -194,8 +198,18 @@ fun MonthsCards(
 ) {
 
     val months = listOf(
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
+        stringResource(R.string.january),
+        stringResource(R.string.february),
+        stringResource(R.string.march),
+        stringResource(R.string.april),
+        stringResource(R.string.may),
+        stringResource(R.string.june),
+        stringResource(R.string.july),
+        stringResource(R.string.august),
+        stringResource(R.string.september),
+        stringResource(R.string.october),
+        stringResource(R.string.november),
+        stringResource(R.string.december)
     )
 
     LazyColumn(
@@ -314,7 +328,7 @@ fun YearPickerDialog(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Select a year",
+                        text = stringResource(R.string.select_year),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -338,14 +352,9 @@ fun YearPickerDialog(
                             )
                         }
                     }
-
                 }
-
             }
-
-
         }
-
     }
 }
 

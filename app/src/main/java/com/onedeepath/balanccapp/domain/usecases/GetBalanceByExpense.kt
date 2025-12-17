@@ -1,4 +1,4 @@
-package com.onedeepath.balanccapp.domain
+package com.onedeepath.balanccapp.domain.usecases
 
 import com.onedeepath.balanccapp.data.repository.BalanceRepository
 import javax.inject.Inject

@@ -1,7 +1,7 @@
-package com.onedeepath.balanccapp.domain
+package com.onedeepath.balanccapp.domain.usecases
 
 import com.onedeepath.balanccapp.data.repository.BalanceRepository
-import com.onedeepath.balanccapp.ui.presentation.model.BalanceModel
+import com.onedeepath.balanccapp.domain.model.BalanceModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

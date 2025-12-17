@@ -3,7 +3,8 @@ package com.onedeepath.balanccapp.data.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.onedeepath.balanccapp.ui.presentation.model.BalanceModel
+import com.onedeepath.balanccapp.domain.model.Category
+import com.onedeepath.balanccapp.domain.model.BalanceModel
 
 @Entity(tableName = "balance_table")
 data class BalanceEntity(
@@ -14,8 +15,8 @@ data class BalanceEntity(
     @ColumnInfo(name = "day") val day: String,
     @ColumnInfo(name = "month") val month: String,
     @ColumnInfo(name = "year") val year: String,
-    @ColumnInfo(name = "category") val category: String,
+    @ColumnInfo(name = "category") val category: Category,
     @ColumnInfo(name = "description") val description: String
 )
 
-fun BalanceModel.toDatabase() = BalanceEntity(id = id,type = type, amount = amount, day = day, month = month, year = year, category = category, description = description)
+fun BalanceModel.toEntity() = BalanceEntity(id = id,type = type, amount = amount, day = day, month = month, year = year, category = category, description = description)
