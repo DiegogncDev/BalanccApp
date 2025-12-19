@@ -1,5 +1,6 @@
 package com.onedeepath.balanccapp.ui.screens.detail
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -80,6 +81,7 @@ enum class ChartType{
     EXPENSE
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MonthsDetailScreen(
     navController: NavController,
