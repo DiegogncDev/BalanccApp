@@ -1,4 +1,4 @@
-package com.onedeepath.balanccapp.ui.screens
+package com.onedeepath.balanccapp.ui.navigation
 
 sealed class AppScreens(val route: String) {
     object SplashScreens: AppScreens("splash_screen")

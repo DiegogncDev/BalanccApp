@@ -3,7 +3,7 @@ package com.onedeepath.balanccapp.domain.model
 import com.onedeepath.balanccapp.data.database.entity.BalanceEntity
 
 data class BalanceModel(
-    val id: Int,
+    val id: Int = 0,
     val type: String,
     val category: Category,
     val description: String,

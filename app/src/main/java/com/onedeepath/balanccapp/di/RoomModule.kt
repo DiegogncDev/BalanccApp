@@ -19,16 +19,14 @@ object RoomModule {
 
     @Singleton
     @Provides
-    fun provideRoom(@ApplicationContext context: Context) = Room.databaseBuilder(context, BalanceDatabase::class.java, BALANCE_DATABASE_NAME).build()
+    fun provideRoom(@ApplicationContext context: Context) =
+        Room.databaseBuilder(context, BalanceDatabase::class.java, BALANCE_DATABASE_NAME)
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Singleton
     @Provides
     fun provideBalanceDao(db: BalanceDatabase) = db.getBalanceDao()
-
-    @Singleton
-    @Provides
-    fun provideCategoryDao(db: BalanceDatabase) = db.getCategoryDao()
-
 
 
 

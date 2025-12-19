@@ -7,9 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.onedeepath.balanccapp.ui.presentation.viewmodel.BalanceViewModel
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
-import com.onedeepath.balanccapp.ui.screens.AppScreens
 import com.onedeepath.balanccapp.ui.screens.addbalance.AddIncomeOrExpenseScreen
 import com.onedeepath.balanccapp.ui.screens.detail.MonthsDetailScreen
 import com.onedeepath.balanccapp.ui.screens.main.MainScreen
@@ -32,11 +30,11 @@ fun AppNavigation() {
         composable(AppScreens.MainScreen.route) { backStackEntry ->
 
             val parentEntry = remember{ backStackEntry }
-            val sharedViewModel: YearMonthViewModel = hiltViewModel(parentEntry)
-            val balanceViewModel : BalanceViewModel = hiltViewModel(parentEntry)
+            val yearMonthViewModel :  YearMonthViewModel = hiltViewModel(parentEntry)
+
 
             MainScreen(
-                navController = navController, yearMonthViewModel = sharedViewModel, balanceViewModel = balanceViewModel)
+                navController = navController, yearMonthViewModel = yearMonthViewModel)
         }
         composable(AppScreens.DetailScreen.route) {
 
@@ -46,7 +44,9 @@ fun AppNavigation() {
             val sharedViewModel: YearMonthViewModel = hiltViewModel(parentEntry)
 
             MonthsDetailScreen(
-                navController = navController, yearMonthViewModel = sharedViewModel)
+                navController = navController,
+                yearMonthViewModel = sharedViewModel
+            )
         }
         composable(AppScreens.AddIncomeOrExpenseScreen.route) {
             val parentEntry = remember {

@@ -1,12 +1,11 @@
 package com.onedeepath.balanccapp.data.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.onedeepath.balanccapp.data.database.entity.BalanceEntity
-import com.onedeepath.balanccapp.ui.presentation.model.BalanceByMonthEntity
+import com.onedeepath.balanccapp.data.model.BalanceByMonthEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

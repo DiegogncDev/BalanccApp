@@ -1,9 +1,8 @@
 package com.onedeepath.balanccapp.ui.screens.addbalance
 
-import android.graphics.drawable.Icon
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -22,10 +20,8 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,15 +30,11 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -64,7 +56,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.maxkeppeker.sheets.core.models.base.UseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -74,45 +65,26 @@ import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import com.onedeepath.balanccapp.R
 import com.onedeepath.balanccapp.core.cleanAmountForStorage
 import com.onedeepath.balanccapp.core.formatAmountForDisplay
-import com.onedeepath.balanccapp.core.formatCurrency
-import com.onedeepath.balanccapp.ui.presentation.model.Categories
+import com.onedeepath.balanccapp.domain.model.Category
 import com.onedeepath.balanccapp.ui.presentation.model.TabItem
-import com.onedeepath.balanccapp.ui.presentation.viewmodel.BalanceViewModel
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
+import com.onedeepath.balanccapp.ui.screens.addbalance.model.AddBalanceUiState
+import com.onedeepath.balanccapp.ui.screens.addbalance.viewmodel.AddBalanceViewModel
 import java.time.LocalDate
 import java.time.YearMonth
 
 
-private val categories = listOf(
-    Categories.Investment,
-    Categories.Work,
-    Categories.Gift,
-    Categories.Grocery,
-    Categories.Entertainment,
-    Categories.Transport,
-    Categories.Utilities,
-    Categories.Rent,
-    Categories.Health,
-    Categories.Travel,
-    Categories.Food,
-    Categories.Education,
-    Categories.Other)
-
 @Composable
 fun AddIncomeOrExpenseScreen(
-    balanceViewModel: BalanceViewModel = hiltViewModel(),
+    viewModel: AddBalanceViewModel = hiltViewModel(),
     yearMonthViewModel: YearMonthViewModel) {
+
+    val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     val selectedYear:String by yearMonthViewModel.selectedYear.collectAsState()
     val selectedMonth:String by yearMonthViewModel.selectedMonthIndex.collectAsState()
 
-    val context = LocalContext.current
-
-    var typeIncomeOrExpense by remember { mutableStateOf(true) }
-    var amount by remember { mutableStateOf("") }
-    var category by remember {mutableStateOf(categories[0]) }
-    var details by remember { mutableStateOf("") }
-    var selectedDay by remember { mutableStateOf("") }
 
     Column(
         Modifier
@@ -122,62 +94,82 @@ fun AddIncomeOrExpenseScreen(
             .padding(16.dp)
 
     ) {
-        Spacer(Modifier.height(32.dp))
-        Text(text = stringResource(R.string.add),
-            fontSize = 55.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface)
+        HeaderAdd()
 
-        Spacer(Modifier.height(16.dp))
-        //IncomeExpenseRB(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
-        IncomeExpenseTabview(isIncome = typeIncomeOrExpense, onCheckedChange = {typeIncomeOrExpense = it})
-        Spacer(Modifier.height(16.dp))
+        IncomeExpenseTabview(
+            isIncome = uiState.isIncome,
+            onCheckedChange = viewModel::onTypeChange)
 
-        AddAmountTF(amount = amount, onAmountChange = {amount = it})
+        AddAmountTF(
+            amount = uiState.amount,
+            onAmountChange = viewModel::onAmountChange
+        )
         Spacer(Modifier.height(32.dp))
 
-        AddCategorySelector(selectedCategory = category, onCategoryChange = {category = it})
+        AddCategorySelector(
+            selectedCategory = uiState.category,
+            onCategoryChange = viewModel::onCategoryChange)
         Spacer(Modifier.height(32.dp))
 
         DatePickerSelector(selectedYear.toInt(), selectedMonth) { date ->
-            selectedDay = date.dayOfMonth.toString()
+            viewModel.onDateSelected(date.dayOfMonth.toString())
         }
         Spacer(Modifier.height(32.dp))
 
-        DetailsTF(details = details, onDetailsChange = {details = it})
+        DetailsTF(
+            details = uiState.details,
+            onDetailsChange = viewModel::onDetailsChange
+        )
         Spacer(Modifier.height(32.dp))
 
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            ),
-            onClick = {
-            if (amount.isNotBlank()){
-                balanceViewModel.addBalance(
-                    type = if (typeIncomeOrExpense) "income" else "expense",
-                    amount = amount.toDouble(),
-                    day = selectedDay,
-                    month = selectedMonth,
-                    year = selectedYear,
-                    category = category.name,
-                    description = details
-                    )
-                Toast.makeText(context, "Balance Added Successfully", Toast.LENGTH_SHORT).show()
-            }else {
-                Toast.makeText(context, "Please enter an amount", Toast.LENGTH_SHORT).show()
-                 }
-            }
-        ) {
-            Text(text = stringResource(R.string.add),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold)
-        }
+        AddBalanceButton(
+            uiState =  uiState,
+            selectedYear =  selectedYear.toInt(),
+            selectedMonth = selectedMonth ,
+            onSave = viewModel::save,
+            context =  context,)
     }
-
 }
 
+@Composable
+fun AddBalanceButton(
+    uiState: AddBalanceUiState,
+    selectedYear: Int,
+    selectedMonth: String,
+    onSave: (year: String, month: String) -> Result<Unit>,
+    context: Context,) {
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        enabled = uiState.isValid,
+        onClick = {
+            val result = onSave(selectedYear.toString(), selectedMonth)
+
+            if (result.isSuccess) {
+                Toast.makeText(context, "Balance Added", Toast.LENGTH_SHORT).show()
+            }else {
+                Toast.makeText(context, "Invalid Data", Toast.LENGTH_SHORT).show()
+            }
+        }
+    ) {
+        Text(text = stringResource(R.string.add),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold)
+    }
+}
+
+@Composable
+fun HeaderAdd(){
+    Spacer(Modifier.height(32.dp))
+    Text(text = stringResource(R.string.add),
+        fontSize = 55.sp,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurface)
+    Spacer(Modifier.height(16.dp))
+}
 
 
 @Composable
@@ -275,7 +267,7 @@ fun DatePickerSelector(
                 }
             ) {
                 Text(
-                    text = if (currentDay.isEmpty()) stringResource(R.string.day) else currentDay,
+                    text = currentDay.ifEmpty { stringResource(R.string.day) },
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -299,9 +291,11 @@ fun DatePickerSelector(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddCategorySelector(selectedCategory: Categories, onCategoryChange: (Categories) -> Unit) {
+fun AddCategorySelector(selectedCategory: Category, onCategoryChange: (Category) -> Unit) {
 
     var isExpanded by remember { mutableStateOf(false) }
+
+    val categories = Category.entries
 
     Box(
         modifier = Modifier
@@ -346,13 +340,16 @@ fun AddCategorySelector(selectedCategory: Categories, onCategoryChange: (Categor
             ExposedDropdownMenu(
                 expanded = isExpanded,
                 onDismissRequest = {isExpanded = false}
-            ) { categories.forEachIndexed { index, category ->
+            ) { categories.forEach { category ->
                 DropdownMenuItem(
                     modifier = Modifier.background(
                         MaterialTheme.colorScheme.surfaceVariant),
-                    text = {Text(text = category.name,
-                        fontWeight = FontWeight.Bold,
-                        color = category.color)},
+                    text = {
+                        Text(
+                            text = category.name,
+                            fontWeight = FontWeight.Bold,
+                            color = category.color)
+                           },
                     onClick = {
                         onCategoryChange(category)
                         isExpanded = false
@@ -377,6 +374,8 @@ fun AddAmountTF(amount: String, onAmountChange: (String) -> Unit) {
     val cleanedAmount = cleanAmountForStorage(amount)
 
     val formattedAmount = formatAmountForDisplay(cleanedAmount)
+
+    Spacer(Modifier.height(16.dp))
 
     OutlinedTextField(
         modifier = Modifier

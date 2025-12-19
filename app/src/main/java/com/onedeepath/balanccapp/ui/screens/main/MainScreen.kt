@@ -11,15 +11,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalTextStyle
@@ -28,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,30 +44,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.onedeepath.balanccapp.R
 import com.onedeepath.balanccapp.core.formatCurrency
-import com.onedeepath.balanccapp.ui.presentation.model.BalanceByMonthEntity
-import com.onedeepath.balanccapp.ui.presentation.model.MonthsCardModel
-import com.onedeepath.balanccapp.ui.presentation.viewmodel.BalanceViewModel
+import com.onedeepath.balanccapp.ui.navigation.AppScreens
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
-import com.onedeepath.balanccapp.ui.screens.AppScreens
-
+import com.onedeepath.balanccapp.ui.screens.main.model.MonthsBalanceUi
+import com.onedeepath.balanccapp.ui.screens.main.viewmodel.MainViewModel
 
 
 @Composable
 fun MainScreen(
     navController: NavController,
     yearMonthViewModel: YearMonthViewModel,
-    balanceViewModel: BalanceViewModel
+    viewModel: MainViewModel = hiltViewModel()
 ) {
 
-    val selectedYear by yearMonthViewModel.selectedYear.collectAsState()
-    val balancesByYear by balanceViewModel.balancesByYear.collectAsState()
+    val state by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(selectedYear) {
-        balanceViewModel.getBalanceByYear(selectedYear)
-    }
+    val year by yearMonthViewModel.selectedYear.collectAsState()
 
     Column(
         modifier = Modifier
@@ -75,45 +71,56 @@ fun MainScreen(
             .background(color = MaterialTheme.colorScheme.surface),
 
         ) {
-        Spacer(modifier = Modifier.height(32.dp))
-        Text(
-            text = stringResource(R.string.app_name),
-            fontSize = 45.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = stringResource(R.string.sort_by),
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-        Spacer(Modifier.height(32.dp))
-        YearFilter(
-            selectedYear = selectedYear,
-            onYearSelected = { yearMonthViewModel.setYear(it) }
-        )
-        Spacer(Modifier.height(16.dp))
-        MonthsCards(
-            balances = balancesByYear,
-            year = selectedYear,
-            onMonthClick = { index ->
-                yearMonthViewModel.setMonthIndex(index)
-            }, navController = navController
-        )
-        Spacer(Modifier.height(32.dp))
-    }
+            HeaderBalanccApp()
 
+            YearFilter(
+                selectedYear = state.selectedYear,
+                onYearSelected = viewModel::onYearSelected
+
+            )
+            Spacer(Modifier.height(16.dp))
+
+            if (state.isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(
+                    Alignment.CenterHorizontally).fillMaxSize()
+                )
+            } else {
+                MonthsCards(
+                    balances = state.months,
+                    onMonthClick = { index ->
+                        yearMonthViewModel.setMonthIndex(index)
+                    }, navController = navController
+                )
+            }
+            Spacer(Modifier.height(32.dp))
+        }
+
+}
+
+@Composable
+fun HeaderBalanccApp() {
+    Spacer(modifier = Modifier.height(32.dp))
+    Text(
+        text = stringResource(R.string.app_name),
+        fontSize = 45.sp,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.padding(start = 16.dp)
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+    Text(
+        text = stringResource(R.string.sort_by),
+        fontSize = 22.sp,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.padding(start = 16.dp)
+    )
+    Spacer(Modifier.height(32.dp))
 }
 
 
 @Composable
-fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: NavController) {
-
-    val balance = item.incomeAmount - item.expenseAmount
+fun BalanceCardItem(balance: MonthsBalanceUi, onClick: () -> Unit, navController: NavController) {
 
     Card(
         onClick = {
@@ -131,7 +138,7 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
             Modifier.padding(16.dp)
         ) {
             Text(
-                text = item.monthName,
+                text = balance.monthName,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -147,7 +154,7 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp)
                 Text(
-                    formatCurrency(item.incomeAmount),
+                    formatCurrency(balance.income),
                     color = Color.Green,
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp
@@ -162,7 +169,7 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp)
                 Text(
-                    formatCurrency(item.expenseAmount),
+                    formatCurrency(balance.expense),
                     color = Color.Red,
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp
@@ -178,8 +185,8 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp)
                 Text(
-                    text = formatCurrency(balance),
-                    color = if (balance >= 0) Color.Green else Color.Red,
+                    text = formatCurrency(balance.balance),
+                    color = if (balance.balance > 0) Color.Green else Color.Red,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
@@ -192,47 +199,20 @@ fun BalanceCardItem(item: MonthsCardModel, onClick: () -> Unit, navController: N
 @Composable
 fun MonthsCards(
     navController: NavController,
-    year: String,
-    balances: List<BalanceByMonthEntity>,
+    balances: List<MonthsBalanceUi>,
     onMonthClick: (Int) -> Unit
 ) {
-
-    val months = listOf(
-        stringResource(R.string.january),
-        stringResource(R.string.february),
-        stringResource(R.string.march),
-        stringResource(R.string.april),
-        stringResource(R.string.may),
-        stringResource(R.string.june),
-        stringResource(R.string.july),
-        stringResource(R.string.august),
-        stringResource(R.string.september),
-        stringResource(R.string.october),
-        stringResource(R.string.november),
-        stringResource(R.string.december)
-    )
 
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
-        itemsIndexed(months) { index, month ->
-
-            val income = balances.filter { it.month == month && it.type == "income" }
-                .sumOf { it.total }
-
-            val expense = balances.filter { it.month == month && it.type == "expense" }
-                .sumOf { it.total }
-
+        items(balances) {  balance ->
 
             BalanceCardItem(
-                item = MonthsCardModel(
-                    monthName = month,
-                    incomeAmount = income,
-                    expenseAmount = expense
-                ),
-                onClick = { onMonthClick(index) },
+                balance = balance,
+                onClick = { onMonthClick(balance.monthIndex) },
                 navController = navController
             )
 

@@ -6,57 +6,57 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.data.PieEntry
 import com.onedeepath.balanccapp.core.formatCurrency
-import com.onedeepath.balanccapp.data.repository.BalanceRepository
-import com.onedeepath.balanccapp.domain.model.Category
+import com.onedeepath.balanccapp.domain.model.BalanceModel
+import com.onedeepath.balanccapp.domain.usecases.DeleteBalanceUseCase
 import com.onedeepath.balanccapp.domain.usecases.GetBalanceByExpense
 import com.onedeepath.balanccapp.domain.usecases.GetBalanceByIncome
-import com.onedeepath.balanccapp.domain.model.BalanceModel
-import com.onedeepath.balanccapp.ui.presentation.model.Categories
 import com.onedeepath.balanccapp.ui.screens.detail.model.MonthsChartUiState
 import com.onedeepath.balanccapp.ui.screens.detail.model.MonthsDetailUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MonthsDetailViewModel @Inject constructor(
-    private val repository: BalanceRepository,
     private val getBalanceByIncomeUseCase: GetBalanceByIncome,
     private val getBalanceByExpenseUseCase: GetBalanceByExpense,
+    private val deleteBalanceUseCase: DeleteBalanceUseCase,
 ) : ViewModel() {
 
-    private var _incomesList: List<BalanceModel> = emptyList()
-    private var _expensesList: List<BalanceModel> = emptyList()
     private val _uiState = MutableStateFlow(MonthsDetailUiState())
     val uiState: StateFlow<MonthsDetailUiState> = _uiState.asStateFlow()
 
     fun load(year: String, monthName: String) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoadingIncome = true, isLoadingExpense = true) }
+            _uiState.update { it.copy(isLoadingIncome = true) }
 
-            getBalanceByIncomeUseCase.getIncomes(year, monthName).collect { incomes ->
-                _incomesList = incomes
-            }
-            getBalanceByExpenseUseCase.getExpenses(year, monthName).collect { expenses ->
-                _expensesList = expenses
-            }
+            combine(
+                getBalanceByIncomeUseCase.getIncomes(year, monthName),
+                        getBalanceByExpenseUseCase.getExpenses(year, monthName)
 
-            _uiState.value = MonthsDetailUiState(
-                year = year,
-                month = monthName,
-                incomes = _incomesList,
-                expenses = _expensesList,
-                totalBalanceFormatted = buildTotalBalance(_incomesList, _expensesList).first,
-                totalBalanceColor = buildTotalBalance(_incomesList, _expensesList).second,
-                incomeChart = buildIncomeChart(_incomesList),
-                expenseChart = buildExpenseChart(_expensesList),
-                isLoadingIncome = false,
-                isLoadingExpense = false
-            )
+            ) { incomes, expenses ->
+
+                MonthsDetailUiState(
+                    year = year,
+                    month = monthName,
+                    incomes = incomes,
+                    expenses = expenses,
+                    totalBalanceFormatted = buildTotalBalance(incomes, expenses).first,
+                    totalBalanceColor = buildTotalBalance(incomes, expenses).second,
+                    incomeChart = buildIncomeChart(incomes),
+                    expenseChart = buildExpenseChart(expenses),
+                    isLoadingIncome = false,
+                    isLoadingExpense = false
+                )
+
+            }.collect { newState ->
+                _uiState.value = newState
+            }
         }
     }
 
@@ -75,54 +75,33 @@ class MonthsDetailViewModel @Inject constructor(
     }
 
     private fun buildIncomeChart(incomes: List<BalanceModel>): MonthsChartUiState {
-        val grouped = incomes.groupBy { it.category }
+        val grouped = incomes.groupBy {balance -> balance.category }
 
         return MonthsChartUiState(
-            entries = grouped.map { (category, items) ->
-                PieEntry(items.sumOf { it.amount }.toFloat(), category)
+            entries = grouped.map { (category, balances) ->
+                PieEntry(balances.sumOf {balance -> balance.amount }.toFloat(), category)
             },
-            colors = grouped.keys.map { getColorCategoryByName(it).color.toArgb() },
-            centerText = formatCurrency(incomes.sumOf { it.amount })
+            colors = grouped.keys.map { category -> category.color.toArgb() },
+            centerText = formatCurrency(incomes.sumOf { balances -> balances.amount })
         )
     }
 
     private fun buildExpenseChart(expenses: List<BalanceModel>): MonthsChartUiState {
-        val grouped = expenses.groupBy { it.category }
+        val grouped = expenses.groupBy { balance ->  balance.category }
 
         return MonthsChartUiState(
-            entries = grouped.map { (category, items) ->
-                PieEntry(items.sumOf { it.amount }.toFloat(), category)
+            entries = grouped.map { (category, balances) ->
+                PieEntry(balances.sumOf { balance ->  balance.amount }.toFloat(), category)
             },
-            colors = grouped.keys.map { getColorCategoryByName(it).color.toArgb() },
-            centerText = formatCurrency(expenses.sumOf { it.amount })
+            colors = grouped.keys.map { category ->  category.color.toArgb() },
+            centerText = formatCurrency(expenses.sumOf { balance -> balance.amount })
         )
     }
 
     fun deleteBalance(id: Int) {
         viewModelScope.launch {
-            repository.deleteBalance(id)
+            deleteBalanceUseCase(id)
         }
-    }
-
-    fun getColorCategoryByName(category: Category) : Categories {
-
-        return when(category) {
-            Category.INVESTMENT -> Categories.Investment
-            Category.WORK -> Categories.Work
-            Category.GIFT -> Categories.Gift
-            Category.GROCERY -> Categories.Grocery
-            Category.ENTERTAINMENT -> Categories.Entertainment
-            Category.TRANSPORT -> Categories.Transport
-            Category.UTILITIES -> Categories.Utilities
-            Category.RENT -> Categories.Rent
-            Category.HEALTH -> Categories.Health
-            Category.TRAVEL -> Categories.Travel
-            Category.FOOD -> Categories.Food
-            Category.EDUCATION -> Categories.Education
-            Category.PET -> Categories.Pet
-            Category.OTHER -> Categories.Other
-        }
-
     }
 }
 

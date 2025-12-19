@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,7 +24,6 @@ import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -70,10 +68,12 @@ import com.github.mikephil.charting.data.PieEntry
 import com.onedeepath.balanccapp.R
 import com.onedeepath.balanccapp.core.formatCurrency
 import com.onedeepath.balanccapp.domain.model.BalanceModel
+import com.onedeepath.balanccapp.ui.navigation.AppScreens
 import com.onedeepath.balanccapp.ui.presentation.model.TabItem
-import com.onedeepath.balanccapp.ui.presentation.viewmodel.BalanceViewModel
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
-import com.onedeepath.balanccapp.ui.screens.AppScreens
+import com.onedeepath.balanccapp.ui.screens.detail.model.MonthsChartUiState
+import com.onedeepath.balanccapp.ui.screens.detail.model.MonthsDetailUiState
+import com.onedeepath.balanccapp.ui.screens.detail.viewmodel.MonthsDetailViewModel
 
 enum class ChartType{
     INCOME,
@@ -83,26 +83,16 @@ enum class ChartType{
 @Composable
 fun MonthsDetailScreen(
     navController: NavController,
-    balanceViewModel: BalanceViewModel = hiltViewModel(),
+    viewModel: MonthsDetailViewModel = hiltViewModel(),
     yearMonthViewModel: YearMonthViewModel
 ) {
+    val uiState by viewModel.uiState.collectAsState()
 
     val year by yearMonthViewModel.selectedYear.collectAsState()
     val month by yearMonthViewModel.selectedMonthIndex.collectAsState()
 
-    LaunchedEffect(Unit) {
-        balanceViewModel.getIncomeBalance(year, month)
-        balanceViewModel.getExpenseBalance(year, month)
-    }
-
-    val incomes by balanceViewModel.incomeBalance.collectAsState()
-    val expenses by balanceViewModel.expenseBalance.collectAsState()
-    //  val totalBalance = balanceViewModel.getTotalBalance()
-
-    val totalBalance = remember(incomes, expenses) {
-        val totalInc = incomes.sumOf { it.amount }
-        val totalExp = expenses.sumOf { it.amount }
-        totalInc - totalExp
+    LaunchedEffect(year, month) {
+        viewModel.load(year = year, monthName = month)
     }
 
     Scaffold (
@@ -110,62 +100,147 @@ fun MonthsDetailScreen(
             .fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.primary,
         floatingActionButton = { AddIncomeOrExpenseFAB(navController = navController) }
-    ) { padding ->
+    ) {
         Column(
             Modifier
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(Modifier.padding(top = 64.dp))
-            Text(
-                text = month,
-                fontSize = 35.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(text = year, fontSize = 20.sp,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface)
-            Spacer(Modifier.height(16.dp))
-            //---------- Section 1
-            Column(
-                Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                val sign = if (totalBalance > 0) "+" else if (totalBalance < 0) "" else ""
-                Text(
-                    text = sign + formatCurrency(totalBalance),
-                    fontSize = 35.sp,
-                    fontWeight = Bold,
-                    color =
-                        if (totalBalance > 0) Color.Green
-                        else if (totalBalance < 0) Color.Red
-                        else Color.Black
-                )
-                Spacer(Modifier.padding(bottom = 24.dp))
-            }
+
+            HeaderDate(uiState = uiState)
+            MonthBalance(uiState = uiState)
+
             //------- Section 2
-            Card(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
-                    )
-                    .padding(8.dp),
-                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
-            ) {
-                TabRowIncomesExpenses(
-                    incomes = incomes,
-                    expenses = expenses,
-                    viewModel = balanceViewModel,
+
+            TabRowIncomesExpenses(
+                incomes = uiState.incomes,
+                expenses = uiState.expenses,
+                incomeChart = uiState.incomeChart,
+                expenseChart = uiState.expenseChart,
+                onDelete = viewModel::deleteBalance
                 )
-            }
-            AddIncomeOrExpenseFAB(navController = navController)
         }
     }
+}
+
+@Composable
+fun HeaderDate(uiState: MonthsDetailUiState) {
+    Spacer(Modifier.padding(top = 64.dp))
+    Text(
+        text = uiState.month,
+        fontSize = 35.sp,
+        fontWeight = FontWeight.ExtraBold,
+        color = MaterialTheme.colorScheme.onSurface,
+    )
+    Spacer(Modifier.height(4.dp))
+    Text(text = uiState.year, fontSize = 20.sp,
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.onSurface)
+    Spacer(Modifier.height(16.dp))
+}
+
+@Composable
+fun MonthBalance(uiState: MonthsDetailUiState) {
+    Column(
+        Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = uiState.totalBalanceFormatted,
+            fontSize = 35.sp,
+            fontWeight = Bold,
+            color = uiState.totalBalanceColor
+        )
+        Spacer(Modifier.padding(bottom = 24.dp))
+    }
+}
+
+@Composable
+fun TabRowIncomesExpenses(
+    incomes: List<BalanceModel>,
+    expenses: List<BalanceModel>,
+    incomeChart: MonthsChartUiState,
+    expenseChart: MonthsChartUiState,
+    onDelete: (Int) -> Unit
+) {
+
+    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
+
+    val tabItems = listOf(
+        TabItem(stringResource(R.string.incomes_tab),
+            Icons.Outlined.KeyboardArrowUp,
+            Icons.Filled.KeyboardArrowUp),
+        TabItem(stringResource(R.string.expenses_tab),
+            Icons.Outlined.KeyboardArrowDown,
+            Icons.Filled.KeyboardArrowDown)
+    )
+
+    val pagerState = rememberPagerState {
+        tabItems.size
+    }
+
+    // LaunchedEffect only works if the key is changed. We used this twice to synchronize the pager and the tab.
+    LaunchedEffect(selectedTabIndex) { // if the user touch a window, the pager slide on it window
+        pagerState.animateScrollToPage(selectedTabIndex)
+    }
+    LaunchedEffect(pagerState.currentPage) { // if the user slide a window, the pager change on it window
+        selectedTabIndex = pagerState.currentPage
+    }
+
+
+     Card(
+         modifier = Modifier
+             .fillMaxSize()
+             .background(
+                 color = MaterialTheme.colorScheme.surface,
+                 shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+             .padding(8.dp),
+         shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+     ){
+        TabRow(
+            selectedTabIndex = selectedTabIndex,
+            modifier = Modifier
+                .height(56.dp)
+                .background(MaterialTheme.colorScheme.surface),
+            indicator = {},
+            divider = {}
+        ) {
+            tabItems.forEachIndexed { index, item ->
+                val selected = selectedTabIndex == index
+                Tab(
+                    modifier = if (selected) Modifier
+                        .clip(RoundedCornerShape(20))
+                        .background(Color(0xFF88199A))
+                    else Modifier
+                        .clip(RoundedCornerShape(20))
+                        .background(MaterialTheme.colorScheme.surface),
+                    selected = selected,     //index == selectedTabIndex
+                    onClick = {
+                        selectedTabIndex = index
+                    },
+                    text = {
+                        Text(
+                            text = item.title,
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                )
+            }
+        }
+         HorizontalPager(
+             state = pagerState,
+             modifier = Modifier
+                 .weight(1f)
+                 .background(MaterialTheme.colorScheme.surface)
+         ) { index ->
+             when (index) {
+                 0 -> IncomePage(incomes, incomeChart, onDelete)
+                 1 -> ExpensePage(expenses, expenseChart, onDelete)
+             }
+         }
+     }
 }
 
 @Composable
@@ -229,85 +304,13 @@ fun DonutChart(
             chart.invalidate()
         },
 
-    )
+        )
 }
 
 @Composable
-fun TabRowIncomesExpenses(
-    incomes: List<BalanceModel>,
-    expenses: List<BalanceModel>,
-    viewModel: BalanceViewModel,
-) {
-
-    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
-
-    val tabItems = listOf(
-        TabItem(stringResource(R.string.incomes_tab), Icons.Outlined.KeyboardArrowUp, Icons.Filled.KeyboardArrowUp),
-        TabItem(stringResource(R.string.expenses_tab), Icons.Outlined.KeyboardArrowDown, Icons.Filled.KeyboardArrowDown)
-    )
-
-    val pagerState = rememberPagerState {
-        tabItems.size
-    }
-
-    // LaunchedEffect only works if the key is changed. We used this twice to synchronize the pager and the tab.
-    LaunchedEffect(selectedTabIndex) { // if the user touch a window, the pager slide on it window
-        pagerState.animateScrollToPage(selectedTabIndex)
-    }
-    LaunchedEffect(pagerState.currentPage) { // if the user slide a window, the pager change on it window
-        selectedTabIndex = pagerState.currentPage
-    }
-
-
-    TabRow(
-        selectedTabIndex = selectedTabIndex,
-        modifier = Modifier
-            .height(45.dp)
-            .background(MaterialTheme.colorScheme.surface),
-        indicator = {},
-        divider = {}
-    ) {
-        tabItems.forEachIndexed { index, item ->
-            val selected = selectedTabIndex == index
-            Tab(
-                modifier = if (selected) Modifier
-                    .clip(RoundedCornerShape(20))
-                    .background(Color(0xFF88199A))
-                else Modifier
-                    .clip(RoundedCornerShape(20))
-                    .background(MaterialTheme.colorScheme.surface),
-                selected = selected,     //index == selectedTabIndex
-                onClick = {
-                    selectedTabIndex = index
-                },
-                text = {
-                    Text(
-                        text = item.title,
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.onSurface)},
-                )
-        }
-    }
-    HorizontalPager(
-        state = pagerState,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .background(MaterialTheme.colorScheme.surface)
-    ) { index ->
-        when (index) {
-            0 ->{
-                IncomePage(incomes, viewModel)
-            }
-            1 -> ExpensePage(expenses, viewModel)
-        }
-    }
-
-
-}
-
-@Composable
-fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
+fun IncomePage(incomes: List<BalanceModel>,
+               incomeChart: MonthsChartUiState,
+               onDelete: (Int) -> Unit) {
 
     var donutChartHeight by remember {
         mutableStateOf(200.dp)
@@ -319,23 +322,6 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
 
             return Offset.Zero
         }
-    }
-
-    val totalIncomes = viewModel.totalIncomes.collectAsState()
-
-    val groupedIncomes = incomes
-        .groupBy { it.category }
-        .map { (category, items) ->
-            category to items.sumOf { it.amount }
-        }
-
-    val pieChartEntries = groupedIncomes.map { (category, total) ->
-        PieEntry(total.toFloat(), category)
-    }
-
-    val pieColors = incomes.map {
-      //  viewModel.getColorCategoryNew(it).color.toArgb()
-        viewModel.getColorCategory(it).color.toArgb()
     }
 
     Column(
@@ -352,9 +338,9 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
         Spacer(Modifier.padding(vertical = 4.dp))
         if (incomes.isNotEmpty() && donutChartHeight > 90.dp ) {
             DonutChart(
-                entries = pieChartEntries,
-                colors = pieColors,
-                centerText = formatCurrency(totalIncomes.value),
+                entries = incomeChart.entries,
+                colors = incomeChart.colors,
+                centerText = incomeChart.centerText,
                 type = ChartType.INCOME,
                 nestedHeight = donutChartHeight
             )
@@ -368,12 +354,14 @@ fun IncomePage(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
             fontSize = 25.sp,
             modifier = Modifier.padding(start = 16.dp)
         )
-        IncomeList(incomes, viewModel)
+        IncomeList(incomes, onDelete)
     }
 }
 
 @Composable
-fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
+fun ExpensePage(expenses: List<BalanceModel>,
+                expenseChart: MonthsChartUiState,
+                onDelete: (Int) -> Unit) {
 
     var donutChartHeight by remember {
         mutableStateOf(200.dp)
@@ -387,21 +375,6 @@ fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
         }
     }
 
-    val totalExpenses = viewModel.totalExpenses.collectAsState()
-
-    val groupedExpenses = expenses
-        .groupBy{ it.category}
-        .map { (category, items) ->
-            category to items.sumOf { it.amount }
-        }
-
-    val pieChartEntries = groupedExpenses.map { (category, total) ->
-        PieEntry(total.toFloat(), category)
-    }
-    val pieColors = expenses.map {
-        //  viewModel.getColorCategoryNew(it).color.toArgb()
-        viewModel.getColorCategory(it).color.toArgb()
-    }
 
     Column(
         Modifier
@@ -412,15 +385,16 @@ fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
             )
             .padding(top = 8.dp)
             .nestedScroll(
-                connection = connection),
+                connection = connection
+            ),
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(Modifier.padding(vertical = 4.dp))
         if (expenses.isNotEmpty() && donutChartHeight > 90.dp ) {
             DonutChart(
-                entries = pieChartEntries,
-                colors = pieColors,
-                centerText = formatCurrency(totalExpenses.value),
+                entries = expenseChart.entries,
+                colors = expenseChart.colors,
+                centerText = expenseChart.centerText,
                 type = ChartType.EXPENSE,
                 nestedHeight = donutChartHeight
             )
@@ -434,36 +408,26 @@ fun ExpensePage(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
             fontWeight = Bold,
             modifier = Modifier.padding(start = 16.dp)
         )
-        ExpenseList(expenses, viewModel)
+        ExpenseList(expenses, onDelete)
     }
 }
 
 @Composable
-fun IncomeList(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
-
-    val isLoading by viewModel.isLoadingIncome.collectAsState()
+fun IncomeList(incomes: List<BalanceModel>, onDelete: (Int) -> Unit) {
 
     Column(
         Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface),
     ) {
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .size(64.dp)
-                    .padding(64.dp)
-                    .align(Alignment.CenterHorizontally)
-
-            )
-        } else {
             if (incomes.isEmpty()) {
                 Text(text = stringResource(R.string.no_incomes),
                     fontSize = 35.sp,
                     fontWeight = Bold,
                     color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.fillMaxSize().padding(vertical = 64.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 64.dp)
                         ,
                     textAlign = TextAlign.Center)
             } else {
@@ -473,46 +437,35 @@ fun IncomeList(incomes: List<BalanceModel>, viewModel: BalanceViewModel) {
                         .background(MaterialTheme.colorScheme.surface)
                 ) {
                     items(incomes.size) { income ->
-                        IncomeCard(incomes[income], viewModel)
+                        IncomeCard(incomes[income], onDelete)
                     }
                 }
-            }
+
         }
     }
 }
 
 @Composable
-fun ExpenseList(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
-
-    val isLoading by viewModel.isLoadingExpense.collectAsState()
+fun ExpenseList(expenses: List<BalanceModel>, onDelete: (Int) -> Unit) {
 
     Column(
         Modifier.fillMaxSize()
     ) {
-
-        if (isLoading) {
-            CircularProgressIndicator(
+        if (expenses.isEmpty()) {
+            Text(text = stringResource(R.string.no_expenses),
+                fontSize = 35.sp,
+                fontWeight = Bold,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
-                    .fillMaxSize().size(64.dp)
-                    .padding(64.dp)
-                    .align(Alignment.CenterHorizontally))
+                    .fillMaxSize()
+                    .padding(vertical = 64.dp)
+                    .align(Alignment.CenterHorizontally),
+                textAlign = TextAlign.Center)
         } else {
-            if (expenses.isEmpty()) {
-                Text(text = stringResource(R.string.no_expenses),
-                    fontSize = 35.sp,
-                    fontWeight = Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.fillMaxSize()
-                        .padding(vertical = 64.dp)
-                        .align(Alignment.CenterHorizontally),
-                    textAlign = TextAlign.Center)
-            } else {
-                LazyColumn(
-                    Modifier.fillMaxWidth(),
-                ) {
+            LazyColumn(
+                Modifier.fillMaxWidth()) {
                     items(expenses.size) { expense ->
-                        ExpenseCard(expenses[expense], viewModel)
-                    }
+                    ExpenseCard(expenses[expense], onDelete)
                 }
             }
         }
@@ -520,9 +473,8 @@ fun ExpenseList(expenses: List<BalanceModel>, viewModel: BalanceViewModel) {
 }
 
 @Composable
-fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
+fun IncomeCard(income: BalanceModel, onDelete: (Int) -> Unit) {
 
-    val categoryProperties = viewModel.getColorCategory(income)
 
     Card(
         onClick = {
@@ -532,8 +484,10 @@ fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
             .height(120.dp)
             .padding(horizontal = 8.dp, vertical = 8.dp),
         shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        colors = CardDefaults.cardColors(containerColor = categoryProperties.color)
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = income.category.color)
     ) {
         Row(
             Modifier
@@ -542,7 +496,7 @@ fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                painter = painterResource(categoryProperties.icon),
+                painter = painterResource(income.category.icon),
                 tint = Color.Black,
                 contentDescription = "Add",
                 modifier = Modifier.size(38.dp)
@@ -552,7 +506,7 @@ fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
                 Modifier.weight(1f)
             ) {
                 Text(
-                    text = income.category,
+                    text = income.category.name,
                     color = Color.Black,
                     fontWeight = Bold,
                     fontSize = 18.sp
@@ -574,7 +528,7 @@ fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
             )
             Spacer(Modifier.width(16.dp))
             IconButton(
-                onClick = { viewModel.deleteBalance(income.id) },
+                onClick = { onDelete(income.id) },
                 modifier = Modifier
                     .size(32.dp)
                     .background(
@@ -583,10 +537,12 @@ fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
                     )
             ) {
                 Icon(
-                    painter = painterResource(com.onedeepath.balanccapp.R.drawable.ic_trash),
-                    contentDescription = "Delete",
+                    painter = painterResource(R.drawable.ic_trash),
+                    contentDescription = "",
                     tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.fillMaxSize().size(20.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .size(20.dp)
                 )
             }
         }
@@ -594,9 +550,8 @@ fun IncomeCard(income: BalanceModel, viewModel: BalanceViewModel) {
 }
 
 @Composable
-fun ExpenseCard(expense: BalanceModel, viewModel: BalanceViewModel) {
+fun ExpenseCard(expense: BalanceModel, onDelete: (Int) -> Unit) {
 
-    val categoryProperties = viewModel.getColorCategory(expense)
 
     Card(
         onClick = {
@@ -607,14 +562,14 @@ fun ExpenseCard(expense: BalanceModel, viewModel: BalanceViewModel) {
             .padding(horizontal = 16.dp, vertical = 8.dp),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        colors = CardDefaults.cardColors(containerColor = categoryProperties.color)
+        colors = CardDefaults.cardColors(containerColor = expense.category.color)
     ) {
         Row(
             Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                painter = painterResource(categoryProperties.icon),
+                painter = painterResource(expense.category.icon),
                 tint = Color.Black, contentDescription = "",
                 modifier = Modifier.size(38.dp)
             )
@@ -624,7 +579,7 @@ fun ExpenseCard(expense: BalanceModel, viewModel: BalanceViewModel) {
                     .width(150.dp)
             ) {
                 Text(
-                    text = expense.category,
+                    text = expense.category.name,
                     color = Color.Black,
                     fontWeight = Bold,
                     fontSize = 18.sp
@@ -637,8 +592,8 @@ fun ExpenseCard(expense: BalanceModel, viewModel: BalanceViewModel) {
                     color = Color.Black
                 )
             }
-                 Spacer(Modifier.weight(1f))
-                    Text(
+            Spacer(Modifier.weight(1f))
+            Text(
                 text = formatCurrency(expense.amount),
                 fontSize = 18.sp,
                 fontWeight = Bold,
@@ -646,7 +601,7 @@ fun ExpenseCard(expense: BalanceModel, viewModel: BalanceViewModel) {
                 )
             Spacer(Modifier.width(16.dp))
             IconButton(
-                onClick = { viewModel.deleteBalance(expense.id) },
+                onClick = { onDelete(expense.id) },
                 modifier = Modifier
                     .size(32.dp)
                     .background(
@@ -658,7 +613,9 @@ fun ExpenseCard(expense: BalanceModel, viewModel: BalanceViewModel) {
                     painter = painterResource(com.onedeepath.balanccapp.R.drawable.ic_trash),
                     contentDescription = "",
                     tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.fillMaxSize().size(20.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .size(20.dp)
                 )
             }
         }
@@ -683,5 +640,4 @@ fun AddIncomeOrExpenseFAB(navController: NavController) {
 
             )
         }
-
 }

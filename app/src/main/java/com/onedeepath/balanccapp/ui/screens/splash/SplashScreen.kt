@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.onedeepath.balanccapp.R
-import com.onedeepath.balanccapp.ui.screens.AppScreens
+import com.onedeepath.balanccapp.ui.navigation.AppScreens
 
 @Composable
 fun SplashScreen(navController: NavController) {
