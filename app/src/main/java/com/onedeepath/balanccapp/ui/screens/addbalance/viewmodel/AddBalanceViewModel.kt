@@ -38,9 +38,10 @@ class AddBalanceViewModel @Inject constructor(
         _uiState.update { it.copy(isIncome = isIncome) }
     }
 
-    fun onDateSelected(day: String) {
+    fun onDaySelected(day: String) {
         _uiState.update { it.copy(selectedDay = day) }
     }
+
 
     fun onDetailsChange(details: String) {
         _uiState.update { it.copy(details = details) }

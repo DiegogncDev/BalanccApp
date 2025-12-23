@@ -2,7 +2,11 @@ package com.onedeepath.balanccapp.ui.screens.addbalance
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,13 +16,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -56,6 +67,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.maxkeppeker.sheets.core.models.base.UseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -83,49 +96,54 @@ fun AddIncomeOrExpenseScreen(
     val context = LocalContext.current
 
     val selectedYear:String by yearMonthViewModel.selectedYear.collectAsState()
-    val selectedMonth:String by yearMonthViewModel.selectedMonthIndex.collectAsState()
-
+    val selectedMonthByIndex:String by yearMonthViewModel.selectedMonthIndex.collectAsState()
+    val isFastAddBalance:Boolean by yearMonthViewModel.isFastAddBalance.collectAsState()
+    val selectedMonthByFastAdd:String by yearMonthViewModel.selectedMonthByFastAdd.collectAsState()
 
     Column(
         Modifier
             .fillMaxSize()
             .background(
-                MaterialTheme.colorScheme.surface)
+                MaterialTheme.colorScheme.surface
+            )
             .padding(16.dp)
 
     ) {
         HeaderAdd()
-
         IncomeExpenseTabview(
             isIncome = uiState.isIncome,
             onCheckedChange = viewModel::onTypeChange)
-
         AddAmountTF(
             amount = uiState.amount,
             onAmountChange = viewModel::onAmountChange
         )
         Spacer(Modifier.height(32.dp))
-
         AddCategorySelector(
             selectedCategory = uiState.category,
             onCategoryChange = viewModel::onCategoryChange)
         Spacer(Modifier.height(32.dp))
-
-        DatePickerSelector(selectedYear.toInt(), selectedMonth) { date ->
-            viewModel.onDateSelected(date.dayOfMonth.toString())
-        }
+        DatePickerSelector(
+            selectedYear =  selectedYear.toInt(),
+            selectedMonth =  if (isFastAddBalance) selectedMonthByFastAdd
+            else selectedMonthByIndex,
+            isFastAddBalance = isFastAddBalance,
+            onDaySelected = { day ->
+                viewModel.onDaySelected(day.toString())
+            },
+            onMonthSelected = yearMonthViewModel::setMonth
+        )
         Spacer(Modifier.height(32.dp))
-
         DetailsTF(
             details = uiState.details,
             onDetailsChange = viewModel::onDetailsChange
         )
         Spacer(Modifier.height(32.dp))
-
         AddBalanceButton(
             uiState =  uiState,
             selectedYear =  selectedYear.toInt(),
-            selectedMonth = selectedMonth ,
+            selectedMonth =
+                if(isFastAddBalance) selectedMonthByFastAdd
+                else selectedMonthByIndex,
             onSave = viewModel::save,
             context =  context,)
     }
@@ -203,8 +221,13 @@ fun DetailsTF(details: String, onDetailsChange: (String) -> Unit) {
 fun DatePickerSelector(
     selectedYear: Int,
     selectedMonth: String,
-    onDateSelected: (LocalDate) -> Unit
-) {
+    isFastAddBalance: Boolean,
+    onDaySelected: (LocalDate) -> Unit,
+    onMonthSelected: (String) -> Unit
+    ) {
+
+    var showMonthDialog by remember { mutableStateOf(false) }
+
     val selectedMonthMapped = when (selectedMonth) {
         stringResource(R.string.january) -> 0
         stringResource(R.string.february) -> 1
@@ -221,16 +244,24 @@ fun DatePickerSelector(
         else -> 0
     }
 
-    var calendarState = UseCaseState()
-
+    var calendarState = remember { UseCaseState() }
     val startDate = LocalDate.of(selectedYear, selectedMonthMapped + 1, 1)
     val endDate = YearMonth.of(selectedYear, selectedMonthMapped + 1).atEndOfMonth()
-
     var currentDay by remember { mutableStateOf("") }
+
+    val calendarTheme = MaterialTheme.colorScheme.copy(
+        surface = Color.Black,            // Fondo del dialogo
+        onSurface = Color.White,          // Texto de los días (Números)
+        surfaceVariant = Color(0xFF2B2828), // Fondo de cabeceras o días inactivos
+        onSurfaceVariant = Color.Black,   // Texto sobre variantes
+        primary = MaterialTheme.colorScheme.primary, // Mantiene tu color primario para la selección
+        onPrimary = Color.White           // Texto dentro del círculo de selección
+    )
 
     Card(
         modifier = Modifier
-            .fillMaxWidth().height(90.dp),
+            .fillMaxWidth()
+            .height(90.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
@@ -242,49 +273,195 @@ fun DatePickerSelector(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            CalendarDialog(
-                state = calendarState,
-                config = CalendarConfig(
-                    monthSelection = false,
-                    yearSelection = false,
-                    style = CalendarStyle.MONTH,
-                    boundary = startDate..endDate,
-                ),
-                selection = CalendarSelection.Date { date ->
-                    onDateSelected(date)
-                    currentDay = date.dayOfMonth.toString()
-                },
-            )
-
-            Button(
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary ,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                onClick = {
-                    calendarState.show()
-                }
-            ) {
-                Text(
-                    text = currentDay.ifEmpty { stringResource(R.string.day) },
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
+            MaterialTheme(colorScheme = calendarTheme) {
+                CalendarDialog(
+                    state = calendarState,
+                    config = CalendarConfig(
+                        monthSelection = false,
+                        yearSelection = false,
+                        style = CalendarStyle.MONTH,
+                        boundary = startDate..endDate,
+                    ),
+                    selection = CalendarSelection.Date { date ->
+                        onDaySelected(date)
+                        currentDay = date.dayOfMonth.toString()
+                        calendarState.finish()
+                    },
                 )
             }
-            Spacer(Modifier.weight(1f))
-            Text(text = selectedMonth,
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
-                color = MaterialTheme.colorScheme.onSurface
+
+            Icon(
+                imageVector = Icons.Default.DateRange,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface
             )
-            Spacer(Modifier.weight(1f))
-            Text("$selectedYear",
+
+            AssistChip(
+                onClick = {
+                    calendarState.show()
+                },
+                leadingIcon = {
+                    if (currentDay.isEmpty())
+                        Icon(Icons.Default.Add,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp).fillMaxWidth(),
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                },
+                label = {  Text(
+                    text = currentDay.ifEmpty { "" },
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                    )
+                },
+                colors = AssistChipDefaults.assistChipColors(
+                    labelColor = MaterialTheme.colorScheme.onSurface
+                ),
+            )
+            // Month/Year Selector
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.clickable(enabled = isFastAddBalance) {
+                    showMonthDialog = true
+                }
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = selectedMonth,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    if (isFastAddBalance) {
+                        Icon(
+                            Icons.Default.KeyboardArrowDown,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+
+                }
+
+            }
+
+            Text(
+                "$selectedYear",
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
+    }
+
+    if(showMonthDialog) {
+        FastAddMonthDialog(
+            onMonthSelected = { month ->
+                onMonthSelected(month)
+                showMonthDialog = false
+            },
+            onDismiss = { showMonthDialog = false }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FastAddMonthDialog(
+    onMonthSelected: (String) -> Unit,
+    onDismiss: () -> Unit
+){
+
+    val months = listOf(
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    )
+
+    Dialog(
+        onDismissRequest = onDismiss
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp)
+        ) {
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
+                colors = CardDefaults.cardColors(containerColor =MaterialTheme.colorScheme.surface),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(vertical = 24.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.select_month),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
+                    LazyColumn(
+                        modifier = Modifier
+                            .height(280.dp)
+                            .padding(horizontal = 8.dp)
+                            .background(MaterialTheme.colorScheme.surface)
+                    ) {
+                        items(months) { month ->
+                            MonthItem(
+                                month = month,
+                                onClick = {
+                                    onMonthSelected(month)
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MonthItem(
+    month: String,
+    onClick: () -> Unit
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    var isPressed by remember { mutableStateOf(false) }
+
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isPressed) Color(0xFFEDEDED) else Color.Transparent,
+        animationSpec = tween(150), label = ""
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+            .background(backgroundColor, shape = RoundedCornerShape(14.dp))
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {
+                isPressed = true
+                onClick()
+            }
+            .padding(vertical = 12.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = month,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        )
     }
 }
 

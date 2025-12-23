@@ -23,7 +23,8 @@
     <string name="select_year">Select year</string>
 
     <!--- Buttons -->
-    <string name="day">Day</string>
+    <string name="select_day">day</string>
+    <string name="select_month">Select month</string>
 
     <!-- Empty Statements -->
     <string name="no_expenses">No expenses</string>

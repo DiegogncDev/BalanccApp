@@ -22,7 +22,7 @@ val LightColorScheme = darkColorScheme(
     background = Background,
     surfaceVariant = SurfaceVariant,
     surface = Background,
-    onSurface = TextPrimary,
+    onSurface = Color(0xFFB573B6),
     outline = Outline
 
 )

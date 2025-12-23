@@ -12,15 +12,34 @@ import javax.inject.Inject
 @HiltViewModel
 class YearMonthViewModel @Inject constructor() : ViewModel() {
 
+    private val _selectedMonthByFastAdd = MutableStateFlow("January")
+    val selectedMonthByFastAdd: StateFlow<String> = _selectedMonthByFastAdd
+
     private val _selectedYear = MutableStateFlow("2025")
     val selectedYear: StateFlow<String> = _selectedYear
-
     private val _selectedMonthIndex = MutableStateFlow("January")
     val selectedMonthIndex: StateFlow<String> = _selectedMonthIndex
 
+    private val _isFastAddBalance = MutableStateFlow(false)
+    val isFastAddBalance: StateFlow<Boolean> = _isFastAddBalance
+
+
+    fun setIsFastAddBalance(isFastAddBalance: Boolean) {
+        _isFastAddBalance.value = isFastAddBalance
+    }
+
+
     fun setYear(year: String) {
         _selectedYear.value = year
+
     }
+
+    fun setMonth(month: String) {
+        _selectedMonthByFastAdd.value = month
+    }
+
+
+
 
     fun setMonthIndex(index: Int) {
 

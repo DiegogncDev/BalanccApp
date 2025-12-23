@@ -15,16 +15,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -63,26 +69,31 @@ fun MainScreen(
 
     val state by viewModel.uiState.collectAsState()
 
-    val year by yearMonthViewModel.selectedYear.collectAsState()
+    Scaffold(
+        floatingActionButton = { AddBalanceFAB(
+            navController = navController,
+            onFastAddBalance = yearMonthViewModel::setIsFastAddBalance)
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colorScheme.surface),
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.surface),
-
-        ) {
+            ) {
             HeaderBalanccApp()
 
             YearFilter(
                 selectedYear = state.selectedYear,
                 onYearSelected = viewModel::onYearSelected
-
             )
             Spacer(Modifier.height(16.dp))
 
             if (state.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(
-                    Alignment.CenterHorizontally).fillMaxSize()
+                CircularProgressIndicator(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(120.dp)
                 )
             } else {
                 MonthsCards(
@@ -94,7 +105,29 @@ fun MainScreen(
             }
             Spacer(Modifier.height(32.dp))
         }
+    }
 
+}
+
+@Composable
+fun AddBalanceFAB(navController: NavController, onFastAddBalance: (isFastAddBalance: Boolean) -> Unit) {
+
+    FloatingActionButton(
+        onClick = {
+            onFastAddBalance(true)
+            navController.navigate(AppScreens.AddIncomeOrExpenseScreen.route)
+        },
+        containerColor = MaterialTheme.colorScheme.primary,
+        shape = RoundedCornerShape(25)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "",
+            tint = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.size(32.dp)
+
+        )
+    }
 }
 
 @Composable
@@ -271,8 +304,8 @@ fun YearFilter(selectedYear: String, onYearSelected: (String) -> Unit) {
 
     if (showDialog) {
         YearPickerDialog(
-            onYearSelected = {
-                onYearSelected(it.toString())
+            onYearSelected = { year ->
+                onYearSelected(year.toString())
                 showDialog = false
             },
             onDismiss = { showDialog = false })
@@ -372,7 +405,7 @@ fun YearItem(
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color(0xFF444444)
+                color = MaterialTheme.colorScheme.onSurface
             )
         )
     }

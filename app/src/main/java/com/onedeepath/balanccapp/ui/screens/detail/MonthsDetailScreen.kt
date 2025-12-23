@@ -101,7 +101,9 @@ fun MonthsDetailScreen(
         modifier = Modifier
             .fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.primary,
-        floatingActionButton = { AddIncomeOrExpenseFAB(navController = navController) }
+        floatingActionButton = {
+            yearMonthViewModel.setIsFastAddBalance(false)
+            AddIncomeOrExpenseFAB(navController = navController) }
     ) {
         Column(
             Modifier

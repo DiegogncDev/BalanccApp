@@ -17,23 +17,23 @@ val Pink40 = Color(0xFF7D5260)
  */
 
 // Primary brand colors
-val Primary = Color(0xFF88199A)
-val OnPrimary = Color(0xFFFFFFFF)
+val Primary = Color(0xFF800C95)
+val OnPrimary = Color(0xFFD0A7D0)
 
 
 // Secondary / supporting colors
-val Secondary = Color(0xFF67316F)
+val Secondary = Color(0xFFBF73C6)
 val OnSecondary = Color(0xFFFFFFFF)
 
 
 // Tertiary / accent colors
 val Tertiary = Color(0xFFB872C1)
-val OnTertiary = Color(0xFF000000)
+val OnTertiary = Color(0xFF9C27B0)
 
 
 // Surface & background
 val SurfaceVariant = Color(0xFF741387)
-val Background = Color(0xFFFFFFFF)
+val Background = Color(0xFFFDDBFD)
 
 
 // Text / emphasis colors
@@ -42,7 +42,7 @@ val TextSecondary = Color(0xE98A64D2)
 
 
 // Status / utility
-val Outline = Color(0xFFCCCCCC)
+val Outline = Color(0xFF151515)
 
 
 // CATEGORIES COLOR
