@@ -8,7 +8,5 @@ import javax.inject.Inject
 class GetAllBalancesUseCase @Inject constructor(
     private val repository: BalanceRepository
 ) {
-    suspend operator fun invoke() : Flow<List<BalanceModel>> = repository.getAllBalances()
-
-
+     operator fun invoke() : Flow<List<BalanceModel>> = repository.getAllBalances()
 }
