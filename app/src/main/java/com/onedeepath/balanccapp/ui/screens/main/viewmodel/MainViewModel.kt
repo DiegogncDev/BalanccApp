@@ -24,7 +24,7 @@ class MainViewModel @Inject constructor(
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
     init {
-        val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR).toString()
+        val currentYear = "2025"
         onYearSelected(currentYear)
     }
 

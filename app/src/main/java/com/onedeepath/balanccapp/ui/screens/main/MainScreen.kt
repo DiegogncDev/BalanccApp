@@ -1,5 +1,6 @@
 package com.onedeepath.balanccapp.ui.screens.main
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -60,6 +61,7 @@ import com.onedeepath.balanccapp.ui.screens.main.model.MonthsBalanceUi
 import com.onedeepath.balanccapp.ui.screens.main.viewmodel.MainViewModel
 
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
     navController: NavController,
@@ -85,7 +87,10 @@ fun MainScreen(
 
             YearFilter(
                 selectedYear = state.selectedYear,
-                onYearSelected = viewModel::onYearSelected
+                onYearSelected = { newYear ->
+                    viewModel.onYearSelected(newYear)
+                    yearMonthViewModel.setYear(newYear)
+                }
             )
             Spacer(Modifier.height(16.dp))
 
@@ -317,7 +322,7 @@ fun YearPickerDialog(
     onYearSelected: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val currentYear = remember { java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) }
+    val currentYear = remember { 2025 }
     val years = remember { (currentYear..(currentYear + 200)).toList() }
 
     Dialog(
