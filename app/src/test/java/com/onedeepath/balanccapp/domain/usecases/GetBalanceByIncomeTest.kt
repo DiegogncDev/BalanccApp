@@ -10,61 +10,60 @@ import io.mockk.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
-class GetBalanceByExpenseTest {
+class GetBalanceByIncomeTest {
 
     @RelaxedMockK
     private lateinit var repository: BalanceRepository
 
-    private lateinit var getBalanceByExpense: GetBalanceByExpense
+    private lateinit var getBalanceByIncome: GetBalanceByIncome
 
 
     @Before
     fun onBefore() {
         MockKAnnotations.init(this)
-        getBalanceByExpense = GetBalanceByExpense(repository)
+        getBalanceByIncome = GetBalanceByIncome(repository)
     }
 
     @Test
-    fun `when getExpense is called, then return list of balances by expense from repository`() = runTest {
+    fun `when getIncomes is called, then return list of balances by income from repository`() = runTest {
         // Given
         val balanceModelMock = mockk<BalanceModel>()
         val expectedList = listOf(balanceModelMock)
         val year = "2025"
         val month = "January"
 
-        every { repository.getExpenseByMonth(year, month) } returns flowOf(expectedList)
+        every { repository.getIncomeByMonth(year, month) } returns flowOf(expectedList)
 
-        // WHEN
-        val result = getBalanceByExpense.getExpenses(year, month).first()
+        // When
+        val result = getBalanceByIncome.getIncomes(year, month).first()
 
-        // THEN
+        // Then
         assert(result == expectedList)
-        verify(exactly = 1) { repository.getExpenseByMonth(year, month) }
-    }
+        verify(exactly = 1) { repository.getIncomeByMonth(year, month) }
+
+        }
 
     @Test
-    fun `when getExpense is called and repository returns empty list, then return empty list`() = runTest {
-        // GIVE
+    fun `when getIncomes is called and repository returns empty list, then return empty list`() = runTest {
+        //Given
         val year = "2025"
         val month = "January"
         val emptyFlow = flowOf(emptyList<BalanceModel>())
 
-        every { repository.getExpenseByMonth(year, month) } returns emptyFlow
+        every { repository.getIncomeByMonth(year, month) } returns emptyFlow
 
-        // WHEN
-        val response = getBalanceByExpense.getExpenses(year, month).first()
+        // When
+        val result = getBalanceByIncome.getIncomes(year, month).first()
 
-        // THEN
-        assert(response.isEmpty())
-        verify(exactly = 1) { repository.getExpenseByMonth(year, month) }
+        // Then
+        assert(result.isEmpty())
+        verify(exactly = 1) { repository.getIncomeByMonth(year, month) }
 
     }
-
-
     @Test
     fun `when year and month are not provided, then return empty list`() = runTest {
         // GIVEN
@@ -72,11 +71,11 @@ class GetBalanceByExpenseTest {
         val month = ""
 
         // WHEN
-        val result = getBalanceByExpense.getExpenses(year, month).first()
+        val result = getBalanceByIncome.getIncomes(year, month).first()
 
         // THEN
         assertTrue(result.isEmpty())
-        verify(exactly = 0) { repository.getExpenseByMonth(year, month) }
+        verify(exactly = 0) { repository.getIncomeByMonth(year, month) }
 
     }
 

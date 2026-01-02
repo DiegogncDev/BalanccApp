@@ -9,6 +9,11 @@ import javax.inject.Inject
 class GetBalanceByExpense @Inject constructor(
     private val repository: BalanceRepository,
 ) {
-   fun getExpenses(year: String, month: String) = repository.getExpenseByMonth(year = year, month = month)
+   fun getExpenses(year: String, month: String) : Flow<List<BalanceModel>> {
+       if (year.isBlank() && month.isBlank()) {
+           return flowOf(emptyList())
+       }
+       return repository.getExpenseByMonth(year = year, month = month)
+   }
 
 }

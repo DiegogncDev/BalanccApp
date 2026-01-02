@@ -10,4 +10,5 @@ class InsertBalanceUseCase @Inject constructor(
     suspend operator fun invoke(balance: BalanceModel) {
         repository.insertBalance(balance)
     }
+
 }
