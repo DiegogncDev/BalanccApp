@@ -6,7 +6,6 @@ import com.onedeepath.balanccapp.domain.usecases.GetBalancesByYearUseCase
 import com.onedeepath.balanccapp.ui.screens.main.mapper.toMonthsBalanceUi
 import com.onedeepath.balanccapp.ui.screens.main.model.MainUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,8 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getBalancesByYearUseCase: GetBalancesByYearUseCase,
-
+    private val getBalancesByYearUseCase: GetBalancesByYearUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
@@ -37,7 +35,6 @@ class MainViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            delay(2000)
             getBalancesByYearUseCase(year).collect { balances ->
                 _uiState.update {
                     it.copy(
