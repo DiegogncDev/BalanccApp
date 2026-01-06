@@ -1,5 +1,6 @@
 package com.onedeepath.balanccapp.ui.screens.main.viewmodel
 
+import app.cash.turbine.test
 import com.onedeepath.balanccapp.domain.model.BalanceByMonth
 import com.onedeepath.balanccapp.domain.usecases.GetBalancesByYearUseCase
 import io.mockk.MockKAnnotations
@@ -96,8 +97,59 @@ class MainViewModelTest {
 
         assertFalse(vm.uiState.value.isLoading)
         assertEquals("boom", vm.uiState.value.error)
-
     }
 
+    @Test
+    fun `when onErrorShown is called then error should be null`() = runTest {
+        //Given
+        val usecase = mockk<GetBalancesByYearUseCase>()
+        val year ="2025"
+
+        every { usecase(year) } returns flowOf(emptyList())
+
+        val viewModel = MainViewModel(
+            getBalancesByYearUseCase = usecase,
+            ioDispatcher = testDispatcher,
+            defaultYearProvider = {year}
+        )
+
+        viewModel.uiState.test {
+            val initialState = awaitItem() // Initial state of init
+
+            //When
+            viewModel.onErrorShown()
+
+            //Then
+            val finalState = awaitItem()
+            assertNull(finalState.error)
+        }
+    }
+
+    @Test
+    fun `when useCase emits empty balances then uiState updates months with zero values`() = runTest {
+        //Given
+        val year = "2025"
+        val useCase = mockk<GetBalancesByYearUseCase>()
+
+        every { useCase(year) } returns flowOf(emptyList())
+
+        val viewModel = MainViewModel(
+            getBalancesByYearUseCase = useCase,
+            ioDispatcher = testDispatcher,
+            defaultYearProvider = {year}
+        )
+
+        //When
+        advanceUntilIdle() // execute coroutines of init
+
+        //Then
+        val currentState = viewModel.uiState.value
+        assertFalse(currentState.isLoading)
+        //there must be 12 months
+        assertEquals(12, currentState.months.size)
+        // BALANCE, INCOME AND EXPENSE must have 0 values
+        assertTrue(currentState.months.all { it.balance == 0.0 && it.income == 0.0 && it.expense == 0.0})
+        assertNull(currentState.error)
+    }
 }
 
