@@ -48,6 +48,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -94,6 +95,17 @@ fun AddIncomeOrExpenseScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(uiState.saveSuccess, uiState.error) {
+        if (uiState.saveSuccess) {
+            Toast.makeText(context, "BalanceAdded", Toast.LENGTH_SHORT).show()
+            viewModel.resetSaveEvent()
+        }
+        uiState.error?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.resetSaveEvent()
+        }
+    }
 
     val selectedYear:String by yearMonthViewModel.selectedYear.collectAsState()
     val selectedMonthByIndex:String by yearMonthViewModel.selectedMonthIndex.collectAsState()
@@ -144,7 +156,7 @@ fun AddIncomeOrExpenseScreen(
             selectedMonth =
                 if(isFastAddBalance) selectedMonthByFastAdd
                 else selectedMonthByIndex,
-            onSave = viewModel::save,
+            onSave = {year, month -> viewModel.save(year, month)},
             context =  context,)
     }
 }
@@ -154,7 +166,7 @@ fun AddBalanceButton(
     uiState: AddBalanceUiState,
     selectedYear: Int,
     selectedMonth: String,
-    onSave: (year: String, month: String) -> Result<Unit>,
+    onSave: (year: String, month: String) -> Unit,
     context: Context,) {
     Button(
         modifier = Modifier.fillMaxWidth(),
@@ -162,11 +174,9 @@ fun AddBalanceButton(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        enabled = uiState.isValid,
+        enabled = uiState.isValid && uiState.isSaving,
         onClick = {
-            val result = onSave(selectedYear.toString(), selectedMonth)
-
-            if (result.isSuccess) {
+            if (uiState.isSaving) {
                 Toast.makeText(context, "Balance Added", Toast.LENGTH_SHORT).show()
             }else {
                 Toast.makeText(context, "Invalid Data", Toast.LENGTH_SHORT).show()

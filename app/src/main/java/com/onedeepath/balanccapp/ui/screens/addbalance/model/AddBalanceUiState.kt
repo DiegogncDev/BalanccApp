@@ -8,5 +8,8 @@ data class AddBalanceUiState(
     val category: Category = Category.WORK,
     val details: String = "",
     val selectedDay: String = "",
-    val isValid: Boolean = false
+    val isValid: Boolean = false,
+    val isSaving: Boolean = false,
+    val saveSuccess: Boolean = false,
+    val error: String? = null
 )

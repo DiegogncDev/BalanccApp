@@ -74,6 +74,8 @@ import com.onedeepath.balanccapp.ui.presentation.model.TabItem
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.detail.model.MonthsChartUiState
 import com.onedeepath.balanccapp.ui.screens.detail.model.MonthsDetailUiState
+import com.onedeepath.balanccapp.ui.screens.detail.model.MyMonthsChartUiState
+import com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData
 import com.onedeepath.balanccapp.ui.screens.detail.viewmodel.MonthsDetailViewModel
 
 enum class ChartType{
@@ -164,8 +166,8 @@ fun MonthBalance(uiState: MonthsDetailUiState) {
 fun TabRowIncomesExpenses(
     incomes: List<BalanceModel>,
     expenses: List<BalanceModel>,
-    incomeChart: MonthsChartUiState,
-    expenseChart: MonthsChartUiState,
+    incomeChart: MyMonthsChartUiState,
+    expenseChart: MyMonthsChartUiState,
     onDelete: (Int) -> Unit
 ) {
 
@@ -249,7 +251,7 @@ fun TabRowIncomesExpenses(
 
 @Composable
 fun DonutChart(
-    entries: List<PieEntry>,
+    entries: List<PieChartData>,
     colors: List<Int>,
     centerText: String,
     type: ChartType,
@@ -294,7 +296,7 @@ fun DonutChart(
         },
         update = { chart ->
 
-            val dataSet = PieDataSet(entries, "")
+            val dataSet = PieDataSet(entries.map { PieEntry(it.value, "") }, "")
             dataSet.setDrawValues(false)
             dataSet.colors = colors
             dataSet.sliceSpace = 4f
@@ -313,7 +315,7 @@ fun DonutChart(
 
 @Composable
 fun IncomePage(incomes: List<BalanceModel>,
-               incomeChart: MonthsChartUiState,
+               incomeChart: MyMonthsChartUiState,
                onDelete: (Int) -> Unit) {
 
     var donutChartHeight by remember {
@@ -364,7 +366,7 @@ fun IncomePage(incomes: List<BalanceModel>,
 
 @Composable
 fun ExpensePage(expenses: List<BalanceModel>,
-                expenseChart: MonthsChartUiState,
+                expenseChart: MyMonthsChartUiState,
                 onDelete: (Int) -> Unit) {
 
     var donutChartHeight by remember {

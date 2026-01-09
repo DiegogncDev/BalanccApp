@@ -4,19 +4,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.mikephil.charting.data.PieEntry
-import com.onedeepath.balanccapp.core.formatCurrency
+import com.onedeepath.balanccapp.core.CurrencyHelper
+import com.onedeepath.balanccapp.di.IoDispatcher
 import com.onedeepath.balanccapp.domain.model.BalanceModel
 import com.onedeepath.balanccapp.domain.usecases.DeleteBalanceUseCase
 import com.onedeepath.balanccapp.domain.usecases.GetBalanceByExpense
 import com.onedeepath.balanccapp.domain.usecases.GetBalanceByIncome
-import com.onedeepath.balanccapp.ui.screens.detail.model.MonthsChartUiState
 import com.onedeepath.balanccapp.ui.screens.detail.model.MonthsDetailUiState
+import com.onedeepath.balanccapp.ui.screens.detail.model.MyMonthsChartUiState
+import com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,6 +29,8 @@ class MonthsDetailViewModel @Inject constructor(
     private val getBalanceByIncomeUseCase: GetBalanceByIncome,
     private val getBalanceByExpenseUseCase: GetBalanceByExpense,
     private val deleteBalanceUseCase: DeleteBalanceUseCase,
+    private val currencyHelper: CurrencyHelper,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MonthsDetailUiState())
@@ -36,20 +41,22 @@ class MonthsDetailViewModel @Inject constructor(
             _uiState.update { it.copy(isLoadingIncome = true) }
 
             combine(
-                getBalanceByIncomeUseCase.getIncomes(year, monthName),
-                        getBalanceByExpenseUseCase.getExpenses(year, monthName)
+                getBalanceByIncomeUseCase.getIncomes(year, monthName).flowOn(ioDispatcher),
+                        getBalanceByExpenseUseCase.getExpenses(year, monthName).flowOn(ioDispatcher)
 
             ) { incomes, expenses ->
+
+                val (formattedBalance, formattedColor) = buildTotalBalance(incomes, expenses)
 
                 MonthsDetailUiState(
                     year = year,
                     month = monthName,
                     incomes = incomes,
                     expenses = expenses,
-                    totalBalanceFormatted = buildTotalBalance(incomes, expenses).first,
-                    totalBalanceColor = buildTotalBalance(incomes, expenses).second,
-                    incomeChart = buildIncomeChart(incomes),
-                    expenseChart = buildExpenseChart(expenses),
+                    totalBalanceFormatted = formattedBalance,
+                    totalBalanceColor = formattedColor,
+                    incomeChart = MyBuildIncomeChart(incomes),
+                    expenseChart = MyBuildExpenseChart(expenses),
                     isLoadingIncome = false,
                     isLoadingExpense = false
                 )
@@ -71,31 +78,7 @@ class MonthsDetailViewModel @Inject constructor(
             total < 0 -> Color(0xFFE53757)
             else -> Color.Black
         }
-        return sign + formatCurrency(total) to color
-    }
-
-    private fun buildIncomeChart(incomes: List<BalanceModel>): MonthsChartUiState {
-        val grouped = incomes.groupBy {balance -> balance.category }
-
-        return MonthsChartUiState(
-            entries = grouped.map { (category, balances) ->
-                PieEntry(balances.sumOf {balance -> balance.amount }.toFloat(), category)
-            },
-            colors = grouped.keys.map { category -> category.color.toArgb() },
-            centerText = formatCurrency(incomes.sumOf { balances -> balances.amount })
-        )
-    }
-
-    private fun buildExpenseChart(expenses: List<BalanceModel>): MonthsChartUiState {
-        val grouped = expenses.groupBy { balance ->  balance.category }
-
-        return MonthsChartUiState(
-            entries = grouped.map { (category, balances) ->
-                PieEntry(balances.sumOf { balance ->  balance.amount }.toFloat(), category)
-            },
-            colors = grouped.keys.map { category ->  category.color.toArgb() },
-            centerText = formatCurrency(expenses.sumOf { balance -> balance.amount })
-        )
+        return sign + currencyHelper.formatCurrency(total) to color
     }
 
     fun deleteBalance(id: Int) {
@@ -103,7 +86,56 @@ class MonthsDetailViewModel @Inject constructor(
             deleteBalanceUseCase(id)
         }
     }
+
+    private fun MyBuildIncomeChart(incomes: List<BalanceModel>): MyMonthsChartUiState {
+        val grouped = incomes.groupBy {balance -> balance.category }
+
+        return MyMonthsChartUiState(
+            entries = grouped.map { (category, balances) ->
+                PieChartData(balances.sumOf { balance -> balance.amount }.toFloat(), category)
+            },
+            colors = grouped.keys.map { category -> category.color.toArgb() },
+            centerText = currencyHelper.formatCurrency(incomes.sumOf { balances -> balances.amount })
+        )
+    }
+
+    private fun MyBuildExpenseChart(expenses: List<BalanceModel>): MyMonthsChartUiState {
+        val grouped = expenses.groupBy { balance ->  balance.category }
+
+        return MyMonthsChartUiState(
+            entries = grouped.map { (category, balances) ->
+                PieChartData(balances.sumOf { balance ->  balance.amount }.toFloat(), category)
+            },
+            colors = grouped.keys.map { category ->  category.color.toArgb() },
+            centerText = currencyHelper.formatCurrency(expenses.sumOf { balance -> balance.amount })
+        )
+
+    }
 }
+
+//private fun buildIncomeChart(incomes: List<BalanceModel>): MonthsChartUiState {
+//        val grouped = incomes.groupBy {balance -> balance.category }
+//
+//        return MonthsChartUiState(
+//            entries = grouped.map { (category, balances) ->
+//                PieEntry(balances.sumOf {balance -> balance.amount }.toFloat(), category)
+//            },
+//            colors = grouped.keys.map { category -> category.color.toArgb() },
+//            centerText = currencyHelper.formatCurrency(incomes.sumOf { balances -> balances.amount })
+//        )
+//    }
+//
+//    private fun buildExpenseChart(expenses: List<BalanceModel>): MonthsChartUiState {
+//        val grouped = expenses.groupBy { balance ->  balance.category }
+//
+//        return MonthsChartUiState(
+//            entries = grouped.map { (category, balances) ->
+//                PieEntry(balances.sumOf { balance ->  balance.amount }.toFloat(), category)
+//            },
+//            colors = grouped.keys.map { category ->  category.color.toArgb() },
+//            centerText = currencyHelper.formatCurrency(expenses.sumOf { balance -> balance.amount })
+//        )
+//    }
 
 
 

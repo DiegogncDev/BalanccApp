@@ -50,27 +50,40 @@ class AddBalanceViewModel @Inject constructor(
     fun save(
         year: String,
         month: String,
-    ): Result<Unit> {
+    ) {
         val state = _uiState.value
 
         if (!state.isValid || state.selectedDay == null) {
-            return Result.failure(IllegalArgumentException(""))
+            _uiState.update { it.copy(error = "Invalid data") }
+            return
         }
 
+        _uiState.update { it.copy(isSaving = true, error = null) }
+
         viewModelScope.launch {
-            insertBalanceUseCase(
-                BalanceModel(
-                    type = if (state.isIncome) "income" else "expense",
-                    amount = state.amount.toDouble(),
-                    day = state.selectedDay,
-                    month = month,
-                    year = year,
-                    category = state.category,
-                    description = state.details
+
+            try {
+                insertBalanceUseCase(
+                    BalanceModel(
+                        type = if (state.isIncome) "income" else "expense",
+                        amount = state.amount.toDouble(),
+                        day = state.selectedDay,
+                        month = month,
+                        year = year,
+                        category = state.category,
+                        description = state.details
+                    )
                 )
-            )
+                _uiState.update { it.copy(saveSuccess = true, isSaving = false) }
+
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = e.message, isSaving = false) }
+            }
         }
-        return Result.success(Unit)
+    }
+
+    fun resetSaveEvent() {
+        _uiState.update { it.copy(saveSuccess = false, error = null) }
     }
 
 }
