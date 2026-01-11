@@ -22,12 +22,7 @@ class AddBalanceViewModel @Inject constructor(
     val uiState: StateFlow<AddBalanceUiState> = _uiState
 
     fun onAmountChange(value: String) {
-        _uiState.update {
-            it.copy(
-                amount = value,
-                isValid = value.isNotBlank()
-            )
-        }
+        _uiState.update { it.copy(amount = value) }
     }
 
     fun onCategoryChange(category: Category) {

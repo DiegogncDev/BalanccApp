@@ -34,6 +34,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -174,18 +175,23 @@ fun AddBalanceButton(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        enabled = uiState.isValid && uiState.isSaving,
-        onClick = {
-            if (uiState.isSaving) {
-                Toast.makeText(context, "Balance Added", Toast.LENGTH_SHORT).show()
-            }else {
-                Toast.makeText(context, "Invalid Data", Toast.LENGTH_SHORT).show()
-            }
-        }
+        enabled = uiState.isValid && !uiState.isSaving,
+        onClick ={ onSave(selectedYear.toString(), selectedMonth) }
     ) {
-        Text(text = stringResource(R.string.add),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold)
+        if (uiState.isSaving) {
+            // Feedback visual de carga
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                color = MaterialTheme.colorScheme.onPrimary,
+                strokeWidth = 2.dp
+            )
+        } else {
+            Text(
+                text = stringResource(R.string.add),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 
