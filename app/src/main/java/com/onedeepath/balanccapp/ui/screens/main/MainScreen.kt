@@ -17,11 +17,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,6 +37,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -83,6 +87,7 @@ fun MainScreen(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = { SnackbarHost(snackBarHostState) },
         floatingActionButton = { AddBalanceFAB(
             navController = navController,
@@ -91,42 +96,28 @@ fun MainScreen(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(color = MaterialTheme.colorScheme.surface),
+                .fillMaxWidth(),
 
             ) {
-            HeaderBalanccApp()
+                HeaderBalanccApp(
+                    selectedYear = state.selectedYear,
+                    onYearSelected = { newYear ->
+                        viewModel.onYearSelected(newYear)
+                        yearMonthViewModel.setYear(newYear)
+                    }
+                )
 
-            YearFilter(
-                selectedYear = state.selectedYear,
-                onYearSelected = { newYear ->
-                    viewModel.onYearSelected(newYear)
-                    yearMonthViewModel.setYear(newYear)
-                }
-            )
-            Spacer(Modifier.height(16.dp))
-
-            when {
-                state.isLoading -> {
-                    CircularProgressIndicator(
-                        Modifier
-                            .fillMaxSize()
-                            .padding(120.dp)
-                    )
-                }
-
-                state.months.isNotEmpty() -> {
+                if (state.isLoading) {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    }
+                } else {
                     MonthsCards(
                         balances = state.months,
-                        onMonthClick = { index ->
-                            yearMonthViewModel.setMonthIndex(index)
-                        }, navController = navController
+                        onMonthClick = { index -> yearMonthViewModel.setMonthIndex(index) },
+                        navController = navController
                     )
                 }
-
-            }
-
-            Spacer(Modifier.height(32.dp))
         }
     }
 
@@ -154,24 +145,27 @@ fun AddBalanceFAB(navController: NavController, onFastAddBalance: (isFastAddBala
 }
 
 @Composable
-fun HeaderBalanccApp() {
-    Spacer(modifier = Modifier.height(32.dp))
-    Text(
-        text = stringResource(R.string.app_name),
-        fontSize = 45.sp,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.padding(start = 16.dp)
-    )
-    Spacer(modifier = Modifier.height(16.dp))
-    Text(
-        text = stringResource(R.string.sort_by),
-        fontSize = 22.sp,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.padding(start = 16.dp)
-    )
-    Spacer(Modifier.height(32.dp))
+fun HeaderBalanccApp(
+    selectedYear: String,
+    onYearSelected: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 24.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.app_name), // app_name
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight.ExtraBold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Selector de año estilo "Chip"
+        YearFilterChip(selectedYear, onYearSelected)
+    }
 }
 
 
@@ -185,70 +179,71 @@ fun BalanceCardItem(balance: MonthsBalanceUi, onClick: () -> Unit, navController
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        shape = RoundedCornerShape(16.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary)
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(
-            Modifier.padding(16.dp)
-        ) {
+        Column(Modifier.padding(20.dp)) {
             Text(
                 text = balance.monthName,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 22.sp
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
-            Spacer(Modifier.height(8.dp))
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(stringResource(R.string.incomes),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp)
-                Text(
-                    formatCurrency(balance.income),
-                    color = Color.Green,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp
+
+            Spacer(Modifier.height(16.dp))
+
+
+            Row(Modifier.fillMaxWidth()) {
+                BalanceStat(
+                    label = "Ingresos",
+                    value = balance.income,
+                    color = Color(0xFF4CAF50), // Un verde más amigable
+                    modifier = Modifier.weight(1f)
+                )
+                BalanceStat(
+                    label = "Gastos",
+                    value = balance.expense,
+                    color = Color(0xFFE57373), // Un rojo coral
+                    modifier = Modifier.weight(1f)
                 )
             }
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 12.dp),
+                thickness = 1.dp,
+                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.1f)
+            )
+
             Row(
                 Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(stringResource(R.string.expenses),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp)
                 Text(
-                    formatCurrency(balance.expense),
-                    color = Color.Red,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp
+                    "Balance Total",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
-            }
-            HorizontalDivider(Modifier.padding(vertical = 8.dp))
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(stringResource(R.string.balance),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp)
                 Text(
                     text = formatCurrency(balance.balance),
-                    color = if (balance.balance > 0) Color.Green else Color.Red,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.ExtraBold),
+                    color = if (balance.balance >= 0) Color(0xFF4CAF50) else Color(0xFFE57373)
                 )
-
             }
         }
+    }
+
+}
+
+@Composable
+fun BalanceStat(label: String, value: Double, color: Color, modifier: Modifier) {
+    Column(modifier = modifier) {
+        Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f))
+        Text(formatCurrency(value), style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold), color = color)
     }
 }
 
@@ -273,6 +268,38 @@ fun MonthsCards(
             )
 
         }
+    }
+
+}
+
+@Composable
+fun YearFilterChip(selectedYear: String, onYearSelected: (String) -> Unit) {
+
+    var showDialog by remember { mutableStateOf(false) }
+
+    Surface(
+        onClick = { showDialog = true },
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(Icons.Default.DateRange, contentDescription = null, modifier = Modifier.size(16.dp))
+            Spacer(Modifier.width(8.dp))
+            Text(selectedYear, fontWeight = FontWeight.Medium)
+            Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+        }
+    }
+
+    if (showDialog) {
+        YearPickerDialog(
+            onYearSelected = { year ->
+                onYearSelected(year.toString())
+                showDialog = false
+            },
+            onDismiss = { showDialog = false })
     }
 
 }
