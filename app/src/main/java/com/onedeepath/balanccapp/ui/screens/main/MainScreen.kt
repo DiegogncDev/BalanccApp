@@ -97,7 +97,8 @@ fun MainScreen(
     ) { padding ->
         Column(
             modifier = Modifier
-                .fillMaxWidth().padding(padding)
+                .fillMaxWidth()
+                .padding(padding)
             ) {
                 HeaderBalanccApp(
                     selectedYear = state.selectedYear,
@@ -230,7 +231,7 @@ fun BalanceCardItem(balance: MonthsBalanceUi, onClick: () -> Unit, navController
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Text(
-                    text = formatCurrency(balance.balance),
+                    text = if (balance.balance > 0) "+${formatCurrency(balance.balance)}" else formatCurrency(balance.balance),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.ExtraBold),
                     color = if (balance.balance >= 0) Color(0xFF4CAF50) else Color(0xFFE57373)
                 )

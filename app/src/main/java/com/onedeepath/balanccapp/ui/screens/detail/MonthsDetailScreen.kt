@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -55,6 +56,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
@@ -77,6 +79,7 @@ import com.onedeepath.balanccapp.ui.screens.detail.model.MonthsDetailUiState
 import com.onedeepath.balanccapp.ui.screens.detail.model.MyMonthsChartUiState
 import com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData
 import com.onedeepath.balanccapp.ui.screens.detail.viewmodel.MonthsDetailViewModel
+import java.time.Month
 
 enum class ChartType{
     INCOME,
@@ -91,7 +94,6 @@ fun MonthsDetailScreen(
     yearMonthViewModel: YearMonthViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
     val year by yearMonthViewModel.selectedYear.collectAsState()
     val month by yearMonthViewModel.selectedMonthIndex.collectAsState()
 
@@ -106,26 +108,119 @@ fun MonthsDetailScreen(
         floatingActionButton = {
             yearMonthViewModel.setIsFastAddBalance(false)
             AddIncomeOrExpenseFAB(navController = navController) }
-    ) {
+    ) { padding ->
         Column(
             Modifier
-                .fillMaxSize(),
+                .fillMaxSize().padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            HeaderDate(uiState = uiState)
-            MonthBalance(uiState = uiState)
+            HeaderSection(uiState)
+
+            MainContentSheet(uiState = uiState, onDelete = viewModel::deleteBalance)
+
+//            HeaderDate(uiState = uiState)
+//            MonthBalance(uiState = uiState)
 
             //------- Section 2
 
-            TabRowIncomesExpenses(
-                incomes = uiState.incomes,
-                expenses = uiState.expenses,
-                incomeChart = uiState.incomeChart,
-                expenseChart = uiState.expenseChart,
-                onDelete = viewModel::deleteBalance
-                )
+//            TabRowIncomesExpenses(
+//                incomes = uiState.incomes,
+//                expenses = uiState.expenses,
+//                incomeChart = uiState.incomeChart,
+//                expenseChart = uiState.expenseChart,
+//                onDelete = viewModel::deleteBalance
+//                )
         }
+    }
+}
+
+@Composable
+fun MainContentSheet(uiState: MonthsDetailUiState, onDelete: (Int) -> Unit) {
+    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
+    val tabItems = listOf("Ingresos", "Gastos")
+    val pagerState = rememberPagerState { tabItems.size }
+
+    LaunchedEffect(selectedTabIndex) { pagerState.animateScrollToPage(selectedTabIndex) }
+    LaunchedEffect(pagerState.currentPage) { selectedTabIndex = pagerState.currentPage }
+
+    // Superficie blanca redondeada que contiene
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+        tonalElevation = 2.dp
+    ) {
+        Column(modifier = Modifier.padding(top = 16.dp)) {
+            // TabRow Estilo Pill
+            TabRow(
+                selectedTabIndex = selectedTabIndex,
+                containerColor = Color.Transparent,
+                contentColor = MaterialTheme.colorScheme.primary,
+                indicator = {}, // Eliminamos el indicador de línea por defecto
+                divider = {},
+                modifier = Modifier
+                    .padding(horizontal = 24.dp, vertical = 8.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f))
+            ) {
+                tabItems.forEachIndexed { index, title ->
+                    val selected = selectedTabIndex == index
+                    Tab(
+                        selected = selected,
+                        onClick = { selectedTabIndex = index },
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .clip(CircleShape)
+                            .background(if (selected) MaterialTheme.colorScheme.primary else Color.Transparent),
+                        text = {
+                            Text(
+                                text = title,
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+                                color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    )
+                }
+            }
+
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.Top
+            ) { index ->
+                when (index) {
+                    0 -> IncomePage(uiState.incomes, uiState.incomeChart, onDelete)
+                    1 -> ExpensePage(uiState.expenses, uiState.expenseChart, onDelete)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun HeaderSection(uiState: MonthsDetailUiState) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "${uiState.month} ${uiState.year}",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = uiState.totalBalanceFormatted,
+            style = MaterialTheme.typography.displaySmall.copy(
+                fontWeight = FontWeight.Black,
+                letterSpacing = (-1).sp
+            ),
+            color = uiState.totalBalanceColor
+        )
     }
 }
 
@@ -481,151 +576,143 @@ fun ExpenseList(expenses: List<BalanceModel>, onDelete: (Int) -> Unit) {
 @Composable
 fun IncomeCard(income: BalanceModel, onDelete: (Int) -> Unit) {
 
-
     Card(
-        onClick = {
-        },
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
-            .padding(horizontal = 8.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = income.category.color)
+            .padding(horizontal = 16.dp, vertical = 6.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = income.category.color),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Row(
-            Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(income.category.icon),
-                tint = Color.Black,
-                contentDescription = "Add",
-                modifier = Modifier.size(38.dp)
-            )
-            Spacer(Modifier.width(16.dp))
-            Column(
-                Modifier.weight(1f)
+            // Círculo para el icono
+            Surface(
+                modifier = Modifier.size(48.dp),
+                shape = CircleShape,
+                color = Color.White.copy(alpha = 0.5f)
             ) {
+                Icon(
+                    painter = painterResource(income.category.icon),
+                    contentDescription = null,
+                    modifier = Modifier.padding(12.dp),
+                    tint = Color.DarkGray
+                )
+            }
+
+            Spacer(Modifier.width(12.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = income.category.name,
-                    color = Color.Black,
-                    fontWeight = Bold,
-                    fontSize = 18.sp
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1A1A1A)
                 )
-                Spacer(Modifier.height(6.dp))
-                Text(
-                    text = income.description,
-                    fontSize = 14.sp,
-                    maxLines = 1,
-                    color = Color.Black
-                )
+                if (income.description.isNotEmpty()) {
+                    Text(
+                        text = income.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.DarkGray,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
 
             Text(
                 text = formatCurrency(income.amount),
-                fontSize = 18.sp,
-                fontWeight = Bold,
-                color = Color(0xFF2E7D32),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color(0xFF2E7D32)
             )
-            Spacer(Modifier.width(16.dp))
-            IconButton(
-                onClick = { onDelete(income.id) },
-                modifier = Modifier
-                    .size(32.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = CircleShape
-                    )
-            ) {
+
+            IconButton(onClick = { onDelete(income.id) }) {
                 Icon(
                     painter = painterResource(R.drawable.ic_trash),
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .size(20.dp)
+                    contentDescription = "Borrar",
+                    modifier = Modifier.size(20.dp),
+                    tint = Color.DarkGray.copy(alpha = 0.6f)
                 )
             }
         }
     }
+
 }
 
 @Composable
 fun ExpenseCard(expense: BalanceModel, onDelete: (Int) -> Unit) {
 
-
     Card(
-        onClick = {
-        },
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        colors = CardDefaults.cardColors(containerColor = expense.category.color)
+            .padding(horizontal = 16.dp, vertical = 6.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = expense.category.color),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Row(
-            Modifier.padding(16.dp),
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(expense.category.icon),
-                tint = Color.Black, contentDescription = "",
-                modifier = Modifier.size(38.dp)
-            )
-            Spacer(Modifier.width(16.dp))
-            Column(
-                Modifier
-                    .width(150.dp)
-            ) {
-                Text(
-                    text = expense.category.name,
-                    color = Color.Black,
-                    fontWeight = Bold,
-                    fontSize = 18.sp
-                )
-                Spacer(Modifier.height(6.dp))
-                Text(
-                    text = expense.description,
-                    fontSize = 14.sp,
-                    maxLines = 1,
-                    color = Color.Black
-                )
-            }
-            Spacer(Modifier.weight(1f))
-            Text(
-                text = formatCurrency(expense.amount),
-                fontSize = 18.sp,
-                fontWeight = Bold,
-                color = Color.Red
-                )
-            Spacer(Modifier.width(16.dp))
-            IconButton(
-                onClick = { onDelete(expense.id) },
-                modifier = Modifier
-                    .size(32.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = CircleShape
-                    )
+            // Círculo para el icono
+            Surface(
+                modifier = Modifier.size(48.dp),
+                shape = CircleShape,
+                color = Color.White.copy(alpha = 0.5f)
             ) {
                 Icon(
-                    painter = painterResource(com.onedeepath.balanccapp.R.drawable.ic_trash),
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .size(20.dp)
+                    painter = painterResource(expense.category.icon),
+                    contentDescription = null,
+                    modifier = Modifier.padding(12.dp),
+                    tint = Color.DarkGray
+                )
+            }
+
+            Spacer(Modifier.width(12.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = expense.category.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1A1A1A)
+                )
+                if (expense.description.isNotEmpty()) {
+                    Text(
+                        text = expense.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.DarkGray,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+
+            Text(
+                text = formatCurrency(expense.amount),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color(0xFF2E7D32)
+            )
+
+            IconButton(onClick = { onDelete(expense.id) }) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_trash),
+                    contentDescription = "Borrar",
+                    modifier = Modifier.size(20.dp),
+                    tint = Color.DarkGray.copy(alpha = 0.6f)
                 )
             }
         }
     }
+
 }
 
 @Composable
