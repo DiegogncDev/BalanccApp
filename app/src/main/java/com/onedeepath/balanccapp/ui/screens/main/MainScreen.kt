@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -93,11 +94,10 @@ fun MainScreen(
             navController = navController,
             onFastAddBalance = yearMonthViewModel::setIsFastAddBalance)
         }
-    ) {
+    ) { padding ->
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
-
+                .fillMaxWidth().padding(padding)
             ) {
                 HeaderBalanccApp(
                     selectedYear = state.selectedYear,
@@ -152,7 +152,8 @@ fun HeaderBalanccApp(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 24.dp)
+            .statusBarsPadding()
+            .padding(horizontal = 20.dp)
     ) {
         Text(
             text = stringResource(R.string.app_name), // app_name
@@ -199,13 +200,13 @@ fun BalanceCardItem(balance: MonthsBalanceUi, onClick: () -> Unit, navController
 
             Row(Modifier.fillMaxWidth()) {
                 BalanceStat(
-                    label = "Ingresos",
+                    label = stringResource(R.string.incomes),
                     value = balance.income,
                     color = Color(0xFF4CAF50), // Un verde más amigable
                     modifier = Modifier.weight(1f)
                 )
                 BalanceStat(
-                    label = "Gastos",
+                    label = stringResource(R.string.expenses),
                     value = balance.expense,
                     color = Color(0xFFE57373), // Un rojo coral
                     modifier = Modifier.weight(1f)
@@ -224,7 +225,7 @@ fun BalanceCardItem(balance: MonthsBalanceUi, onClick: () -> Unit, navController
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Balance Total",
+                    "Balance",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
