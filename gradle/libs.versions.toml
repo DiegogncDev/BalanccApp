@@ -13,6 +13,7 @@ roomRuntimeAndroid = "2.7.2"
 navigationRuntimeAndroid = "2.9.6"
 foundation = "1.10.0"
 junitJunit = "4.12"
+foundationLayout = "1.10.1"
 
 
 [libraries]
@@ -36,6 +37,7 @@ androidx-room-runtime-android = { group = "androidx.room", name = "room-runtime-
 androidx-navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroid" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 
 
 

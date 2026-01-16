@@ -1,9 +1,12 @@
 package com.onedeepath.balanccapp.ui.screens.addbalance
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.widget.Space
 import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -12,15 +15,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
@@ -35,6 +46,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -43,6 +55,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -60,6 +75,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -89,6 +105,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AddIncomeOrExpenseScreen(
     viewModel: AddBalanceViewModel = hiltViewModel(),
@@ -113,52 +130,60 @@ fun AddIncomeOrExpenseScreen(
     val isFastAddBalance:Boolean by yearMonthViewModel.isFastAddBalance.collectAsState()
     val selectedMonthByFastAdd:String by yearMonthViewModel.selectedMonthByFastAdd.collectAsState()
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .background(
-                MaterialTheme.colorScheme.surface
-            )
-            .padding(16.dp)
+    Scaffold(
+        topBar = { HeaderAdd() },
+        containerColor = MaterialTheme.colorScheme.background
+    ) { padding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState()) // for small screen
+                .padding(horizontal = 16.dp)
 
-    ) {
-        HeaderAdd()
-        IncomeExpenseTabview(
-            isIncome = uiState.isIncome,
-            onCheckedChange = viewModel::onTypeChange)
-        AddAmountTF(
-            amount = uiState.amount,
-            onAmountChange = viewModel::onAmountChange
-        )
-        Spacer(Modifier.height(32.dp))
-        AddCategorySelector(
-            selectedCategory = uiState.category,
-            onCategoryChange = viewModel::onCategoryChange)
-        Spacer(Modifier.height(32.dp))
-        DatePickerSelector(
-            selectedYear =  selectedYear.toInt(),
-            selectedMonth =  if (isFastAddBalance) selectedMonthByFastAdd
-            else selectedMonthByIndex,
-            isFastAddBalance = isFastAddBalance,
-            onDaySelected = { day ->
-                viewModel.onDaySelected(day.toString())
-            },
-            onMonthSelected = yearMonthViewModel::setMonth
-        )
-        Spacer(Modifier.height(32.dp))
-        DetailsTF(
-            details = uiState.details,
-            onDetailsChange = viewModel::onDetailsChange
-        )
-        Spacer(Modifier.height(32.dp))
-        AddBalanceButton(
-            uiState =  uiState,
-            selectedYear =  selectedYear.toInt(),
-            selectedMonth =
-                if(isFastAddBalance) selectedMonthByFastAdd
+        ) {
+            IncomeExpenseTabview(
+                isIncome = uiState.isIncome,
+                onCheckedChange = viewModel::onTypeChange
+            )
+            Spacer(Modifier.height(24.dp))
+            AddAmountTF(
+                amount = uiState.amount,
+                onAmountChange = viewModel::onAmountChange
+            )
+            Spacer(Modifier.height(32.dp))
+            AddCategorySelector(
+                selectedCategory = uiState.category,
+                onCategoryChange = viewModel::onCategoryChange
+            )
+            Spacer(Modifier.height(16.dp))
+            DatePickerSelector(
+                selectedYear = selectedYear.toInt(),
+                selectedMonth = if (isFastAddBalance) selectedMonthByFastAdd
                 else selectedMonthByIndex,
-            onSave = {year, month -> viewModel.save(year, month)},
-            context =  context,)
+                isFastAddBalance = isFastAddBalance,
+                onDaySelected = { day ->
+                    viewModel.onDaySelected(day.toString())
+                },
+                onMonthSelected = yearMonthViewModel::setMonth
+            )
+            Spacer(Modifier.height(16.dp))
+            DetailsTF(
+                details = uiState.details,
+                onDetailsChange = viewModel::onDetailsChange
+            )
+            Spacer(Modifier.height(40.dp))
+            AddBalanceButton(
+                uiState = uiState,
+                selectedYear = selectedYear.toInt(),
+                selectedMonth =
+                    if (isFastAddBalance) selectedMonthByFastAdd
+                    else selectedMonthByIndex,
+                onSave = { year, month -> viewModel.save(year, month) },
+                context = context,
+            )
+            Spacer(Modifier.height(24.dp))
+        }
     }
 }
 
@@ -173,7 +198,7 @@ fun AddBalanceButton(
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onSurface
+            contentColor = MaterialTheme.colorScheme.onPrimary
         ),
         enabled = uiState.isValid && !uiState.isSaving,
         onClick ={ onSave(selectedYear.toString(), selectedMonth) }
@@ -197,12 +222,19 @@ fun AddBalanceButton(
 
 @Composable
 fun HeaderAdd(){
-    Spacer(Modifier.height(32.dp))
-    Text(text = stringResource(R.string.add),
-        fontSize = 55.sp,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSurface)
-    Spacer(Modifier.height(16.dp))
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .statusBarsPadding() // <--- ESTO es lo que empuja el contenido debajo de la hora/batería
+            .padding(horizontal = 20.dp, vertical = 16.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.add),
+            style = MaterialTheme.typography.displaySmall,
+            fontWeight = FontWeight.Black,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
 }
 
 
@@ -214,7 +246,7 @@ fun DetailsTF(details: String, onDetailsChange: (String) -> Unit) {
         onValueChange = onDetailsChange,
         textStyle = TextStyle(
             fontSize = 18.sp,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.primary
         ),
         label = { Text(stringResource(R.string.details), color = MaterialTheme.colorScheme.onSurface) },
         placeholder = { Text(stringResource(R.string.enter_details), color = MaterialTheme.colorScheme.onSurface) },
@@ -223,11 +255,10 @@ fun DetailsTF(details: String, onDetailsChange: (String) -> Unit) {
             .height(120.dp), // altura más grande para parecer un "text area"
         maxLines = 5,
         singleLine = false,
-        colors = TextFieldDefaults.colors(
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
             focusedContainerColor = MaterialTheme.colorScheme.surface,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-            disabledIndicatorColor = Color.Transparent,
-            errorIndicatorColor = Color.Transparent
         )
     )
 }
@@ -266,12 +297,13 @@ fun DatePickerSelector(
     var currentDay by remember { mutableStateOf("") }
 
     val calendarTheme = MaterialTheme.colorScheme.copy(
-        surface = Color.Black,            // Fondo del dialogo
-        onSurface = Color.White,          // Texto de los días (Números)
-        surfaceVariant = Color(0xFF2B2828), // Fondo de cabeceras o días inactivos
-        onSurfaceVariant = Color.Black,   // Texto sobre variantes
-        primary = MaterialTheme.colorScheme.primary, // Mantiene tu color primario para la selección
-        onPrimary = Color.White           // Texto dentro del círculo de selección
+        surface = MaterialTheme.colorScheme.surface,          // Violet background
+        onSurface = MaterialTheme.colorScheme.onSurface,      // obscure text
+        primary = MaterialTheme.colorScheme.primary,          // Circle selection violet
+        onPrimary = MaterialTheme.colorScheme.onPrimary,      // Selected number white
+        secondaryContainer = MaterialTheme.colorScheme.primaryContainer,
+        onSecondaryContainer = MaterialTheme.colorScheme.onPrimaryContainer
+
     )
 
     Card(
@@ -320,7 +352,9 @@ fun DatePickerSelector(
                     if (currentDay.isEmpty())
                         Icon(Icons.Default.Add,
                             contentDescription = null,
-                            modifier = Modifier.size(24.dp).fillMaxWidth(),
+                            modifier = Modifier
+                                .size(24.dp)
+                                .fillMaxWidth(),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                 },
@@ -488,77 +522,69 @@ fun AddCategorySelector(selectedCategory: Category, onCategoryChange: (Category)
 
     var isExpanded by remember { mutableStateOf(false) }
 
-    val categories = Category.entries
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-            .clip(RoundedCornerShape(50)),
-        contentAlignment = Alignment.Center
+    // Usamos el color de la categoría para el fondo sutilmente
+    Surface(
+        onClick = { isExpanded = !isExpanded },
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
-        ExposedDropdownMenuBox(
-            expanded = isExpanded,
-            onExpandedChange = { isExpanded = !isExpanded},
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            TextField(
-                value = selectedCategory.name,
-                onValueChange = {},
-                readOnly = true,
-                shape = RoundedCornerShape(50),
-                textStyle = LocalTextStyle.current.copy(
-                    textAlign = TextAlign.Center,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = selectedCategory.color
-                ),
-                trailingIcon = {ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)},
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    disabledIndicatorColor = Color.Transparent,
-                    errorIndicatorColor = Color.Transparent
-                    ),
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth(),
-                leadingIcon = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Surface(
+                    shape = CircleShape,
+                    color = selectedCategory.color, // Usamos tus colores pastel definidos
+                    modifier = Modifier.size(40.dp)
+                ) {
                     Icon(
                         painter = painterResource(selectedCategory.icon),
-                        contentDescription = "",
-                        tint = selectedCategory.color
+                        contentDescription = null,
+                        tint = Color.DarkGray, // Ajustar según contraste del pastel
+                        modifier = Modifier.padding(8.dp)
                     )
-                },
-            )
-            ExposedDropdownMenu(
-                expanded = isExpanded,
-                onDismissRequest = {isExpanded = false}
-            ) { categories.forEach { category ->
+                }
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = selectedCategory.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+            Icon(Icons.Default.KeyboardArrowDown, contentDescription = null)
+        }
+
+        DropdownMenu(
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = false },
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+        ) {
+            Category.entries.forEach { category ->
                 DropdownMenuItem(
-                    modifier = Modifier.background(
-                        MaterialTheme.colorScheme.surfaceVariant),
-                    text = {
-                        Text(
-                            text = category.name,
-                            fontWeight = FontWeight.Bold,
-                            color = category.color)
-                           },
+                    text = { Text(category.name, fontWeight = FontWeight.Medium) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(category.icon),
+                            contentDescription = null,
+                            tint = category.color,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    },
                     onClick = {
                         onCategoryChange(category)
                         isExpanded = false
-                    },
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    leadingIcon =  { Icon(
-                        painter = painterResource(id = category.icon),
-                        contentDescription = "",
-                        tint = category.color
-                            )
-                        },
-                    )
-                }
+                    }
+                )
             }
         }
     }
+
 }
 
 @Composable
@@ -570,42 +596,49 @@ fun AddAmountTF(amount: String, onAmountChange: (String) -> Unit) {
 
     Spacer(Modifier.height(16.dp))
 
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(90.dp),
-        value = formattedAmount,
-        singleLine = true,
-        maxLines = 15,
-        textStyle = TextStyle(fontSize = 35.sp,
-            color = MaterialTheme.colorScheme.onSurface),
-        onValueChange = { newValue ->
-            // Clean the input to only allow digits
-            val newCleanedValue = newValue.replace(Regex("[^0-9]"), "")
-
-            // Limit the input to 15 characters if the values are no digits
-            if (newCleanedValue.length > 15) return@OutlinedTextField
-
-            if (newCleanedValue != cleanedAmount) {
-                onAmountChange(newCleanedValue)
-            }
-                        },
-        label = {
-            Text(
-                text = stringResource(R.string.amount), fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurface
-            )
-        },
-        placeholder = {
-            Text(text = stringResource(R.string.enter_amount), fontSize = 35.sp, color = MaterialTheme.colorScheme.onSurface)
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number
-        ),
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surface,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Amount",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.primary
         )
-    )
+        BasicTextField(
+            value = formattedAmount,
+            onValueChange = { newValue ->
+                val newCleanedValue = newValue.replace(Regex("[^0-9]"), "")
+                if (newCleanedValue.length <= 12) onAmountChange(newCleanedValue)
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            textStyle = TextStyle(
+                fontSize = 48.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface
+            ),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            decorationBox = { innerTextField ->
+                Box(contentAlignment = Alignment.Center) {
+                    if (amount.isEmpty()) {
+                        Text(
+                            "$0.00",
+                            style = TextStyle(
+                                fontSize = 48.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                            )
+                        )
+                    }
+                    innerTextField()
+                }
+            }
+        )
+    }
+
+
+
 }
 
 
@@ -619,38 +652,48 @@ fun IncomeExpenseTabview(isIncome: Boolean, onCheckedChange: (Boolean) -> Unit) 
         TabItem(stringResource(R.string.expenses_tab), Icons.Outlined.KeyboardArrowDown, Icons.Filled.KeyboardArrowDown)
     )
 
-    TabRow(
-        selectedTabIndex = selectedTabIndex,
+    Surface(
+        shape = RoundedCornerShape(50),
+        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
         modifier = Modifier
-            .fillMaxWidth(),
-        indicator = {},
-        divider = {}
+            .fillMaxWidth()
+            .height(48.dp)
     ) {
+        TabRow(
+            selectedTabIndex = selectedTabIndex,
+            modifier = Modifier
+                .fillMaxWidth(),
+            indicator = {},
+            divider = {}
+        ) {
 
-        tabItems.forEachIndexed { index, item ->
-            val selected = selectedTabIndex == index
-            Tab(
-                modifier = if (selected) Modifier
-                    .clip(RoundedCornerShape(25))
-                    .background(MaterialTheme.colorScheme.primary)
-                    .fillMaxSize()
-                else Modifier
-                    .clip(RoundedCornerShape(25))
-                    .background(MaterialTheme.colorScheme.background)
-                    .fillMaxSize(),
-                selected = selected,     //index == selectedTabIndex
-                onClick = {
-                    selectedTabIndex = index
-                    onCheckedChange(index == 0)
-                },
-                text = {Text(item.title,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    color = if (selected) MaterialTheme.colorScheme.onPrimary
-                    else MaterialTheme.colorScheme.onSurfaceVariant
+            tabItems.forEachIndexed { index, item ->
+                val selected = selectedTabIndex == index
+                Tab(
+                    modifier = if (selected) Modifier
+                        .clip(RoundedCornerShape(25))
+                        .background(MaterialTheme.colorScheme.primary)
+                        .fillMaxSize()
+                    else Modifier
+                        .clip(RoundedCornerShape(25))
+                        .background(MaterialTheme.colorScheme.background)
+                        .fillMaxSize(),
+                    selected = selected,     //index == selectedTabIndex
+                    onClick = {
+                        selectedTabIndex = index
+                        onCheckedChange(index == 0)
+                    },
+                    text = {
+                        Text(
+                            item.title,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            color = if (selected) MaterialTheme.colorScheme.onPrimary
+                            else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    },
                 )
-                },
-            )
+            }
         }
     }
 }

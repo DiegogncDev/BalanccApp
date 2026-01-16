@@ -16,47 +16,49 @@ val Pink40 = Color(0xFF7D5260)
  * Centralized colors following Material 3 semantics
  */
 
-// Primary brand colors
-val Primary = Color(0xFF800C95)
-val OnPrimary = Color(0xFFD0A7D0)
+// --- PALETA LILA AMIGABLE (M3) ---
+// Light Theme
+val PrimaryLight = Color(0xFF7149D0)    // Lila vibrante pero elegante
+val OnPrimaryLight = Color(0xFFE6C7F8)  // Blanco puro para contraste
+val PrimaryContainerLight = Color(0xFFF3E5F5)
+val OnPrimaryContainerLight = Color(0xFF2B0033)
 
+val SecondaryLight = Color(0xFF6D526E)  // Lila grisáceo para equilibrio
+val OnSecondaryLight = Color(0xFFFFFFFF)
 
-// Secondary / supporting colors
-val Secondary = Color(0xFFBF73C6)
-val OnSecondary = Color(0xFFFFFFFF)
+val TertiaryLight = Color(0xFF705573)   // Acento sutil
+val OnTertiaryLight = Color(0xFFFFFFFF)
 
+val BackgroundLight = Color(0xFFFFF7FF) // Blanco con un toque de lila (muy cómodo)
+val SurfaceLight = Color(0xFFFFF7FF)
+val OnSurfaceLight = Color(0xFF1E1A1D)
+val OutlineLight = Color(0xFF7F747C)
 
-// Tertiary / accent colors
-val Tertiary = Color(0xFFB872C1)
-val OnTertiary = Color(0xFF9C27B0)
+// Dark Theme
+val PrimaryDark = Color(0xFF7149D0)     // Lila claro para que resalte en negro
+val OnPrimaryDark = Color(0xFFE6C7F8)
+val PrimaryContainerDark = Color(0xFF78568F)
+val OnPrimaryContainerDark = Color(0xFFF6F6F6)
 
+val SecondaryDark = Color(0xFF766777)
 
-// Surface & background
-val SurfaceVariant = Color(0xFF741387)
-val Background = Color(0xFFFDDBFD)
+val BackgroundDark = Color(0xFF1D1B1E)  // Casi negro con tinte violeta
+val SurfaceDark = Color(0xFF1D1B1E)
+val OnSurfaceDark = Color(0xFFE7E1E5)
 
-
-// Text / emphasis colors
-val TextPrimary = Color(0xFF4B094C)
-val TextSecondary = Color(0xE98A64D2)
-
-
-// Status / utility
-val Outline = Color(0xFF151515)
-
-
-// CATEGORIES COLOR
+// --- CATEGORIES (Pastel Soft) ---
+// Ajustados para que no desentonen con el Lila
 val InvestmentColor = Color(0xFFB2EBF2)
 val WorkColor = Color(0xFFFFF9C4)
 val GiftColor = Color(0xFFF8BBD0)
 val GroceryColor = Color(0xFFFFCDD2)
-val EntertainmentColor = Color(0xFFBBDEFB)
+val EntertainmentColor = Color(0xFFD1C4E9) // Ajustado a lila
 val TransportColor = Color(0xFFCFD8DC)
 val UtilitiesColor = Color(0xFFB0BEC5)
-val RentColor = Color(0xFFEEEEEE)
+val RentColor = Color(0xFFE0E0E0)
 val HealthColor = Color(0xFFD7CCC8)
-val TravelColor = Color(0xFFE1F5FE)
+val TravelColor = Color(0xFFB3E5FC)
 val FoodColor = Color(0xFFF0F4C3)
 val EducationColor = Color(0xFFE1BEE7)
 val PetColor = Color(0xFFFFECB3)
-val OtherColor = Color(0xFFD7CCC8)
+val OtherColor = Color(0xFFD1D1D1)

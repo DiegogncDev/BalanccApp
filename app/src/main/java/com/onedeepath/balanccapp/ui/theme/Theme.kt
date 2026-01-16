@@ -12,33 +12,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-val LightColorScheme = darkColorScheme(
-    primary = Primary,
-    onPrimary = OnPrimary,
-    secondary = Secondary,
-    onSecondary = OnSecondary,
-    tertiary = Tertiary,
-    onTertiary = OnTertiary,
-    background = Background,
-    surfaceVariant = SurfaceVariant,
-    surface = Background,
-    onSurface = Color(0xFFB573B6),
-    outline = Outline
-
+val LightColorScheme = lightColorScheme(
+    primary = PrimaryLight,
+    onPrimary = OnPrimaryLight,
+    primaryContainer = PrimaryContainerLight,
+    onPrimaryContainer = OnPrimaryContainerLight,
+    secondary = SecondaryLight,
+    onSecondary = OnSecondaryLight,
+    tertiary = TertiaryLight,
+    onTertiary = OnTertiaryLight,
+    background = BackgroundLight,
+    surface = SurfaceLight,
+    onBackground = OnSurfaceLight,
+    onSurface = OnSurfaceLight,
+    outline = OutlineLight
 )
 
-val DarkColorScheme = lightColorScheme(
-    primary = Primary,
-    onPrimary = OnPrimary,
-    secondary = Secondary,
-    onSecondary = OnSecondary,
-    tertiary = Tertiary,
-    onTertiary = OnTertiary,
-    background = Color(0xFF121212),
-    surfaceVariant = Secondary,
-    surface = Color(0xFF1E1E1E),
-    onSurface = Color(0xFFE6A0EA),
-    outline = Color(0xFF444444)
+val DarkColorScheme = darkColorScheme(
+    primary = PrimaryDark,
+    onPrimary = OnPrimaryDark,
+    primaryContainer = PrimaryContainerDark,
+    onPrimaryContainer = OnPrimaryContainerDark,
+    secondary = SecondaryDark, // Puedes definir SecondaryDark similar al Light pero más claro
+    onSecondary = Color.White,
+    background = BackgroundDark,
+    surface = SurfaceDark,
+    onBackground = OnSurfaceDark,
+    onSurface = OnSurfaceDark,
+    outline = Color(0xFF998E96)
+)
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -49,13 +51,13 @@ val DarkColorScheme = lightColorScheme(
     onBackground = Color(0xFF1C1B1F),
     onSurface = Color(0xFF1C1B1F),
     */
-)
+
 
 @Composable
 fun BalanccAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false   ,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

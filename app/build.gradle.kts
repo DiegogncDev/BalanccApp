@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.room.runtime.android)
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.foundation.layout)
     testImplementation(libs.junit.junit)
     testImplementation(libs.junit.junit)
     testImplementation(libs.junit.junit)
