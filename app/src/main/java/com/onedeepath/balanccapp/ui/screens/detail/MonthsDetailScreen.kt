@@ -80,6 +80,8 @@ import com.onedeepath.balanccapp.ui.screens.detail.model.MyMonthsChartUiState
 import com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData
 import com.onedeepath.balanccapp.ui.screens.detail.viewmodel.MonthsDetailViewModel
 import java.time.Month
+import kotlin.collections.component1
+import kotlin.collections.component2
 
 enum class ChartType{
     INCOME,
@@ -119,18 +121,6 @@ fun MonthsDetailScreen(
 
             MainContentSheet(uiState = uiState, onDelete = viewModel::deleteBalance)
 
-//            HeaderDate(uiState = uiState)
-//            MonthBalance(uiState = uiState)
-
-            //------- Section 2
-
-//            TabRowIncomesExpenses(
-//                incomes = uiState.incomes,
-//                expenses = uiState.expenses,
-//                incomeChart = uiState.incomeChart,
-//                expenseChart = uiState.expenseChart,
-//                onDelete = viewModel::deleteBalance
-//                )
         }
     }
 }
@@ -224,125 +214,6 @@ fun HeaderSection(uiState: MonthsDetailUiState) {
     }
 }
 
-@Composable
-fun HeaderDate(uiState: MonthsDetailUiState) {
-    Spacer(Modifier.padding(top = 64.dp))
-    Text(
-        text = uiState.month,
-        fontSize = 35.sp,
-        fontWeight = FontWeight.ExtraBold,
-        color = MaterialTheme.colorScheme.onSurface,
-    )
-    Spacer(Modifier.height(4.dp))
-    Text(text = uiState.year, fontSize = 20.sp,
-        fontWeight = FontWeight.Medium,
-        color = MaterialTheme.colorScheme.onSurface)
-    Spacer(Modifier.height(16.dp))
-}
-
-@Composable
-fun MonthBalance(uiState: MonthsDetailUiState) {
-    Column(
-        Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = uiState.totalBalanceFormatted,
-            fontSize = 35.sp,
-            fontWeight = Bold,
-            color = uiState.totalBalanceColor
-        )
-        Spacer(Modifier.padding(bottom = 24.dp))
-    }
-}
-
-@Composable
-fun TabRowIncomesExpenses(
-    incomes: List<BalanceModel>,
-    expenses: List<BalanceModel>,
-    incomeChart: MyMonthsChartUiState,
-    expenseChart: MyMonthsChartUiState,
-    onDelete: (Int) -> Unit
-) {
-
-    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
-
-    val tabItems = listOf(
-        TabItem(stringResource(R.string.incomes_tab),
-            Icons.Outlined.KeyboardArrowUp,
-            Icons.Filled.KeyboardArrowUp),
-        TabItem(stringResource(R.string.expenses_tab),
-            Icons.Outlined.KeyboardArrowDown,
-            Icons.Filled.KeyboardArrowDown)
-    )
-
-    val pagerState = rememberPagerState {
-        tabItems.size
-    }
-
-    // LaunchedEffect only works if the key is changed. We used this twice to synchronize the pager and the tab.
-    LaunchedEffect(selectedTabIndex) { // if the user touch a window, the pager slide on it window
-        pagerState.animateScrollToPage(selectedTabIndex)
-    }
-    LaunchedEffect(pagerState.currentPage) { // if the user slide a window, the pager change on it window
-        selectedTabIndex = pagerState.currentPage
-    }
-
-
-     Card(
-         modifier = Modifier
-             .fillMaxSize()
-             .background(
-                 color = MaterialTheme.colorScheme.surface,
-                 shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-             .padding(8.dp),
-         shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
-     ){
-        TabRow(
-            selectedTabIndex = selectedTabIndex,
-            modifier = Modifier
-                .height(56.dp)
-                .background(MaterialTheme.colorScheme.surface),
-            indicator = {},
-            divider = {}
-        ) {
-            tabItems.forEachIndexed { index, item ->
-                val selected = selectedTabIndex == index
-                Tab(
-                    modifier = if (selected) Modifier
-                        .clip(RoundedCornerShape(20))
-                        .background(Color(0xFF88199A))
-                    else Modifier
-                        .clip(RoundedCornerShape(20))
-                        .background(MaterialTheme.colorScheme.surface),
-                    selected = selected,     //index == selectedTabIndex
-                    onClick = {
-                        selectedTabIndex = index
-                    },
-                    text = {
-                        Text(
-                            text = item.title,
-                            fontSize = 18.sp,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    },
-                )
-            }
-        }
-         HorizontalPager(
-             state = pagerState,
-             modifier = Modifier
-                 .weight(1f)
-                 .background(MaterialTheme.colorScheme.surface)
-         ) { index ->
-             when (index) {
-                 0 -> IncomePage(incomes, incomeChart, onDelete)
-                 1 -> ExpensePage(expenses, expenseChart, onDelete)
-             }
-         }
-     }
-}
 
 @Composable
 fun DonutChart(
@@ -406,6 +277,19 @@ fun DonutChart(
         },
 
         )
+}
+
+@Composable
+fun DateHeader(date: String) {
+    Text(
+        text = date,
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.ExtraBold,
+        color = MaterialTheme.colorScheme.primary, // O usa OutlineLight de tu paleta
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 24.dp, top = 16.dp, bottom = 8.dp)
+    )
 }
 
 @Composable
@@ -532,14 +416,30 @@ fun IncomeList(incomes: List<BalanceModel>, onDelete: (Int) -> Unit) {
                         ,
                     textAlign = TextAlign.Center)
             } else {
+
+                val sortedIncomes = incomes.sortedByDescending {
+                    it.day.substringAfterLast("-").toIntOrNull() ?: 0
+                }
+
+                val groupedIncomes = sortedIncomes.groupBy { it.day }
                 LazyColumn(
                     Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surface)
                 ) {
-                    items(incomes.size) { income ->
-                        IncomeCard(incomes[income], onDelete)
+                    groupedIncomes.forEach { (rawDay, incomesList) ->
+
+                        item {
+                            val cleanDay = rawDay.substringAfterLast("-")
+                            val monthName = incomesList.first().month
+                            DateHeader(date = "$cleanDay $monthName")
+                        }
+
+                        items(incomesList.size) { income ->
+                            IncomeCard(incomesList[income], onDelete)
+                        }
                     }
+
                 }
 
         }
@@ -563,10 +463,23 @@ fun ExpenseList(expenses: List<BalanceModel>, onDelete: (Int) -> Unit) {
                     .align(Alignment.CenterHorizontally),
                 textAlign = TextAlign.Center)
         } else {
+            val sortedIncomes = expenses.sortedByDescending {
+                it.day.substringAfterLast("-").toIntOrNull() ?: 0
+            }
+
+            val groupedExpenses = sortedIncomes.groupBy { it.day }
+
             LazyColumn(
                 Modifier.fillMaxWidth()) {
-                    items(expenses.size) { expense ->
-                    ExpenseCard(expenses[expense], onDelete)
+                groupedExpenses.forEach { (rawDay, ExpensesList) ->
+                    item {
+                        val cleanDay = rawDay.substringAfterLast("-")
+                        val monthName = ExpensesList.first().month
+                        DateHeader(date = "$cleanDay $monthName")
+                    }
+                    items(ExpensesList.size) { income ->
+                        IncomeCard(ExpensesList[income], onDelete)
+                    }
                 }
             }
         }

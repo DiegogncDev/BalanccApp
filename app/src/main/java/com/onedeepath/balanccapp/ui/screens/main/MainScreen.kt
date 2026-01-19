@@ -132,7 +132,7 @@ fun AddBalanceFAB(navController: NavController, onFastAddBalance: (isFastAddBala
             onFastAddBalance(true)
             navController.navigate(AppScreens.AddIncomeOrExpenseScreen.route)
         },
-        containerColor = MaterialTheme.colorScheme.primary,
+        containerColor = MaterialTheme.colorScheme.secondary,
         shape = RoundedCornerShape(25)
     ) {
         Icon(
@@ -184,7 +184,7 @@ fun BalanceCardItem(balance: MonthsBalanceUi, onClick: () -> Unit, navController
             .padding(horizontal = 16.dp, vertical = 8.dp),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = MaterialTheme.colorScheme.primary
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -306,63 +306,6 @@ fun YearFilterChip(selectedYear: String, onYearSelected: (String) -> Unit) {
 
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun YearFilter(selectedYear: String, onYearSelected: (String) -> Unit) {
-
-    var showDialog by remember { mutableStateOf(false) }
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp)
-            .clip(RoundedCornerShape(50))
-    ) {
-        TextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .clip(RoundedCornerShape(50)),
-            value = selectedYear,
-            onValueChange = {},
-            readOnly = true,
-            singleLine = true,
-            textStyle = LocalTextStyle.current.copy(
-                textAlign = TextAlign.Center,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
-
-            ),
-            shape = RoundedCornerShape(50),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.primary,
-                unfocusedContainerColor = MaterialTheme.colorScheme.primary,
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent
-            )
-        )
-
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .clip(RoundedCornerShape(50))
-                .clickable { showDialog = true }
-
-        )
-    }
-
-
-    if (showDialog) {
-        YearPickerDialog(
-            onYearSelected = { year ->
-                onYearSelected(year.toString())
-                showDialog = false
-            },
-            onDismiss = { showDialog = false })
-    }
-}
 
 @Composable
 fun YearPickerDialog(

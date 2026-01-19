@@ -18,7 +18,7 @@ val Pink40 = Color(0xFF7D5260)
 
 // --- PALETA LILA AMIGABLE (M3) ---
 // Light Theme
-val PrimaryLight = Color(0xFF7149D0)    // Lila vibrante pero elegante
+val PrimaryLight = Color(0xFF9D7D9D)    // Lila vibrante pero elegante
 val OnPrimaryLight = Color(0xFFE6C7F8)  // Blanco puro para contraste
 val PrimaryContainerLight = Color(0xFFF3E5F5)
 val OnPrimaryContainerLight = Color(0xFF2B0033)
@@ -35,7 +35,7 @@ val OnSurfaceLight = Color(0xFF1E1A1D)
 val OutlineLight = Color(0xFF7F747C)
 
 // Dark Theme
-val PrimaryDark = Color(0xFF7149D0)     // Lila claro para que resalte en negro
+val PrimaryDark = Color(0xFF9D7D9D)     // Lila claro para que resalte en negro
 val OnPrimaryDark = Color(0xFFE6C7F8)
 val PrimaryContainerDark = Color(0xFF78568F)
 val OnPrimaryContainerDark = Color(0xFFF6F6F6)
