@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <string name="app_name">BalanccApp</string>
+        <string name="sort_by">Ordenar por</string>
+        <string name="add">Añadir</string>
+        <string name="incomes">Ingresos</string>
+        <string name="expenses">Gastos</string>
+
+        <string name="balance">Balance</string>
+
+        <string name="incomes_tab">Ingresos</string>
+        <string name="expenses_tab">Gastos</string>
+
+        <string name="amount">Monto</string>
+        <string name="details">Detalles</string>
+        <string name="enter_amount">Ingrese un monto</string>
+        <string name="enter_details">Ingrese detalles...</string>
+
+        <string name="select_year">Seleccionar año</string>
+
+        <string name="select_day">día</string>
+        <string name="select_month">Seleccionar mes</string>
+
+        <string name="no_expenses">Sin gastos</string>
+        <string name="no_incomes">Sin ingresos</string>
+
+        <string name="balance_added">Balance añadido con éxito</string>
+        <string name="please_enter_amount">Por favor, ingrese un monto</string>
+
+        <string name="investment">Inversión</string>
+        <string name="work">Trabajo</string>
+        <string name="gift">Regalo</string>
+        <string name="grocery">Despensa</string>
+        <string name="entertainment">Entretenimiento</string>
+        <string name="transport">Transporte</string>
+        <string name="utilities">Servicios</string>
+        <string name="rent">Renta</string>
+        <string name="health">Salud</string>
+        <string name="travel">Viajes</string>
+        <string name="food">Comida</string>
+        <string name="education">Educación</string>
+        <string name="other">Otro</string>
+
+        <string name="january">Enero</string>
+        <string name="february">Febrero</string>
+        <string name="march">Marzo</string>
+        <string name="april">Abril</string>
+        <string name="may">Mayo</string>
+        <string name="june">Junio</string>
+        <string name="july">Julio</string>
+        <string name="august">Agosto</string>
+        <string name="september">Septiembre</string>
+        <string name="october">Octubre</string>
+        <string name="november">Noviembre</string>
+        <string name="december">Diciembre</string>
+
+        <string name="dark_mode">Modo Oscuro</string>
+        <string name="settings">Ajustes</string>
+        <string name="appearance">Apariencia</string>
+        <string name="change_application_theme">Cambia el tema de la aplicación</string>
+        <string name="preferences">Preferencias</string>
+        <string name="language">Idioma</string>
+        <string name="select_language">Selecciona idioma</string>
+</resources>

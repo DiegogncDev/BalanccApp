@@ -7,16 +7,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.onedeepath.balanccapp.data.datastore.SettingsPreferences
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.addbalance.AddIncomeOrExpenseScreen
 import com.onedeepath.balanccapp.ui.screens.detail.MonthsDetailScreen
 import com.onedeepath.balanccapp.ui.screens.main.MainScreen
+import com.onedeepath.balanccapp.ui.screens.settings.SettingsScreen
 import com.onedeepath.balanccapp.ui.screens.splash.SplashScreen
 
 
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
-fun AppNavigation() {
+fun AppNavigation(
+    settingsPreferences: SettingsPreferences,
+    isDarkTheme: Boolean) {
 
     val navController = rememberNavController()
 
@@ -31,8 +35,6 @@ fun AppNavigation() {
 
             val parentEntry = remember{ backStackEntry }
             val yearMonthViewModel :  YearMonthViewModel = hiltViewModel(parentEntry)
-
-
             MainScreen(
                 navController = navController, yearMonthViewModel = yearMonthViewModel)
         }
@@ -55,6 +57,11 @@ fun AppNavigation() {
             val sharedViewModel: YearMonthViewModel = hiltViewModel(parentEntry)
 
             AddIncomeOrExpenseScreen(yearMonthViewModel = sharedViewModel)
+        }
+        composable(AppScreens.SettingsScreen.route) {
+
+            SettingsScreen(navController = navController, settingsPreferences, isDarkTheme)
+
         }
 
     }

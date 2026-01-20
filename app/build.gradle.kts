@@ -45,6 +45,9 @@ android {
 
 dependencies {
 
+    // datastore
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
     // MPAndroidCharts
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
@@ -61,6 +64,9 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.games.activity)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.appcompat)
     testImplementation(libs.junit.junit)
     testImplementation(libs.junit.junit)
     testImplementation(libs.junit.junit)

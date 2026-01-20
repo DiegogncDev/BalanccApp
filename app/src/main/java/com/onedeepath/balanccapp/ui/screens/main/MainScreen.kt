@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,6 +34,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -61,6 +63,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.androidgamesdk.gametextinput.Settings
 import com.onedeepath.balanccapp.R
 import com.onedeepath.balanccapp.core.formatCurrency
 import com.onedeepath.balanccapp.ui.navigation.AppScreens
@@ -102,10 +105,12 @@ fun MainScreen(
             ) {
                 HeaderBalanccApp(
                     selectedYear = state.selectedYear,
+                    navController = navController,
                     onYearSelected = { newYear ->
                         viewModel.onYearSelected(newYear)
                         yearMonthViewModel.setYear(newYear)
                     }
+
                 )
 
                 if (state.isLoading) {
@@ -148,7 +153,9 @@ fun AddBalanceFAB(navController: NavController, onFastAddBalance: (isFastAddBala
 @Composable
 fun HeaderBalanccApp(
     selectedYear: String,
-    onYearSelected: (String) -> Unit
+    navController: NavController,
+    onYearSelected: (String) -> Unit,
+
 ) {
     Column(
         modifier = Modifier
@@ -156,13 +163,28 @@ fun HeaderBalanccApp(
             .statusBarsPadding()
             .padding(horizontal = 20.dp)
     ) {
-        Text(
-            text = stringResource(R.string.app_name), // app_name
-            style = MaterialTheme.typography.headlineMedium.copy(
-                fontWeight = FontWeight.ExtraBold,
-                color = MaterialTheme.colorScheme.onSurface
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.app_name), // app_name
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             )
-        )
+
+            IconButton(onClick = { navController.navigate(AppScreens.SettingsScreen.route) }) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings",
+                    tint = MaterialTheme.colorScheme.primary, // Usará tu color 0xFF8E44AD
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(8.dp))
 
         // Selector de año estilo "Chip"
