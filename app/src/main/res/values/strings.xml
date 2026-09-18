@@ -29,6 +29,7 @@
     <!-- Empty Statements -->
     <string name="no_expenses">No expenses</string>
     <string name="no_incomes">No incomes</string>
+    <string name="no_movements_in_year">No transactions in %1$s</string>
 
     <!--- Toast -->
     <string name="balance_added">Balance Added Successfully</string>

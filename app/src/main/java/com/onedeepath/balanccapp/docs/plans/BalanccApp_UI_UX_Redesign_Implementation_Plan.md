@@ -140,11 +140,14 @@ Implement the redesign described in `BalanccApp_UI_UX_Redesign_Spec.md` while pr
 - Migrated Settings to `BalanccTopBar` and `SectionHeader` without changing DataStore behavior or navigation.
 - `./gradlew test` completed with the same recorded baseline result: 35 passed and `MainViewModelTest.kt:129` failed.
 
-### [ ] Phase 3 — Dashboard redesign
+### [x] Phase 3 — Dashboard redesign
 
 **Likely files**
 
 - `ui/screens/main/MainScreen.kt`
+- `ui/components/FinancialAmount.kt`
+- `ui/components/FinancialSummaryCard.kt`
+- `ui/components/YearSelector.kt`
 - `res/values/strings.xml`
 - `res/values-es/strings.xml`
 
@@ -161,6 +164,16 @@ Implement the redesign described in `BalanccApp_UI_UX_Redesign_Spec.md` while pr
 
 - Test years with and without movements and positive/negative balances.
 - Open a month from the redesigned card and verify the selected month is preserved.
+
+**Implementation result — 2026-09-18**
+
+- Created reusable `FinancialAmount` composable for semantic currency styling (income green, expense red, sign support).
+- Created `FinancialSummaryCard` replacing the old purple cards with clean surface styling, 20dp corners, 1dp subtle border, and distinct income/expense/balance hierarchy.
+- Created `YearSelector` chip component powered by `SelectionDialog`.
+- Replaced manual emoji empty state in `MainScreen` with the shared `EmptyState` component and added localized strings (`no_movements_in_year`).
+- Configured `LazyColumn` bottom padding (`88.dp`) to prevent the `BalanccFab` from obscuring list items.
+- `:app:compileDebugKotlin` passed.
+- `./gradlew test` completed with the same recorded baseline result: 35 passed and `MainViewModelTest.kt:129` failed.
 
 ### [ ] Phase 4 — Add transaction and category selector redesign
 

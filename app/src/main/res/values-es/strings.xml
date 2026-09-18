@@ -24,6 +24,7 @@
 
         <string name="no_expenses">Sin gastos</string>
         <string name="no_incomes">Sin ingresos</string>
+        <string name="no_movements_in_year">No hay movimientos en %1$s</string>
 
         <string name="balance_added">Balance añadido con éxito</string>
         <string name="please_enter_amount">Por favor, ingrese un monto</string>
