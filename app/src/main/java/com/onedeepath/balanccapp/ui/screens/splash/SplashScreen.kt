@@ -1,10 +1,12 @@
 package com.onedeepath.balanccapp.ui.screens.splash
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -18,14 +20,11 @@ import com.onedeepath.balanccapp.ui.navigation.AppScreens
 
 @Composable
 fun SplashScreen(navController: NavController) {
-    // Navigate to the main screen after a delay or any essencial operation
+    // Navigate to the main screen after a delay or any essential operation
     LaunchedEffect(key1 = true) {
-
-        navController.popBackStack() // Remove the splash screen from the back stack to prevent going back
+        navController.popBackStack()
         navController.navigate(AppScreens.MainScreen.route)
     }
-
-
 
     Splash()
 }
@@ -33,14 +32,16 @@ fun SplashScreen(navController: NavController) {
 @Composable
 fun Splash() {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_balance),
             contentDescription = "Logo",
-            Modifier.size(150.dp, 150.dp)
+            modifier = Modifier.size(150.dp)
         )
     }
 }

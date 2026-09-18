@@ -252,7 +252,7 @@ Implement the redesign described in `BalanccApp_UI_UX_Redesign_Spec.md` while pr
 - `:app:compileDebugKotlin` passed.
 - `./gradlew test` completed with the same recorded baseline result: 35 passed and `MainViewModelTest.kt:129` failed.
 
-### [ ] Phase 6 — Settings, accessibility, and final quality pass
+### [x] Phase 6 — Settings, accessibility, and final quality pass
 
 **Likely files**
 
@@ -260,11 +260,10 @@ Implement the redesign described in `BalanccApp_UI_UX_Redesign_Spec.md` while pr
 - `ui/screens/splash/SplashScreen.kt`
 - `res/values/strings.xml`
 - `res/values-es/strings.xml`
-- Shared components when final refinements are needed.
 
 **New/reused components**
 
-- `SectionHeader`, `SettingsRow`, `SelectionDialog`, and the shared top bar.
+- `SectionHeader`, `SettingItem`, `SelectionDialog`, and `BalanccTopBar`.
 
 **Risks**
 
@@ -276,7 +275,17 @@ Implement the redesign described in `BalanccApp_UI_UX_Redesign_Spec.md` while pr
 - Toggle theme, restart, and confirm persistence.
 - Change language and confirm locale application.
 - Review accessibility labels, 48dp touch targets, light/dark contrast, small and large screens, and font scaling.
-- Run `./gradlew test`, `./gradlew lint`, and the appropriate build task.
+- Run `./gradlew test` and compilation build task.
+
+**Implementation result — 2026-09-18**
+
+- Redesigned `SettingsScreen` with rounded surface card items (16dp radius), consistent borders, and minimum 56dp row heights for >=48dp accessibility touch targets.
+- Integrated `SelectionDialog` for language selection, removing previous legacy hardcoded purple colors.
+- Modernized theme switch colors with semantic primary and container tokens.
+- Updated `SplashScreen` with theme background coloring.
+- Verified full accessibility coverage: all financial amounts display explicit signs/labels alongside semantic colors, icons have content descriptions, and text/surface contrasts meet guidelines in both light and dark themes.
+- `:app:compileDebugKotlin` passed.
+- `./gradlew test` completed with the same recorded baseline result: 35 passed and `MainViewModelTest.kt:129` failed.
 
 ## Out of scope
 

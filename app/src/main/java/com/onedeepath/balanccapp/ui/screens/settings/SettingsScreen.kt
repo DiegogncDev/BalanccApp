@@ -1,9 +1,8 @@
 package com.onedeepath.balanccapp.ui.screens.settings
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,31 +10,24 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,7 +37,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,10 +47,12 @@ import com.onedeepath.balanccapp.R
 import com.onedeepath.balanccapp.data.datastore.SettingsPreferences
 import com.onedeepath.balanccapp.ui.components.BalanccTopBar
 import com.onedeepath.balanccapp.ui.components.SectionHeader
+import com.onedeepath.balanccapp.ui.components.SelectionDialog
+import com.onedeepath.balanccapp.ui.theme.BalanccCornerRadius
+import com.onedeepath.balanccapp.ui.theme.BalanccSpacing
+import com.onedeepath.balanccapp.ui.theme.financialColors
 import kotlinx.coroutines.launch
 
-@SuppressLint("SuspiciousIndentation")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavController,
@@ -70,100 +63,110 @@ fun SettingsScreen(
     val currentLangCode by settingsPreferences.languageCode.collectAsState(initial = "es")
     var showLanguageDialog by remember { mutableStateOf(false) }
 
-    // Mapeo simple para mostrar el nombre bonito en la UI
     val languageDisplay = if (currentLangCode == "es") "Español" else "English"
+    val languageOptions = listOf("Español" to "es", "English" to "en")
 
-        Scaffold(
-            topBar = {
-                BalanccTopBar(
-                    title = stringResource(R.string.settings),
-                    onNavigateBack = navController::popBackStack,
-                )
-            },
-            containerColor = MaterialTheme.colorScheme.background
-        ) { padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 20.dp)
-            ) {
-                Spacer(modifier = Modifier.height(16.dp))
+    Scaffold(
+        topBar = {
+            BalanccTopBar(
+                title = stringResource(R.string.settings),
+                onNavigateBack = { navController.popBackStack() },
+            )
+        },
+        containerColor = MaterialTheme.colorScheme.background,
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(horizontal = BalanccSpacing.standard),
+        ) {
+            Spacer(modifier = Modifier.height(BalanccSpacing.small))
 
-                // Sección: Apariencia
-                SectionHeader(
-                    title = stringResource(R.string.appearance),
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+            SectionHeader(
+                title = stringResource(R.string.appearance),
+                modifier = Modifier.padding(
+                    start = BalanccSpacing.micro,
+                    top = BalanccSpacing.small,
+                    bottom = BalanccSpacing.compact,
+                ),
+            )
 
-                SettingItem(
-                    title = stringResource(R.string.dark_mode),
-                    description = stringResource(R.string.change_application_theme),
-                    icon = Icons.Default.CheckCircle,
-                    trailing = {
-                        Switch(
-                            checked = isDarkTheme,
-                            onCheckedChange = { newValue ->
-                                scope.launch { settingsPreferences.setDarkMode(newValue) }
-                            },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = MaterialTheme.colorScheme.primary,
-                                checkedTrackColor = MaterialTheme.colorScheme.primaryContainer
-                            )
+            SettingItem(
+                title = stringResource(R.string.dark_mode),
+                description = stringResource(R.string.change_application_theme),
+                icon = Icons.Default.Settings,
+                trailing = {
+                    Switch(
+                        checked = isDarkTheme,
+                        onCheckedChange = { newValue ->
+                            scope.launch { settingsPreferences.setDarkMode(newValue) }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                            checkedTrackColor = MaterialTheme.colorScheme.primary,
+                            uncheckedThumbColor = MaterialTheme.financialColors.textTertiary,
+                            uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer,
+                        ),
+                    )
+                },
+            )
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = BalanccSpacing.section),
+                thickness = 1.dp,
+                color = MaterialTheme.financialColors.border,
+            )
+
+            SectionHeader(
+                title = stringResource(R.string.preferences),
+                modifier = Modifier.padding(
+                    start = BalanccSpacing.micro,
+                    bottom = BalanccSpacing.compact,
+                ),
+            )
+
+            SettingItem(
+                title = stringResource(R.string.language),
+                description = stringResource(R.string.select_language),
+                icon = Icons.Default.Build,
+                onClick = { showLanguageDialog = true },
+                trailing = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = languageDisplay,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.financialColors.textSecondary,
+                            fontWeight = FontWeight.Medium,
+                        )
+                        Spacer(Modifier.width(BalanccSpacing.micro))
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.financialColors.textSecondary,
                         )
                     }
-                )
+                },
+            )
 
-                HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
-
-                // Sección: Preferencias
-                SectionHeader(
-                    title = stringResource(R.string.preferences),
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-
-                SettingItem(
-                    title = stringResource(R.string.language),
-                    description = stringResource(R.string.select_language),
-                    icon = Icons.Default.AddCircle,
-                    onClick = {
-                        showLanguageDialog = true
-                    },
-                    trailing = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = languageDisplay,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.outline // 0xFF7F747C
-                            )
-                            Icon(
-                                Icons.Default.Create,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.outline
-                            )
+            if (showLanguageDialog) {
+                SelectionDialog(
+                    title = stringResource(R.string.select_language),
+                    options = languageOptions,
+                    optionLabel = { it.first },
+                    onOptionSelected = { (_, code) ->
+                        scope.launch {
+                            settingsPreferences.setLanguage(code)
+                            val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(code)
+                            AppCompatDelegate.setApplicationLocales(appLocale)
                         }
-                    }
+                        showLanguageDialog = false
+                    },
+                    onDismiss = { showLanguageDialog = false },
                 )
-
-
-                if (showLanguageDialog) {
-                    LanguagePickerDialog(
-                        currentLanguageCode = currentLangCode,
-                        onLanguageSelected = { langCode ->
-                            scope.launch {
-                                settingsPreferences.setLanguage(langCode)
-                                // Aplicar el cambio a nivel sistema para la App
-                                val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(langCode)
-                                AppCompatDelegate.setApplicationLocales(appLocale)
-                            }
-                            showLanguageDialog = false
-                        },
-                        onDismiss = { showLanguageDialog = false }
-                    )
-                }
-
             }
         }
+    }
 }
 
 @Composable
@@ -171,88 +174,60 @@ fun SettingItem(
     title: String,
     description: String,
     icon: ImageVector,
+    modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    trailing: @Composable () -> Unit
+    trailing: @Composable () -> Unit,
 ) {
-    Row(
-        modifier = Modifier
+    Surface(
+        modifier = modifier
             .fillMaxWidth()
-            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .heightIn(min = 56.dp)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
+        shape = RoundedCornerShape(BalanccCornerRadius.input),
+        color = MaterialTheme.colorScheme.surface,
+        border = BorderStroke(1.dp, MaterialTheme.financialColors.border),
     ) {
-        // Icono con fondo suave (usando tus colores de contenedor)
-        Surface(
-            color = MaterialTheme.colorScheme.primaryContainer, // 0xFFF3E5F5
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.size(44.dp)
+        Row(
+            modifier = Modifier.padding(
+                horizontal = BalanccSpacing.standard,
+                vertical = BalanccSpacing.compact,
+            ),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(contentAlignment = Alignment.Center) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-            )
-        }
-
-        trailing()
-    }
-}
-
-@Composable
-fun LanguagePickerDialog(
-    currentLanguageCode: String,
-    onLanguageSelected: (String) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val languages = listOf("Español" to "es", "English" to "en")
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {},
-        title = { Text(stringResource(R.string.select_language), fontWeight = FontWeight.Bold) },
-        text = {
-            LazyColumn {
-                items(languages) { (name, code) ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onLanguageSelected(code) }
-                            .padding(vertical = 12.dp, horizontal = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(name, style = MaterialTheme.typography.bodyLarge)
-                        if (code == currentLanguageCode) {
-                            Icon(
-                                Icons.Default.Check,
-                                contentDescription = null,
-                                tint = Color(0xFF8E44AD) // Tu PrimaryLight
-                            )
-                        }
-                    }
+            Surface(
+                modifier = Modifier.size(40.dp),
+                shape = RoundedCornerShape(BalanccCornerRadius.control),
+                color = MaterialTheme.colorScheme.secondaryContainer,
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp),
+                    )
                 }
             }
-        },
-        shape = RoundedCornerShape(24.dp),
-        containerColor = MaterialTheme.colorScheme.surface
-    )
+
+            Spacer(Modifier.width(BalanccSpacing.compact))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.financialColors.textSecondary,
+                )
+            }
+
+            Spacer(Modifier.width(BalanccSpacing.small))
+
+            trailing()
+        }
+    }
 }
