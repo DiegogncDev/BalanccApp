@@ -21,6 +21,10 @@
 
     <!-- Dialog -->
     <string name="select_year">Select year</string>
+    <string name="select_category">Select category</string>
+    <string name="select_date">Select date</string>
+    <string name="category">Category</string>
+    <string name="date">Date</string>
 
     <!--- Buttons -->
     <string name="select_day">day</string>
@@ -48,6 +52,7 @@
     <string name="travel">Travel</string>
     <string name="food">Food</string>
     <string name="education">Education</string>
+    <string name="pet">Pet</string>
     <string name="other">Other</string>
 
 

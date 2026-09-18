@@ -56,7 +56,10 @@ fun AppNavigation(
             }
             val sharedViewModel: YearMonthViewModel = hiltViewModel(parentEntry)
 
-            AddIncomeOrExpenseScreen(yearMonthViewModel = sharedViewModel)
+            AddIncomeOrExpenseScreen(
+                navController = navController,
+                yearMonthViewModel = sharedViewModel,
+            )
         }
         composable(AppScreens.SettingsScreen.route) {
 

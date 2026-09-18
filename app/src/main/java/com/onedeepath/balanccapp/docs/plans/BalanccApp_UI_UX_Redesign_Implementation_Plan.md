@@ -175,17 +175,20 @@ Implement the redesign described in `BalanccApp_UI_UX_Redesign_Spec.md` while pr
 - `:app:compileDebugKotlin` passed.
 - `./gradlew test` completed with the same recorded baseline result: 35 passed and `MainViewModelTest.kt:129` failed.
 
-### [ ] Phase 4 — Add transaction and category selector redesign
+### [x] Phase 4 — Add transaction and category selector redesign
 
 **Likely files**
 
 - `ui/screens/addbalance/AddBalanceScreen.kt`
+- `ui/components/CategorySelectionDialog.kt`
+- `ui/presentation/mapper/CategoryExtensions.kt`
+- `ui/navigation/AppNavigation.kt`
 - `res/values/strings.xml`
 - `res/values-es/strings.xml`
 
 **New/reused components**
 
-- `BalanccTopBar` with back navigation, `FinancialSegmentedControl`, `FinancialAmount`, `CategorySelector`, `SelectionField`, and `PrimaryButton`.
+- `BalanccTopBar` with back navigation, `FinancialSegmentedControl`, `FinancialAmount`, `CategorySelectionDialog`, `SelectionField`, `CategoryIcon`, and `PrimaryButton`.
 - Reuse `AddBalanceViewModel`, the current calendar dependency, and amount formatting helpers.
 
 **Risks**
@@ -197,6 +200,18 @@ Implement the redesign described in `BalanccApp_UI_UX_Redesign_Spec.md` while pr
 
 - Add one income and one expense, then confirm they persist into dashboard/detail.
 - Test category selection, date selection, long notes, large amounts, and small-screen scrolling.
+
+**Implementation result — 2026-09-18**
+
+- Connected `BalanccTopBar` to navigate back via `navController` in `AddBalanceScreen`.
+- Integrated `FinancialSegmentedControl` for intuitive Income/Expense switching.
+- Redesigned amount input with large display typography, centered alignment, and clear placeholder `$ 0.00`.
+- Created `CategorySelectionDialog` with `CategoryIcon`, localized category names, 52dp rows, and active selection indicator.
+- Created `AddDatePickerField` displaying date selection cleanly on a rounded surface with `CalendarDialog` and fast-add month `SelectionDialog`.
+- Replaced custom add button with `PrimaryButton` including loading indicator and disabled state.
+- Added localized strings for category dialog, date selection, and pet category.
+- `:app:compileDebugKotlin` passed.
+- `./gradlew test` completed with the same recorded baseline result: 35 passed and `MainViewModelTest.kt:129` failed.
 
 ### [ ] Phase 5 — Monthly detail, chart, and transaction list redesign
 

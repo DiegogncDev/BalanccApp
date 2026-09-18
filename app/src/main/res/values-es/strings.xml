@@ -18,6 +18,10 @@
         <string name="enter_details">Ingrese detalles...</string>
 
         <string name="select_year">Seleccionar año</string>
+        <string name="select_category">Seleccionar categoría</string>
+        <string name="select_date">Seleccionar fecha</string>
+        <string name="category">Categoría</string>
+        <string name="date">Fecha</string>
 
         <string name="select_day">día</string>
         <string name="select_month">Seleccionar mes</string>
@@ -41,6 +45,7 @@
         <string name="travel">Viajes</string>
         <string name="food">Comida</string>
         <string name="education">Educación</string>
+        <string name="pet">Mascota</string>
         <string name="other">Otro</string>
 
         <string name="january">Enero</string>
