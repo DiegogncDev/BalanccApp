@@ -66,6 +66,7 @@ import androidx.navigation.NavController
 import com.google.androidgamesdk.gametextinput.Settings
 import com.onedeepath.balanccapp.R
 import com.onedeepath.balanccapp.core.formatCurrency
+import com.onedeepath.balanccapp.ui.components.BalanccFab
 import com.onedeepath.balanccapp.ui.navigation.AppScreens
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.main.model.MonthsBalanceUi
@@ -148,23 +149,13 @@ fun MainScreen(
 
 @Composable
 fun AddBalanceFAB(navController: NavController, onFastAddBalance: (isFastAddBalance: Boolean) -> Unit) {
-
-    FloatingActionButton(
+    BalanccFab(
         onClick = {
             onFastAddBalance(true)
             navController.navigate(AppScreens.AddIncomeOrExpenseScreen.route)
         },
-        containerColor = MaterialTheme.colorScheme.secondary,
-        shape = RoundedCornerShape(25)
-    ) {
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = "",
-            tint = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.size(32.dp)
-
-        )
-    }
+        contentDescription = stringResource(R.string.add),
+    )
 }
 
 @Composable

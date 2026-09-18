@@ -54,6 +54,8 @@ import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavController
 import com.onedeepath.balanccapp.R
 import com.onedeepath.balanccapp.data.datastore.SettingsPreferences
+import com.onedeepath.balanccapp.ui.components.BalanccTopBar
+import com.onedeepath.balanccapp.ui.components.SectionHeader
 import kotlinx.coroutines.launch
 
 @SuppressLint("SuspiciousIndentation")
@@ -73,17 +75,9 @@ fun SettingsScreen(
 
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(R.string.settings), fontWeight = FontWeight.Bold) },
-                    navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Atrás")
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface
-                    )
+                BalanccTopBar(
+                    title = stringResource(R.string.settings),
+                    onNavigateBack = navController::popBackStack,
                 )
             },
             containerColor = MaterialTheme.colorScheme.background
@@ -97,10 +91,8 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Sección: Apariencia
-                Text(
-                    text = stringResource(R.string.appearance),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary, // 0xFF8E44AD
+                SectionHeader(
+                    title = stringResource(R.string.appearance),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
@@ -125,10 +117,8 @@ fun SettingsScreen(
                 HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
 
                 // Sección: Preferencias
-                Text(
-                    text = stringResource(R.string.preferences),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
+                SectionHeader(
+                    title = stringResource(R.string.preferences),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 

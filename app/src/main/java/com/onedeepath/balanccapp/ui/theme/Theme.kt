@@ -1,67 +1,120 @@
 package com.onedeepath.balanccapp.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 
 val LightColorScheme = lightColorScheme(
     primary = PrimaryLight,
-    onPrimary = OnPrimaryLight,
+    onPrimary = Color.White,
     primaryContainer = PrimaryContainerLight,
-    onPrimaryContainer = OnPrimaryContainerLight,
-    secondary = SecondaryLight,
-    onSecondary = OnSecondaryLight,
-    tertiary = TertiaryLight,
-    onTertiary = OnTertiaryLight,
+    onPrimaryContainer = TextPrimaryLight,
+    secondary = TextSecondaryLight,
+    onSecondary = Color.White,
+    secondaryContainer = SurfaceSecondaryLight,
+    onSecondaryContainer = TextPrimaryLight,
+    tertiary = WarningLight,
+    onTertiary = Color.White,
+    tertiaryContainer = WarningContainerLight,
+    onTertiaryContainer = TextPrimaryLight,
+    error = ExpenseLight,
+    onError = Color.White,
+    errorContainer = ExpenseContainerLight,
+    onErrorContainer = TextPrimaryLight,
     background = BackgroundLight,
+    onBackground = TextPrimaryLight,
     surface = SurfaceLight,
-    onBackground = OnSurfaceLight,
-    onSurface = OnSurfaceLight,
-    outline = OutlineLight
+    onSurface = TextPrimaryLight,
+    surfaceVariant = SurfaceSecondaryLight,
+    onSurfaceVariant = TextSecondaryLight,
+    outline = TextTertiaryLight,
+    outlineVariant = BorderLight,
 )
 
 val DarkColorScheme = darkColorScheme(
     primary = PrimaryDark,
-    onPrimary = OnPrimaryDark,
+    onPrimary = BackgroundDark,
     primaryContainer = PrimaryContainerDark,
-    onPrimaryContainer = OnPrimaryContainerDark,
-    secondary = SecondaryDark, // Puedes definir SecondaryDark similar al Light pero más claro
-    onSecondary = Color.White,
+    onPrimaryContainer = TextPrimaryDark,
+    secondary = TextSecondaryDark,
+    onSecondary = BackgroundDark,
+    secondaryContainer = SurfaceSecondaryDark,
+    onSecondaryContainer = TextPrimaryDark,
+    tertiary = WarningDark,
+    onTertiary = BackgroundDark,
+    tertiaryContainer = WarningContainerDark,
+    onTertiaryContainer = TextPrimaryDark,
+    error = ExpenseDark,
+    onError = BackgroundDark,
+    errorContainer = ExpenseContainerDark,
+    onErrorContainer = TextPrimaryDark,
     background = BackgroundDark,
+    onBackground = TextPrimaryDark,
     surface = SurfaceDark,
-    onBackground = OnSurfaceDark,
-    onSurface = OnSurfaceDark,
-    outline = Color(0xFF998E96)
+    onSurface = TextPrimaryDark,
+    surfaceVariant = SurfaceSecondaryDark,
+    onSurfaceVariant = TextSecondaryDark,
+    outline = TextTertiaryDark,
+    outlineVariant = BorderDark,
 )
 
-@Composable
-fun BalanccAppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false   ,
-    content: @Composable () -> Unit
-) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+@Immutable
+data class FinancialColorScheme(
+    val income: Color,
+    val onIncome: Color,
+    val incomeContainer: Color,
+    val onIncomeContainer: Color,
+    val expense: Color,
+    val onExpense: Color,
+    val expenseContainer: Color,
+    val onExpenseContainer: Color,
+    val warning: Color,
+    val warningContainer: Color,
+    val textSecondary: Color,
+    val textTertiary: Color,
+    val textDisabled: Color,
+    val border: Color,
+)
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+val LightFinancialColorScheme = FinancialColorScheme(
+    income = IncomeLight,
+    onIncome = Color.White,
+    incomeContainer = IncomeContainerLight,
+    onIncomeContainer = TextPrimaryLight,
+    expense = ExpenseLight,
+    onExpense = Color.White,
+    expenseContainer = ExpenseContainerLight,
+    onExpenseContainer = TextPrimaryLight,
+    warning = WarningLight,
+    warningContainer = WarningContainerLight,
+    textSecondary = TextSecondaryLight,
+    textTertiary = TextTertiaryLight,
+    textDisabled = TextDisabledLight,
+    border = BorderLight,
+)
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
-}
+val DarkFinancialColorScheme = FinancialColorScheme(
+    income = IncomeDark,
+    onIncome = BackgroundDark,
+    incomeContainer = IncomeContainerDark,
+    onIncomeContainer = TextPrimaryDark,
+    expense = ExpenseDark,
+    onExpense = BackgroundDark,
+    expenseContainer = ExpenseContainerDark,
+    onExpenseContainer = TextPrimaryDark,
+    warning = WarningDark,
+    warningContainer = WarningContainerDark,
+    textSecondary = TextSecondaryDark,
+    textTertiary = TextTertiaryDark,
+    textDisabled = TextDisabledDark,
+    border = BorderDark,
+)
+
+val LocalFinancialColors = staticCompositionLocalOf { LightFinancialColorScheme }
+
+val MaterialTheme.financialColors: FinancialColorScheme
+    @Composable get() = LocalFinancialColors.current

@@ -56,7 +56,7 @@ Implement the redesign described in `BalanccApp_UI_UX_Redesign_Spec.md` while pr
 - Existing failure: `MainViewModelTest > when useCase emits empty balances then uiState updates months with zero values` at `MainViewModelTest.kt:129`.
 - The failure predates the visual-redesign implementation. It is recorded as a baseline issue and is not changed in this phase.
 
-### [ ] Phase 1 — Design system and theme foundation
+### [x] Phase 1 — Design system and theme foundation
 
 **Likely files**
 
@@ -87,7 +87,17 @@ Implement the redesign described in `BalanccApp_UI_UX_Redesign_Spec.md` while pr
 - Compile and run the existing tests.
 - Review contrast, surface hierarchy, and default controls in both themes.
 
-### [ ] Phase 2 — Shared UI components
+**Implementation result — 2026-09-18**
+
+- Replaced the purple-led palette with the specified neutral surfaces, petrol primary, and restrained light/dark semantic financial colors.
+- Added `FinancialColorScheme` and `MaterialTheme.financialColors` for income, expense, warning, supporting text, disabled text, and border tokens.
+- Centralized the 4/8-based spacing scale, shape/radius scale, and subtle elevation tokens.
+- Defined and applied the Material typography scale and shapes through the active `AppTheme` entry point.
+- Kept `BalanccAppTheme` as a deprecated compatibility wrapper around `AppTheme`.
+- `:app:compileDebugKotlin` passed.
+- `./gradlew test` still reports the recorded baseline failure in `MainViewModelTest.kt:129` (35 passed, 1 failed); no new test failures were introduced.
+
+### [x] Phase 2 — Shared UI components
 
 **Likely files**
 
@@ -121,6 +131,14 @@ Implement the redesign described in `BalanccApp_UI_UX_Redesign_Spec.md` while pr
 
 - Verify each selector, enabled/disabled button state, and navigation path.
 - Check touch targets and content descriptions.
+
+**Implementation result — 2026-09-18**
+
+- Added shared Compose components: `BalanccTopBar`, `BalanccFab`, `PrimaryButton`, `FinancialSegmentedControl`, `SelectionField`, `CategoryIcon`, `SectionHeader`, `EmptyState`, and generic `SelectionDialog`.
+- Replaced the duplicated income/expense tabs in the add and monthly-detail screens with the same `FinancialSegmentedControl` while preserving their existing state and callbacks.
+- Replaced the duplicated add FAB implementations with `BalanccFab` and gave the action an accessible label.
+- Migrated Settings to `BalanccTopBar` and `SectionHeader` without changing DataStore behavior or navigation.
+- `./gradlew test` completed with the same recorded baseline result: 35 passed and `MainViewModelTest.kt:129` failed.
 
 ### [ ] Phase 3 — Dashboard redesign
 

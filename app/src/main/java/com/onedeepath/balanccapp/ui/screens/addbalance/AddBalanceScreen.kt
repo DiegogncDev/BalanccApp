@@ -97,6 +97,7 @@ import com.onedeepath.balanccapp.R
 import com.onedeepath.balanccapp.core.cleanAmountForStorage
 import com.onedeepath.balanccapp.core.formatAmountForDisplay
 import com.onedeepath.balanccapp.domain.model.Category
+import com.onedeepath.balanccapp.ui.components.FinancialSegmentedControl
 import com.onedeepath.balanccapp.ui.presentation.model.TabItem
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.addbalance.model.AddBalanceUiState
@@ -644,58 +645,11 @@ fun AddAmountTF(amount: String, onAmountChange: (String) -> Unit) {
 
 @Composable
 fun IncomeExpenseTabview(isIncome: Boolean, onCheckedChange: (Boolean) -> Unit) {
-
-    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
-
-    val tabItems = listOf(
-        TabItem(stringResource(R.string.incomes_tab), Icons.Outlined.KeyboardArrowUp, Icons.Filled.KeyboardArrowUp),
-        TabItem(stringResource(R.string.expenses_tab), Icons.Outlined.KeyboardArrowDown, Icons.Filled.KeyboardArrowDown)
+    FinancialSegmentedControl(
+        isIncome = isIncome,
+        onCheckedChange = onCheckedChange,
+        modifier = Modifier.fillMaxWidth(),
     )
-
-    Surface(
-        shape = RoundedCornerShape(50),
-        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)
-    ) {
-        TabRow(
-            selectedTabIndex = selectedTabIndex,
-            modifier = Modifier
-                .fillMaxWidth(),
-            indicator = {},
-            divider = {}
-        ) {
-
-            tabItems.forEachIndexed { index, item ->
-                val selected = selectedTabIndex == index
-                Tab(
-                    modifier = if (selected) Modifier
-                        .clip(RoundedCornerShape(25))
-                        .background(MaterialTheme.colorScheme.primary)
-                        .fillMaxSize()
-                    else Modifier
-                        .clip(RoundedCornerShape(25))
-                        .background(MaterialTheme.colorScheme.background)
-                        .fillMaxSize(),
-                    selected = selected,     //index == selectedTabIndex
-                    onClick = {
-                        selectedTabIndex = index
-                        onCheckedChange(index == 0)
-                    },
-                    text = {
-                        Text(
-                            item.title,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                            color = if (selected) MaterialTheme.colorScheme.onPrimary
-                            else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    },
-                )
-            }
-        }
-    }
 }
 
 

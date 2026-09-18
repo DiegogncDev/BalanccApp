@@ -70,6 +70,8 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.onedeepath.balanccapp.R
 import com.onedeepath.balanccapp.core.formatCurrency
+import com.onedeepath.balanccapp.ui.components.BalanccFab
+import com.onedeepath.balanccapp.ui.components.FinancialSegmentedControl
 import com.onedeepath.balanccapp.domain.model.BalanceModel
 import com.onedeepath.balanccapp.ui.navigation.AppScreens
 import com.onedeepath.balanccapp.ui.presentation.model.TabItem
@@ -128,8 +130,7 @@ fun MonthsDetailScreen(
 @Composable
 fun MainContentSheet(uiState: MonthsDetailUiState, onDelete: (Int) -> Unit) {
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
-    val tabItems = listOf("Ingresos", "Gastos")
-    val pagerState = rememberPagerState { tabItems.size }
+    val pagerState = rememberPagerState { 2 }
 
     LaunchedEffect(selectedTabIndex) { pagerState.animateScrollToPage(selectedTabIndex) }
     LaunchedEffect(pagerState.currentPage) { selectedTabIndex = pagerState.currentPage }
@@ -142,38 +143,11 @@ fun MainContentSheet(uiState: MonthsDetailUiState, onDelete: (Int) -> Unit) {
         tonalElevation = 2.dp
     ) {
         Column(modifier = Modifier.padding(top = 16.dp)) {
-            // TabRow Estilo Pill
-            TabRow(
-                selectedTabIndex = selectedTabIndex,
-                containerColor = Color.Transparent,
-                contentColor = MaterialTheme.colorScheme.primary,
-                indicator = {}, // Eliminamos el indicador de línea por defecto
-                divider = {},
-                modifier = Modifier
-                    .padding(horizontal = 24.dp, vertical = 8.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f))
-            ) {
-                tabItems.forEachIndexed { index, title ->
-                    val selected = selectedTabIndex == index
-                    Tab(
-                        selected = selected,
-                        onClick = { selectedTabIndex = index },
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .clip(CircleShape)
-                            .background(if (selected) MaterialTheme.colorScheme.primary else Color.Transparent),
-                        text = {
-                            Text(
-                                text = title,
-                                style = MaterialTheme.typography.labelLarge,
-                                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-                                color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    )
-                }
-            }
+            FinancialSegmentedControl(
+                isIncome = selectedTabIndex == 0,
+                onCheckedChange = { isIncome -> selectedTabIndex = if (isIncome) 0 else 1 },
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+            )
 
             HorizontalPager(
                 state = pagerState,
@@ -630,20 +604,8 @@ fun ExpenseCard(expense: BalanceModel, onDelete: (Int) -> Unit) {
 
 @Composable
 fun AddIncomeOrExpenseFAB(navController: NavController) {
-
-        FloatingActionButton(
-            onClick = {
-                navController.navigate(AppScreens.AddIncomeOrExpenseScreen.route)
-            },
-            containerColor = MaterialTheme.colorScheme.primary,
-            shape = RoundedCornerShape(25)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.size(32.dp)
-
-            )
-        }
+    BalanccFab(
+        onClick = { navController.navigate(AppScreens.AddIncomeOrExpenseScreen.route) },
+        contentDescription = stringResource(R.string.add),
+    )
 }
