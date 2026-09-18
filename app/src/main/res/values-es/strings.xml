@@ -4,6 +4,7 @@
         <string name="app_name">BalanccApp</string>
         <string name="sort_by">Ordenar por</string>
         <string name="add">Añadir</string>
+        <string name="delete">Eliminar</string>
         <string name="incomes">Ingresos</string>
         <string name="expenses">Gastos</string>
 

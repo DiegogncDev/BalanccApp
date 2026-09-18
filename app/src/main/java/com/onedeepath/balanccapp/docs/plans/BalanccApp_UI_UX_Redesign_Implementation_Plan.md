@@ -213,18 +213,20 @@ Implement the redesign described in `BalanccApp_UI_UX_Redesign_Spec.md` while pr
 - `:app:compileDebugKotlin` passed.
 - `./gradlew test` completed with the same recorded baseline result: 35 passed and `MainViewModelTest.kt:129` failed.
 
-### [ ] Phase 5 — Monthly detail, chart, and transaction list redesign
+### [x] Phase 5 — Monthly detail, chart, and transaction list redesign
 
 **Likely files**
 
 - `ui/screens/detail/MonthsDetailScreen.kt`
-- Possibly `ui/screens/detail/model/MonthsDetailUiState.kt` only if required for presentation semantics.
-- Possibly `ui/screens/detail/viewmodel/MonthsDetailViewModel.kt` only to remove UI-color presentation data; never to alter calculations.
-- `core/Charts.kt` as a separate cleanup decision, since its chart implementation is currently unused.
+- `ui/components/TransactionCard.kt`
+- `ui/components/FinancialDonutChart.kt`
+- `ui/screens/detail/model/MonthsDetailUiState.kt`
+- `res/values/strings.xml`
+- `res/values-es/strings.xml`
 
 **New/reused components**
 
-- `FinancialSegmentedControl`, `FinancialAmount`, `FinancialDonutChart`, `TransactionCard`, `DateSectionHeader`, `BalanccFab`, and `EmptyState`.
+- `BalanccTopBar`, `FinancialSegmentedControl`, `FinancialAmount`, `FinancialDonutChart`, `TransactionCard`, `BalanccFab`, and `EmptyState`.
 
 **Risks**
 
@@ -236,6 +238,19 @@ Implement the redesign described in `BalanccApp_UI_UX_Redesign_Spec.md` while pr
 
 - Test months containing only income, only expenses, both, and no transactions.
 - Validate chart categories, large values, long descriptions, delete actions, and income/expense semantics.
+
+**Implementation result — 2026-09-18**
+
+- Replaced large solid primary background in `MonthsDetailScreen` with neutral background and `BalanccTopBar`.
+- Created compact, clear `HeaderSummary` showing total balance (large display typography) and supporting income/expense totals with semantic financial colors.
+- Created `TransactionCard` displaying `CategoryIcon`, localized name, note with ellipsis, `FinancialAmount`, and secondary delete icon button.
+- Fixed the previous presentation bug where `ExpenseList` displayed `IncomeCard`.
+- Created theme-aware `FinancialDonutChart` dynamically adapting surface hole and center text colors to light and dark themes.
+- Replaced manual 35sp empty text with the shared `EmptyState` component.
+- Configured list bottom padding (`88.dp`) to ensure the `BalanccFab` does not obscure transaction items.
+- Added localized `delete` string.
+- `:app:compileDebugKotlin` passed.
+- `./gradlew test` completed with the same recorded baseline result: 35 passed and `MainViewModelTest.kt:129` failed.
 
 ### [ ] Phase 6 — Settings, accessibility, and final quality pass
 
