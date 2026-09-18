@@ -7,7 +7,7 @@ import com.onedeepath.balanccapp.core.CategoryConverter
 import com.onedeepath.balanccapp.data.database.dao.BalanceDao
 import com.onedeepath.balanccapp.data.database.entity.BalanceEntity
 
-@Database(entities = [BalanceEntity::class], version = 3)
+@Database(entities = [BalanceEntity::class], version = 4)
 @TypeConverters(CategoryConverter::class)
 abstract class BalanceDatabase: RoomDatabase() {
 

@@ -24,5 +24,5 @@ fun List<BalanceByMonth>.toMonthsBalanceUi(): List<MonthsBalanceUi> {
             balance = income - expense
         )
 
-    }
+    }.filter { it.income > 0.0 || it.expense > 0.0 }
 }
