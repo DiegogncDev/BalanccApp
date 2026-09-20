@@ -13,12 +13,17 @@
     <!--- Tabs-->
     <string name="incomes_tab">Incomes</string>
     <string name="expenses_tab">Expenses</string>
+    <string name="income_singular">Income</string>
+    <string name="expense_singular">Expense</string>
 
     <!--- TextFields -->
     <string name="amount">Amount</string>
     <string name="details">Details</string>
+    <string name="description_optional">Description (optional)</string>
+    <string name="add_note_placeholder">Add a note...</string>
     <string name="enter_amount">Enter an amount</string>
     <string name="enter_details">Enter details...</string>
+    <string name="save">Save</string>
 
     <!-- Dialog -->
     <string name="select_year">Select year</string>
