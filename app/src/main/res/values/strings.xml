@@ -6,6 +6,11 @@
     <string name="delete">Delete</string>
     <string name="incomes">Incomes</string>
     <string name="expenses">Expenses</string>
+    <string name="statistics">Statistics</string>
+    <string name="total_expenses">Total expenses</string>
+    <string name="total_incomes">Total incomes</string>
+    <string name="total_balance">Total Balance</string>
+    <string name="category_breakdown">Category Breakdown</string>
 
     <!--- Cards -->
     <string name="balance">Balance</string>

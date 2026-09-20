@@ -7,6 +7,11 @@
         <string name="delete">Eliminar</string>
         <string name="incomes">Ingresos</string>
         <string name="expenses">Gastos</string>
+        <string name="statistics">Estadísticas</string>
+        <string name="total_expenses">Total gastos</string>
+        <string name="total_incomes">Total ingresos</string>
+        <string name="total_balance">Balance Total</string>
+        <string name="category_breakdown">Desglose por categoría</string>
 
         <string name="balance">Balance</string>
 
