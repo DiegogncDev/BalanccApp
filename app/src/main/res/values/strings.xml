@@ -15,6 +15,14 @@
     <!--- Cards -->
     <string name="balance">Balance</string>
 
+    <!--- Home -->
+    <string name="home">Home</string>
+    <string name="current_balance">Current balance</string>
+    <string name="vs_previous_month">vs. previous month</string>
+    <string name="month_summary">Month summary</string>
+    <string name="others">Others</string>
+    <string name="view_detail">View details</string>
+
     <!--- Tabs-->
     <string name="incomes_tab">Incomes</string>
     <string name="expenses_tab">Expenses</string>

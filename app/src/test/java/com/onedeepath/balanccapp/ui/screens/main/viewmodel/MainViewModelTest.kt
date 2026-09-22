@@ -1,9 +1,9 @@
 package com.onedeepath.balanccapp.ui.screens.main.viewmodel
 
-import app.cash.turbine.test
-import com.onedeepath.balanccapp.domain.model.BalanceByMonth
-import com.onedeepath.balanccapp.domain.usecases.GetBalancesByYearUseCase
-import io.mockk.MockKAnnotations
+import com.onedeepath.balanccapp.domain.model.BalanceModel
+import com.onedeepath.balanccapp.domain.model.Category
+import com.onedeepath.balanccapp.domain.usecases.GetBalanceByExpense
+import com.onedeepath.balanccapp.domain.usecases.GetBalanceByIncome
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -23,13 +23,54 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class MainViewModelTest {
+
     private val testDispatcher = StandardTestDispatcher()
 
+    private val getBalanceByIncomeUseCase: GetBalanceByIncome = mockk()
+    private val getBalanceByExpenseUseCase: GetBalanceByExpense = mockk()
+
+    private val year = "2025"
+    private val month = "February"
+    private val previousYear = "2025"
+    private val previousMonth = "January"
+
+    private val expenses = listOf(
+        BalanceModel(
+            type = "expense",
+            amount = 30.0,
+            category = Category.FOOD,
+            description = "",
+            day = "01",
+            month = month,
+            year = year,
+        ),
+        BalanceModel(
+            type = "expense",
+            amount = 10.0,
+            category = Category.TRANSPORT,
+            description = "",
+            day = "02",
+            month = month,
+            year = year,
+        ),
+    )
+
+    private val incomes = listOf(
+        BalanceModel(
+            type = "income",
+            amount = 1000.0,
+            category = Category.WORK,
+            description = "",
+            day = "01",
+            month = month,
+            year = year,
+        ),
+    )
 
     @Before
     fun setUp() {
-        MockKAnnotations.init(this)
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -38,118 +79,147 @@ class MainViewModelTest {
         Dispatchers.resetMain()
     }
 
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `when useCase emits balances then uiState updates months and isLoading false`() = runTest {
-        //Given
-        val year = "2025"
-        val fakeBalanceModel = listOf<BalanceByMonth>(
-            BalanceByMonth(
-                month = "January",
-                type = "income",
-                total = 1000.0
-            ),
-            BalanceByMonth(
-                month = "February",
-                type = "expense",
-                total = 500.0
-            )
-        )
-        val flow = flowOf(fakeBalanceModel)
-
-        val useCase = mockk<GetBalancesByYearUseCase>()
-
-        every { useCase(year) } returns flow
-
-        val vm = MainViewModel(
-            getBalancesByYearUseCase = useCase,
-            ioDispatcher = testDispatcher,
-            defaultYearProvider = {year})
-
-        // When
-        advanceUntilIdle() // advance coroutines that launched in init/onYearSelected
-
-        // Then
-        assertEquals(year, vm.uiState.value.selectedYear)
-        assertFalse(vm.uiState.value.isLoading)
-        assertTrue(vm.uiState.value.months.isNotEmpty())
-        assertNull(vm.uiState.value.error)
-    }
+    private fun buildViewModel() = MainViewModel(
+        getBalanceByIncomeUseCase = getBalanceByIncomeUseCase,
+        getBalanceByExpenseUseCase = getBalanceByExpenseUseCase,
+        ioDispatcher = testDispatcher,
+    )
 
     @Test
-    fun `when usecase throws then uiState contains error and isLoading false`() = runTest {
+    fun `when use cases emit balances then uiState updates totals and breakdown`() = runTest {
         // Given
-        val year = "year"
-        val exception = RuntimeException("boom")
-        val flow = flow<List<BalanceByMonth>> {throw exception}
-        val usecase = mockk<GetBalancesByYearUseCase>()
-
-        every { usecase(year) } returns flow
-
-        val vm = MainViewModel(
-            getBalancesByYearUseCase = usecase,
-            ioDispatcher = testDispatcher,
-            defaultYearProvider = {year})
+        every { getBalanceByIncomeUseCase.getIncomes(year, month) } returns flowOf(incomes)
+        every { getBalanceByExpenseUseCase.getExpenses(year, month) } returns flowOf(expenses)
+        every { getBalanceByIncomeUseCase.getIncomes(previousYear, previousMonth) } returns flowOf(emptyList())
+        every { getBalanceByExpenseUseCase.getExpenses(previousYear, previousMonth) } returns flowOf(emptyList())
+        val viewModel = buildViewModel()
 
         // When
+        viewModel.load(year = year, month = month)
         advanceUntilIdle()
 
-        assertFalse(vm.uiState.value.isLoading)
-        assertEquals("boom", vm.uiState.value.error)
+        // Then
+        val state = viewModel.uiState.value
+        assertFalse(state.isLoading)
+        assertEquals(1000.0, state.totalIncome, 0.001)
+        assertEquals(40.0, state.totalExpense, 0.001)
+        assertEquals(960.0, state.totalBalance, 0.001)
+        assertEquals(2, state.expenseBreakdown.size)
+        assertEquals(Category.FOOD, state.expenseBreakdown.first().category)
+        assertEquals(75, state.expenseBreakdown.first().percentage)
+        assertEquals(25, state.expenseBreakdown.last().percentage)
+        assertNull(state.error)
     }
 
     @Test
-    fun `when onErrorShown is called then error should be null`() = runTest {
-        //Given
-        val usecase = mockk<GetBalancesByYearUseCase>()
-        val year ="2025"
+    fun `when previous month has no movements then balanceChangePercent is null`() = runTest {
+        // Given
+        every { getBalanceByIncomeUseCase.getIncomes(year, month) } returns flowOf(incomes)
+        every { getBalanceByExpenseUseCase.getExpenses(year, month) } returns flowOf(expenses)
+        every { getBalanceByIncomeUseCase.getIncomes(previousYear, previousMonth) } returns flowOf(emptyList())
+        every { getBalanceByExpenseUseCase.getExpenses(previousYear, previousMonth) } returns flowOf(emptyList())
+        val viewModel = buildViewModel()
 
-        every { usecase(year) } returns flowOf(emptyList())
+        // When
+        viewModel.load(year = year, month = month)
+        advanceUntilIdle()
 
-        val viewModel = MainViewModel(
-            getBalancesByYearUseCase = usecase,
-            ioDispatcher = testDispatcher,
-            defaultYearProvider = {year}
-        )
-
-        viewModel.uiState.test {
-            val initialState = awaitItem() // Initial state of init
-
-            //When
-            viewModel.onErrorShown()
-
-            //Then
-            val finalState = awaitItem()
-            assertNull(finalState.error)
-        }
+        // Then
+        assertNull(viewModel.uiState.value.balanceChangePercent)
     }
 
     @Test
-    fun `when useCase emits empty balances then uiState updates months with zero values`() = runTest {
-        //Given
-        val year = "2025"
-        val useCase = mockk<GetBalancesByYearUseCase>()
-
-        every { useCase(year) } returns flowOf(emptyList())
-
-        val viewModel = MainViewModel(
-            getBalancesByYearUseCase = useCase,
-            ioDispatcher = testDispatcher,
-            defaultYearProvider = {year}
+    fun `when previous month has balance then uiState computes percentage vs previous month`() = runTest {
+        // Given: previous balance (January 2025) = 500, current balance (February) = 1000 - 40 = 960
+        // percentage = ((960 - 500) / 500) * 100 = 92
+        val previousIncomes = incomes.map { it.copy(month = previousMonth) }
+        every { getBalanceByIncomeUseCase.getIncomes(year, month) } returns flowOf(incomes)
+        every { getBalanceByExpenseUseCase.getExpenses(year, month) } returns flowOf(expenses)
+        every { getBalanceByIncomeUseCase.getIncomes(previousYear, previousMonth) } returns flowOf(
+            previousIncomes.map { it.copy(amount = 500.0) },
         )
+        every { getBalanceByExpenseUseCase.getExpenses(previousYear, previousMonth) } returns flowOf(emptyList())
+        val viewModel = buildViewModel()
 
-        //When
-        advanceUntilIdle() // execute coroutines of init
+        // When
+        viewModel.load(year = year, month = month)
+        advanceUntilIdle()
 
-        //Then
-        val currentState = viewModel.uiState.value
-        assertFalse(currentState.isLoading)
-        //there must be 12 months
-        assertEquals(12, currentState.months.size)
-        // BALANCE, INCOME AND EXPENSE must have 0 values
-        assertTrue(currentState.months.all { it.balance == 0.0 && it.income == 0.0 && it.expense == 0.0})
-        assertNull(currentState.error)
+        // Then
+        assertEquals(92, viewModel.uiState.value.balanceChangePercent)
+    }
+
+    @Test
+    fun `when january is selected then previous month is december of previous year`() = runTest {
+        // Given
+        every { getBalanceByIncomeUseCase.getIncomes("2025", "January") } returns flowOf(emptyList())
+        every { getBalanceByExpenseUseCase.getExpenses("2025", "January") } returns flowOf(emptyList())
+        every { getBalanceByIncomeUseCase.getIncomes("2024", "December") } returns flowOf(
+            listOf(incomes.first().copy(year = "2024", month = "December")),
+        )
+        every { getBalanceByExpenseUseCase.getExpenses("2024", "December") } returns flowOf(emptyList())
+        val viewModel = buildViewModel()
+
+        // When
+        viewModel.load(year = "2025", month = "January")
+        advanceUntilIdle()
+
+        // Then: previous balance = 1000 -> percentage = ((0 - 1000) / 1000) * 100 = -100
+        assertEquals(-100, viewModel.uiState.value.balanceChangePercent)
+    }
+
+    @Test
+    fun `when flows throw then uiState contains error and isLoading false`() = runTest {
+        // Given
+        val exception = RuntimeException("boom")
+        every { getBalanceByIncomeUseCase.getIncomes(year, month) } returns flow { throw exception }
+        every { getBalanceByExpenseUseCase.getExpenses(year, month) } returns flowOf(expenses)
+        every { getBalanceByIncomeUseCase.getIncomes(previousYear, previousMonth) } returns flowOf(emptyList())
+        every { getBalanceByExpenseUseCase.getExpenses(previousYear, previousMonth) } returns flowOf(emptyList())
+        val viewModel = buildViewModel()
+
+        // When
+        viewModel.load(year = year, month = month)
+        advanceUntilIdle()
+
+        // Then
+        assertFalse(viewModel.uiState.value.isLoading)
+        assertEquals("boom", viewModel.uiState.value.error)
+    }
+
+    @Test
+    fun `when onErrorShown is called then error is cleared`() = runTest {
+        // Given
+        val exception = RuntimeException("boom")
+        every { getBalanceByIncomeUseCase.getIncomes(year, month) } returns flow { throw exception }
+        every { getBalanceByExpenseUseCase.getExpenses(year, month) } returns flowOf(expenses)
+        every { getBalanceByIncomeUseCase.getIncomes(previousYear, previousMonth) } returns flowOf(emptyList())
+        every { getBalanceByExpenseUseCase.getExpenses(previousYear, previousMonth) } returns flowOf(emptyList())
+        val viewModel = buildViewModel()
+        viewModel.load(year = year, month = month)
+        advanceUntilIdle()
+
+        // When
+        viewModel.onErrorShown()
+
+        // Then
+        assertNull(viewModel.uiState.value.error)
+    }
+
+    @Test
+    fun `when loading starts then previous error is cleared and isLoading true`() = runTest {
+        // Given
+        every { getBalanceByIncomeUseCase.getIncomes(year, month) } returns flowOf(incomes)
+        every { getBalanceByExpenseUseCase.getExpenses(year, month) } returns flowOf(expenses)
+        every { getBalanceByIncomeUseCase.getIncomes(previousYear, previousMonth) } returns flowOf(emptyList())
+        every { getBalanceByExpenseUseCase.getExpenses(previousYear, previousMonth) } returns flowOf(emptyList())
+        val viewModel = buildViewModel()
+
+        // When
+        viewModel.load(year = year, month = month)
+
+        // Then (before advancing, load is pending)
+        assertTrue(viewModel.uiState.value.isLoading)
+        assertNull(viewModel.uiState.value.error)
     }
 }
-

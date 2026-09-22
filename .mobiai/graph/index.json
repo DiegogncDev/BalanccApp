@@ -1,0 +1,5614 @@
+{
+  "version": 1,
+  "generatedAt": "2026-09-22T21:34:38.5911961Z",
+  "root": "C:\\Users\\Usuario\\StudioProjects\\BalanccApp",
+  "files": [
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/androidTest/java/com/onedeepath/balanccapp/ExampleInstrumentedTest.kt",
+      "language": "kotlin",
+      "lines": 24,
+      "imports": [
+        "androidx.test.platform.app.InstrumentationRegistry",
+        "androidx.test.ext.junit.runners.AndroidJUnit4",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.junit.Assert.*"
+      ],
+      "symbols": [
+        {
+          "name": "ExampleInstrumentedTest",
+          "kind": "class",
+          "line": 17
+        },
+        {
+          "name": "useAppContext",
+          "kind": "fun",
+          "line": 19,
+          "container": "ExampleInstrumentedTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/androidTest/java/com/onedeepath/balanccapp/data/dao/BalanceDaoTest.kt",
+      "language": "kotlin",
+      "lines": 133,
+      "imports": [
+        "android.content.Context",
+        "androidx.room.Room.inMemoryDatabaseBuilder",
+        "androidx.test.core.app.ApplicationProvider",
+        "androidx.test.ext.junit.runners.AndroidJUnit4",
+        "com.onedeepath.balanccapp.data.database.BalanceDatabase",
+        "com.onedeepath.balanccapp.data.database.dao.BalanceDao",
+        "com.onedeepath.balanccapp.data.database.entity.BalanceEntity",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "kotlinx.coroutines.flow.first",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.After",
+        "org.junit.Before",
+        "org.junit.Test",
+        "org.junit.runner.RunWith"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceDaoTest",
+          "kind": "class",
+          "line": 19
+        },
+        {
+          "name": "setUp",
+          "kind": "fun",
+          "line": 25,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "tearDown",
+          "kind": "fun",
+          "line": 36,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "getAllBalances_shouldReturnOrderedByIdDesc",
+          "kind": "fun",
+          "line": 41,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "getBalancesByYear_shouldSumCorrectlyAndOrderMonths",
+          "kind": "fun",
+          "line": 57,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "deleteBalance_shouldRemoveCorrectItem",
+          "kind": "fun",
+          "line": 81,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "getBalanceByIncome_shouldOnlyReturnIncomeType",
+          "kind": "fun",
+          "line": 92,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "getBalanceByExpense_shouldReturnEmptyWhenNoMatch",
+          "kind": "fun",
+          "line": 107,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "getBalancesByYear_shouldSeparateIncomeAndExpenseSameMonth",
+          "kind": "fun",
+          "line": 118,
+          "container": "BalanceDaoTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/BalanceApp.kt",
+      "language": "kotlin",
+      "lines": 8,
+      "imports": [
+        "android.app.Application",
+        "dagger.hilt.android.HiltAndroidApp"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceApp",
+          "kind": "class",
+          "line": 7
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/core/AndroidCurrencyHelper.kt",
+      "language": "kotlin",
+      "lines": 44,
+      "imports": [
+        "java.text.DecimalFormat",
+        "java.text.DecimalFormatSymbols",
+        "java.util.Locale",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "AndroidCurrencyHelper",
+          "kind": "class",
+          "line": 8
+        },
+        {
+          "name": "formatAmountForDisplay",
+          "kind": "fun",
+          "line": 24,
+          "container": "AndroidCurrencyHelper",
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "cleanAmountForStorage",
+          "kind": "fun",
+          "line": 36,
+          "container": "AndroidCurrencyHelper",
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "formatCurrency",
+          "kind": "fun",
+          "line": 40,
+          "container": "AndroidCurrencyHelper",
+          "modifiers": [
+            "override"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/core/CategoryConverter.kt",
+      "language": "kotlin",
+      "lines": 18,
+      "imports": [
+        "androidx.room.TypeConverter",
+        "com.onedeepath.balanccapp.domain.model.Category"
+      ],
+      "symbols": [
+        {
+          "name": "CategoryConverter",
+          "kind": "class",
+          "line": 6
+        },
+        {
+          "name": "fromCategory",
+          "kind": "fun",
+          "line": 9,
+          "container": "CategoryConverter"
+        },
+        {
+          "name": "toCategory",
+          "kind": "fun",
+          "line": 14,
+          "container": "CategoryConverter"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/core/Charts.kt",
+      "language": "kotlin",
+      "lines": 106,
+      "imports": [
+        "android.view.ViewGroup",
+        "android.widget.LinearLayout",
+        "androidx.compose.animation.Crossfade",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.wrapContentSize",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.viewinterop.AndroidView",
+        "com.github.mikephil.charting.charts.PieChart",
+        "com.github.mikephil.charting.components.Legend",
+        "com.github.mikephil.charting.data.PieData",
+        "com.github.mikephil.charting.data.PieDataSet"
+      ],
+      "symbols": [
+        {
+          "name": "ChartValue",
+          "kind": "class",
+          "line": 23,
+          "modifiers": [
+            "data"
+          ]
+        },
+        {
+          "name": "CreatePieChart",
+          "kind": "fun",
+          "line": 36
+        },
+        {
+          "name": "updatePieChartWithData",
+          "kind": "fun",
+          "line": 80
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/core/CurrencyHelper.kt",
+      "language": "kotlin",
+      "lines": 7,
+      "imports": [],
+      "symbols": [
+        {
+          "name": "CurrencyHelper",
+          "kind": "interface",
+          "line": 3
+        },
+        {
+          "name": "formatCurrency",
+          "kind": "fun",
+          "line": 4,
+          "container": "CurrencyHelper"
+        },
+        {
+          "name": "formatAmountForDisplay",
+          "kind": "fun",
+          "line": 5,
+          "container": "CurrencyHelper"
+        },
+        {
+          "name": "cleanAmountForStorage",
+          "kind": "fun",
+          "line": 6,
+          "container": "CurrencyHelper"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/core/FormatCurrency.kt",
+      "language": "kotlin",
+      "lines": 41,
+      "imports": [
+        "java.text.DecimalFormat",
+        "java.text.DecimalFormatSymbols",
+        "java.util.Locale"
+      ],
+      "symbols": [
+        {
+          "name": "formatAmountForDisplay",
+          "kind": "fun",
+          "line": 14
+        },
+        {
+          "name": "cleanAmountForStorage",
+          "kind": "fun",
+          "line": 26
+        },
+        {
+          "name": "formatCurrency",
+          "kind": "fun",
+          "line": 32
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/data/database/BalanceDatabase.kt",
+      "language": "kotlin",
+      "lines": 16,
+      "imports": [
+        "androidx.room.Database",
+        "androidx.room.RoomDatabase",
+        "androidx.room.TypeConverters",
+        "com.onedeepath.balanccapp.core.CategoryConverter",
+        "com.onedeepath.balanccapp.data.database.dao.BalanceDao",
+        "com.onedeepath.balanccapp.data.database.entity.BalanceEntity"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceDatabase",
+          "kind": "class",
+          "line": 12,
+          "modifiers": [
+            "abstract"
+          ]
+        },
+        {
+          "name": "getBalanceDao",
+          "kind": "fun",
+          "line": 14,
+          "container": "BalanceDatabase",
+          "modifiers": [
+            "abstract"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/data/database/dao/BalanceDao.kt",
+      "language": "kotlin",
+      "lines": 55,
+      "imports": [
+        "androidx.room.Dao",
+        "androidx.room.Insert",
+        "androidx.room.OnConflictStrategy",
+        "androidx.room.Query",
+        "com.onedeepath.balanccapp.data.database.entity.BalanceEntity",
+        "com.onedeepath.balanccapp.data.model.BalanceByMonthEntity",
+        "kotlinx.coroutines.flow.Flow"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceDao",
+          "kind": "interface",
+          "line": 12
+        },
+        {
+          "name": "getAllBalances",
+          "kind": "fun",
+          "line": 15,
+          "container": "BalanceDao"
+        },
+        {
+          "name": "getBalanceByIncome",
+          "kind": "fun",
+          "line": 18,
+          "container": "BalanceDao"
+        },
+        {
+          "name": "getBalanceByExpense",
+          "kind": "fun",
+          "line": 21,
+          "container": "BalanceDao"
+        },
+        {
+          "name": "getBalancesByYear",
+          "kind": "fun",
+          "line": 46,
+          "container": "BalanceDao"
+        },
+        {
+          "name": "insertAll",
+          "kind": "fun",
+          "line": 49,
+          "container": "BalanceDao",
+          "modifiers": [
+            "suspend"
+          ]
+        },
+        {
+          "name": "deleteBalance",
+          "kind": "fun",
+          "line": 52,
+          "container": "BalanceDao",
+          "modifiers": [
+            "suspend"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/data/database/entity/BalanceEntity.kt",
+      "language": "kotlin",
+      "lines": 22,
+      "imports": [
+        "androidx.room.ColumnInfo",
+        "androidx.room.Entity",
+        "androidx.room.PrimaryKey",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceEntity",
+          "kind": "class",
+          "line": 10,
+          "modifiers": [
+            "data"
+          ]
+        },
+        {
+          "name": "toEntity",
+          "kind": "fun",
+          "line": 22
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/data/datastore/SettingsPreferencesRepostory.kt",
+      "language": "kotlin",
+      "lines": 33,
+      "imports": [
+        "android.content.Context",
+        "androidx.datastore.preferences.core.booleanPreferencesKey",
+        "androidx.datastore.preferences.core.edit",
+        "androidx.datastore.preferences.core.stringPreferencesKey",
+        "androidx.datastore.preferences.preferencesDataStore",
+        "kotlinx.coroutines.flow.Flow",
+        "kotlinx.coroutines.flow.map"
+      ],
+      "symbols": [
+        {
+          "name": "SettingsPreferences",
+          "kind": "class",
+          "line": 11
+        },
+        {
+          "name": "setDarkMode",
+          "kind": "fun",
+          "line": 18,
+          "container": "SettingsPreferences",
+          "modifiers": [
+            "suspend"
+          ]
+        },
+        {
+          "name": "setLanguage",
+          "kind": "fun",
+          "line": 30,
+          "container": "SettingsPreferences",
+          "modifiers": [
+            "suspend"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/data/model/BalanceByMonthEntity.kt",
+      "language": "kotlin",
+      "lines": 15,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceByMonth"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceByMonthEntity",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        },
+        {
+          "name": "toDomain",
+          "kind": "fun",
+          "line": 11
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/data/repository/BalanceRepositoryImpl.kt",
+      "language": "kotlin",
+      "lines": 45,
+      "imports": [
+        "com.onedeepath.balanccapp.data.database.dao.BalanceDao",
+        "com.onedeepath.balanccapp.data.database.entity.toEntity",
+        "com.onedeepath.balanccapp.domain.model.BalanceByMonth",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.model.toDomain",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "com.onedeepath.balanccapp.data.model.toDomain",
+        "kotlinx.coroutines.flow.Flow",
+        "kotlinx.coroutines.flow.map",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceRepositoryImpl",
+          "kind": "class",
+          "line": 14
+        },
+        {
+          "name": "getAllBalances",
+          "kind": "fun",
+          "line": 17,
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "getIncomeByMonth",
+          "kind": "fun",
+          "line": 22,
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "getExpenseByMonth",
+          "kind": "fun",
+          "line": 27,
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "getBalanceByYear",
+          "kind": "fun",
+          "line": 32,
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "insertBalance",
+          "kind": "fun",
+          "line": 37,
+          "modifiers": [
+            "override",
+            "suspend"
+          ]
+        },
+        {
+          "name": "deleteBalance",
+          "kind": "fun",
+          "line": 41,
+          "modifiers": [
+            "override",
+            "suspend"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/di/BalanceModule.kt",
+      "language": "kotlin",
+      "lines": 21,
+      "imports": [
+        "com.onedeepath.balanccapp.data.repository.BalanceRepositoryImpl",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "dagger.Binds",
+        "dagger.Module",
+        "dagger.hilt.InstallIn",
+        "dagger.hilt.components.SingletonComponent",
+        "javax.inject.Singleton"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceModule",
+          "kind": "class",
+          "line": 14,
+          "modifiers": [
+            "abstract"
+          ]
+        },
+        {
+          "name": "bindBalanceRepository",
+          "kind": "fun",
+          "line": 18,
+          "container": "BalanceModule",
+          "modifiers": [
+            "abstract"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/di/CurrencyModel.kt",
+      "language": "kotlin",
+      "lines": 18,
+      "imports": [
+        "com.onedeepath.balanccapp.core.AndroidCurrencyHelper",
+        "com.onedeepath.balanccapp.core.CurrencyHelper",
+        "dagger.Binds",
+        "dagger.Module",
+        "dagger.hilt.InstallIn",
+        "dagger.hilt.components.SingletonComponent"
+      ],
+      "symbols": [
+        {
+          "name": "CurrencyModel",
+          "kind": "class",
+          "line": 12,
+          "modifiers": [
+            "abstract"
+          ]
+        },
+        {
+          "name": "bindCurrencyHelper",
+          "kind": "fun",
+          "line": 15,
+          "container": "CurrencyModel",
+          "modifiers": [
+            "abstract"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/di/DateModule.kt",
+      "language": "kotlin",
+      "lines": 16,
+      "imports": [
+        "dagger.Module",
+        "dagger.Provides",
+        "dagger.hilt.InstallIn",
+        "dagger.hilt.components.SingletonComponent"
+      ],
+      "symbols": [
+        {
+          "name": "DateModule",
+          "kind": "object",
+          "line": 10
+        },
+        {
+          "name": "provideDefaultYearProvider",
+          "kind": "fun",
+          "line": 13,
+          "container": "DateModule"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/di/DispatcherModule.kt",
+      "language": "kotlin",
+      "lines": 22,
+      "imports": [
+        "dagger.Module",
+        "dagger.Provides",
+        "dagger.hilt.InstallIn",
+        "dagger.hilt.components.SingletonComponent",
+        "kotlinx.coroutines.CoroutineDispatcher",
+        "kotlinx.coroutines.Dispatchers",
+        "javax.inject.Qualifier"
+      ],
+      "symbols": [
+        {
+          "name": "DispatcherModule",
+          "kind": "object",
+          "line": 13
+        },
+        {
+          "name": "provideIoDispatcher",
+          "kind": "fun",
+          "line": 17,
+          "container": "DispatcherModule"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/di/RoomModule.kt",
+      "language": "kotlin",
+      "lines": 33,
+      "imports": [
+        "android.content.Context",
+        "androidx.room.Room",
+        "com.onedeepath.balanccapp.data.database.BalanceDatabase",
+        "dagger.Module",
+        "dagger.Provides",
+        "dagger.hilt.InstallIn",
+        "dagger.hilt.android.qualifiers.ApplicationContext",
+        "dagger.hilt.components.SingletonComponent",
+        "javax.inject.Singleton"
+      ],
+      "symbols": [
+        {
+          "name": "RoomModule",
+          "kind": "object",
+          "line": 16
+        },
+        {
+          "name": "provideRoom",
+          "kind": "fun",
+          "line": 22,
+          "container": "RoomModule"
+        },
+        {
+          "name": "provideBalanceDao",
+          "kind": "fun",
+          "line": 29,
+          "container": "RoomModule"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/domain/model/BalanceByMonth.kt",
+      "language": "kotlin",
+      "lines": 16,
+      "imports": [
+        "com.onedeepath.balanccapp.data.model.BalanceByMonthEntity"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceByMonth",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        },
+        {
+          "name": "toEntity",
+          "kind": "fun",
+          "line": 11
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/domain/model/BalanceModel.kt",
+      "language": "kotlin",
+      "lines": 16,
+      "imports": [
+        "com.onedeepath.balanccapp.data.database.entity.BalanceEntity"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceModel",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        },
+        {
+          "name": "toDomain",
+          "kind": "fun",
+          "line": 16
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/domain/model/Category.kt",
+      "language": "kotlin",
+      "lines": 42,
+      "imports": [
+        "androidx.compose.ui.graphics.Color",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.ui.theme.EducationColor",
+        "com.onedeepath.balanccapp.ui.theme.EntertainmentColor",
+        "com.onedeepath.balanccapp.ui.theme.FoodColor",
+        "com.onedeepath.balanccapp.ui.theme.GiftColor",
+        "com.onedeepath.balanccapp.ui.theme.GroceryColor",
+        "com.onedeepath.balanccapp.ui.theme.HealthColor",
+        "com.onedeepath.balanccapp.ui.theme.InvestmentColor",
+        "com.onedeepath.balanccapp.ui.theme.OtherColor",
+        "com.onedeepath.balanccapp.ui.theme.PetColor",
+        "com.onedeepath.balanccapp.ui.theme.RentColor",
+        "com.onedeepath.balanccapp.ui.theme.TransportColor",
+        "com.onedeepath.balanccapp.ui.theme.TravelColor",
+        "com.onedeepath.balanccapp.ui.theme.UtilitiesColor",
+        "com.onedeepath.balanccapp.ui.theme.WorkColor"
+      ],
+      "symbols": [
+        {
+          "name": "Category",
+          "kind": "class",
+          "line": 20,
+          "modifiers": [
+            "enum"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/domain/repository/BalanceRepository.kt",
+      "language": "kotlin",
+      "lines": 27,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceByMonth",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "kotlinx.coroutines.flow.Flow"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceRepository",
+          "kind": "interface",
+          "line": 7
+        },
+        {
+          "name": "getAllBalances",
+          "kind": "fun",
+          "line": 9,
+          "container": "BalanceRepository"
+        },
+        {
+          "name": "getIncomeByMonth",
+          "kind": "fun",
+          "line": 11,
+          "container": "BalanceRepository"
+        },
+        {
+          "name": "getExpenseByMonth",
+          "kind": "fun",
+          "line": 16,
+          "container": "BalanceRepository"
+        },
+        {
+          "name": "getBalanceByYear",
+          "kind": "fun",
+          "line": 21,
+          "container": "BalanceRepository"
+        },
+        {
+          "name": "insertBalance",
+          "kind": "fun",
+          "line": 23,
+          "container": "BalanceRepository",
+          "modifiers": [
+            "suspend"
+          ]
+        },
+        {
+          "name": "deleteBalance",
+          "kind": "fun",
+          "line": 25,
+          "container": "BalanceRepository",
+          "modifiers": [
+            "suspend"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/domain/usecases/DeleteBalanceUseCase.kt",
+      "language": "kotlin",
+      "lines": 15,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "DeleteBalanceUseCase",
+          "kind": "class",
+          "line": 6
+        },
+        {
+          "name": "invoke",
+          "kind": "fun",
+          "line": 10,
+          "modifiers": [
+            "suspend",
+            "operator"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/domain/usecases/GetAllBalancesUseCase.kt",
+      "language": "kotlin",
+      "lines": 12,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "kotlinx.coroutines.flow.Flow",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "GetAllBalancesUseCase",
+          "kind": "class",
+          "line": 8
+        },
+        {
+          "name": "invoke",
+          "kind": "fun",
+          "line": 11,
+          "modifiers": [
+            "operator"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/domain/usecases/GetBalanceByExpense.kt",
+      "language": "kotlin",
+      "lines": 19,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "kotlinx.coroutines.flow.Flow",
+        "kotlinx.coroutines.flow.flowOf",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "GetBalanceByExpense",
+          "kind": "class",
+          "line": 9
+        },
+        {
+          "name": "getExpenses",
+          "kind": "fun",
+          "line": 12
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/domain/usecases/GetBalanceByIncome.kt",
+      "language": "kotlin",
+      "lines": 20,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "kotlinx.coroutines.flow.Flow",
+        "kotlinx.coroutines.flow.flowOf",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "GetBalanceByIncome",
+          "kind": "class",
+          "line": 9
+        },
+        {
+          "name": "getIncomes",
+          "kind": "fun",
+          "line": 13
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/domain/usecases/GetBalancesByYearUseCase.kt",
+      "language": "kotlin",
+      "lines": 21,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceByMonth",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "kotlinx.coroutines.flow.Flow",
+        "kotlinx.coroutines.flow.flowOf",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "GetBalancesByYearUseCase",
+          "kind": "class",
+          "line": 9
+        },
+        {
+          "name": "invoke",
+          "kind": "fun",
+          "line": 13,
+          "modifiers": [
+            "operator"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/domain/usecases/InsertBalanceUseCase.kt",
+      "language": "kotlin",
+      "lines": 14,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "InsertBalanceUseCase",
+          "kind": "class",
+          "line": 7
+        },
+        {
+          "name": "invoke",
+          "kind": "fun",
+          "line": 10,
+          "modifiers": [
+            "suspend",
+            "operator"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/MainActivity.kt",
+      "language": "kotlin",
+      "lines": 47,
+      "imports": [
+        "android.os.Bundle",
+        "androidx.activity.ComponentActivity",
+        "androidx.activity.compose.setContent",
+        "androidx.activity.enableEdgeToEdge",
+        "androidx.appcompat.app.AppCompatDelegate",
+        "androidx.compose.runtime.collectAsState",
+        "androidx.compose.runtime.getValue",
+        "androidx.core.os.LocaleListCompat",
+        "androidx.lifecycle.lifecycleScope",
+        "com.onedeepath.balanccapp.data.datastore.SettingsPreferences",
+        "com.onedeepath.balanccapp.ui.navigation.AppNavigation",
+        "com.onedeepath.balanccapp.ui.theme.AppTheme",
+        "dagger.hilt.android.AndroidEntryPoint",
+        "kotlinx.coroutines.flow.first",
+        "kotlinx.coroutines.launch"
+      ],
+      "symbols": [
+        {
+          "name": "MainActivity",
+          "kind": "class",
+          "line": 20
+        },
+        {
+          "name": "onCreate",
+          "kind": "fun",
+          "line": 21,
+          "container": "MainActivity",
+          "modifiers": [
+            "override"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/navigation/AppNavigation.kt",
+      "language": "kotlin",
+      "lines": 69,
+      "imports": [
+        "android.annotation.SuppressLint",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.remember",
+        "androidx.hilt.navigation.compose.hiltViewModel",
+        "androidx.navigation.compose.NavHost",
+        "androidx.navigation.compose.composable",
+        "androidx.navigation.compose.rememberNavController",
+        "com.onedeepath.balanccapp.data.datastore.SettingsPreferences",
+        "com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel",
+        "com.onedeepath.balanccapp.ui.screens.addbalance.AddIncomeOrExpenseScreen",
+        "com.onedeepath.balanccapp.ui.screens.detail.MonthsDetailScreen",
+        "com.onedeepath.balanccapp.ui.screens.main.MainScreen",
+        "com.onedeepath.balanccapp.ui.screens.settings.SettingsScreen",
+        "com.onedeepath.balanccapp.ui.screens.splash.SplashScreen"
+      ],
+      "symbols": [
+        {
+          "name": "AppNavigation",
+          "kind": "fun",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/navigation/AppScreens.kt",
+      "language": "kotlin",
+      "lines": 9,
+      "imports": [],
+      "symbols": [
+        {
+          "name": "AppScreens",
+          "kind": "class",
+          "line": 3,
+          "modifiers": [
+            "sealed"
+          ]
+        },
+        {
+          "name": "SplashScreens",
+          "kind": "object",
+          "line": 4,
+          "container": "AppScreens"
+        },
+        {
+          "name": "MainScreen",
+          "kind": "object",
+          "line": 5,
+          "container": "AppScreens"
+        },
+        {
+          "name": "DetailScreen",
+          "kind": "object",
+          "line": 6,
+          "container": "AppScreens"
+        },
+        {
+          "name": "AddIncomeOrExpenseScreen",
+          "kind": "object",
+          "line": 7,
+          "container": "AppScreens"
+        },
+        {
+          "name": "SettingsScreen",
+          "kind": "object",
+          "line": 8,
+          "container": "AppScreens"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/presentation/model/TabItem.kt",
+      "language": "kotlin",
+      "lines": 8,
+      "imports": [
+        "android.graphics.drawable.Icon",
+        "androidx.compose.ui.graphics.vector.ImageVector"
+      ],
+      "symbols": [
+        {
+          "name": "TabItem",
+          "kind": "class",
+          "line": 6,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/presentation/viewmodel/YearMonthViewModel.kt",
+      "language": "kotlin",
+      "lines": 65,
+      "imports": [
+        "androidx.compose.runtime.State",
+        "androidx.compose.runtime.mutableStateOf",
+        "androidx.lifecycle.ViewModel",
+        "dagger.hilt.android.lifecycle.HiltViewModel",
+        "kotlinx.coroutines.flow.MutableSharedFlow",
+        "kotlinx.coroutines.flow.MutableStateFlow",
+        "kotlinx.coroutines.flow.StateFlow",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "YearMonthViewModel",
+          "kind": "class",
+          "line": 13
+        },
+        {
+          "name": "setIsFastAddBalance",
+          "kind": "fun",
+          "line": 27,
+          "container": "YearMonthViewModel"
+        },
+        {
+          "name": "setYear",
+          "kind": "fun",
+          "line": 32,
+          "container": "YearMonthViewModel"
+        },
+        {
+          "name": "setMonth",
+          "kind": "fun",
+          "line": 37,
+          "container": "YearMonthViewModel"
+        },
+        {
+          "name": "setMonthIndex",
+          "kind": "fun",
+          "line": 44,
+          "container": "YearMonthViewModel"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/addbalance/AddBalanceScreen.kt",
+      "language": "kotlin",
+      "lines": 701,
+      "imports": [
+        "android.annotation.SuppressLint",
+        "android.content.Context",
+        "android.widget.Space",
+        "android.widget.Toast",
+        "androidx.compose.animation.animateColorAsState",
+        "androidx.compose.animation.core.tween",
+        "androidx.compose.foundation.BorderStroke",
+        "androidx.compose.foundation.background",
+        "androidx.compose.foundation.clickable",
+        "androidx.compose.foundation.interaction.MutableInteractionSource",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.WindowInsets",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.statusBars",
+        "androidx.compose.foundation.layout.statusBarsPadding",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.lazy.LazyColumn",
+        "androidx.compose.foundation.lazy.items",
+        "androidx.compose.foundation.rememberScrollState",
+        "androidx.compose.foundation.shape.CircleShape",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.foundation.text.BasicTextField",
+        "androidx.compose.foundation.text.KeyboardOptions",
+        "androidx.compose.foundation.verticalScroll",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.Add",
+        "androidx.compose.material.icons.filled.DateRange",
+        "androidx.compose.material.icons.filled.KeyboardArrowDown",
+        "androidx.compose.material.icons.filled.KeyboardArrowUp",
+        "androidx.compose.material.icons.outlined.KeyboardArrowDown",
+        "androidx.compose.material.icons.outlined.KeyboardArrowUp",
+        "androidx.compose.material3.AssistChip",
+        "androidx.compose.material3.AssistChipDefaults",
+        "androidx.compose.material3.Button",
+        "androidx.compose.material3.ButtonDefaults",
+        "androidx.compose.material3.Card",
+        "androidx.compose.material3.CardDefaults",
+        "androidx.compose.material3.CircularProgressIndicator",
+        "androidx.compose.material3.DropdownMenu",
+        "androidx.compose.material3.DropdownMenuItem",
+        "androidx.compose.material3.ExperimentalMaterial3Api",
+        "androidx.compose.material3.ExposedDropdownMenuBox",
+        "androidx.compose.material3.ExposedDropdownMenuDefaults",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.LocalTextStyle",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.OutlinedTextField",
+        "androidx.compose.material3.OutlinedTextFieldDefaults",
+        "androidx.compose.material3.Scaffold",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Tab",
+        "androidx.compose.material3.TabRow",
+        "androidx.compose.material3.Text",
+        "androidx.compose.material3.TextField",
+        "androidx.compose.material3.TextFieldDefaults",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.LaunchedEffect",
+        "androidx.compose.runtime.collectAsState",
+        "androidx.compose.runtime.getValue",
+        "androidx.compose.runtime.mutableStateOf",
+        "androidx.compose.runtime.remember",
+        "androidx.compose.runtime.saveable.rememberSaveable",
+        "androidx.compose.runtime.setValue",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.draw.clip",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.graphics.SolidColor",
+        "androidx.compose.ui.platform.LocalContext",
+        "androidx.compose.ui.res.painterResource",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.TextStyle",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.text.input.KeyboardType",
+        "androidx.compose.ui.text.style.TextAlign",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.unit.sp",
+        "androidx.compose.ui.window.Dialog",
+        "androidx.compose.ui.window.DialogProperties",
+        "androidx.hilt.navigation.compose.hiltViewModel",
+        "com.maxkeppeker.sheets.core.models.base.UseCaseState",
+        "com.maxkeppeler.sheets.calendar.CalendarDialog",
+        "com.maxkeppeler.sheets.calendar.models.CalendarConfig",
+        "com.maxkeppeler.sheets.calendar.models.CalendarSelection",
+        "com.maxkeppeler.sheets.calendar.models.CalendarStyle",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.core.cleanAmountForStorage",
+        "com.onedeepath.balanccapp.core.formatAmountForDisplay",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.ui.presentation.model.TabItem",
+        "com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel",
+        "com.onedeepath.balanccapp.ui.screens.addbalance.model.AddBalanceUiState",
+        "com.onedeepath.balanccapp.ui.screens.addbalance.viewmodel.AddBalanceViewModel",
+        "java.time.LocalDate",
+        "java.time.YearMonth"
+      ],
+      "symbols": [
+        {
+          "name": "AddIncomeOrExpenseScreen",
+          "kind": "fun",
+          "line": 110
+        },
+        {
+          "name": "AddBalanceButton",
+          "kind": "fun",
+          "line": 191
+        },
+        {
+          "name": "HeaderAdd",
+          "kind": "fun",
+          "line": 224
+        },
+        {
+          "name": "DetailsTF",
+          "kind": "fun",
+          "line": 242
+        },
+        {
+          "name": "DatePickerSelector",
+          "kind": "fun",
+          "line": 268
+        },
+        {
+          "name": "FastAddMonthDialog",
+          "kind": "fun",
+          "line": 420
+        },
+        {
+          "name": "MonthItem",
+          "kind": "fun",
+          "line": 480
+        },
+        {
+          "name": "AddCategorySelector",
+          "kind": "fun",
+          "line": 521
+        },
+        {
+          "name": "AddAmountTF",
+          "kind": "fun",
+          "line": 591
+        },
+        {
+          "name": "IncomeExpenseTabview",
+          "kind": "fun",
+          "line": 646
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/addbalance/model/AddBalanceUiState.kt",
+      "language": "kotlin",
+      "lines": 17,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.Category"
+      ],
+      "symbols": [
+        {
+          "name": "AddBalanceUiState",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/addbalance/viewmodel/AddBalanceViewModel.kt",
+      "language": "kotlin",
+      "lines": 84,
+      "imports": [
+        "androidx.lifecycle.ViewModel",
+        "androidx.lifecycle.viewModelScope",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.domain.usecases.InsertBalanceUseCase",
+        "com.onedeepath.balanccapp.ui.screens.addbalance.model.AddBalanceUiState",
+        "dagger.hilt.android.lifecycle.HiltViewModel",
+        "kotlinx.coroutines.flow.MutableStateFlow",
+        "kotlinx.coroutines.flow.StateFlow",
+        "kotlinx.coroutines.flow.update",
+        "kotlinx.coroutines.launch",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "AddBalanceViewModel",
+          "kind": "class",
+          "line": 17
+        },
+        {
+          "name": "onAmountChange",
+          "kind": "fun",
+          "line": 24
+        },
+        {
+          "name": "onCategoryChange",
+          "kind": "fun",
+          "line": 28
+        },
+        {
+          "name": "onTypeChange",
+          "kind": "fun",
+          "line": 32
+        },
+        {
+          "name": "onDaySelected",
+          "kind": "fun",
+          "line": 36
+        },
+        {
+          "name": "onDetailsChange",
+          "kind": "fun",
+          "line": 41
+        },
+        {
+          "name": "save",
+          "kind": "fun",
+          "line": 45
+        },
+        {
+          "name": "resetSaveEvent",
+          "kind": "fun",
+          "line": 80
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/detail/MonthsDetailScreen.kt",
+      "language": "kotlin",
+      "lines": 649,
+      "imports": [
+        "android.annotation.SuppressLint",
+        "androidx.compose.foundation.background",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.lazy.LazyColumn",
+        "androidx.compose.foundation.pager.HorizontalPager",
+        "androidx.compose.foundation.pager.rememberPagerState",
+        "androidx.compose.foundation.shape.CircleShape",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.Add",
+        "androidx.compose.material.icons.filled.KeyboardArrowDown",
+        "androidx.compose.material.icons.filled.KeyboardArrowUp",
+        "androidx.compose.material.icons.outlined.KeyboardArrowDown",
+        "androidx.compose.material.icons.outlined.KeyboardArrowUp",
+        "androidx.compose.material3.Card",
+        "androidx.compose.material3.CardDefaults",
+        "androidx.compose.material3.FloatingActionButton",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.IconButton",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Scaffold",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Tab",
+        "androidx.compose.material3.TabRow",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.LaunchedEffect",
+        "androidx.compose.runtime.collectAsState",
+        "androidx.compose.runtime.getValue",
+        "androidx.compose.runtime.mutableStateOf",
+        "androidx.compose.runtime.remember",
+        "androidx.compose.runtime.saveable.rememberSaveable",
+        "androidx.compose.runtime.setValue",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.draw.clip",
+        "androidx.compose.ui.geometry.Offset",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.graphics.toArgb",
+        "androidx.compose.ui.input.nestedscroll.NestedScrollConnection",
+        "androidx.compose.ui.input.nestedscroll.NestedScrollSource",
+        "androidx.compose.ui.input.nestedscroll.nestedScroll",
+        "androidx.compose.ui.res.painterResource",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.text.font.FontWeight.Companion.Bold",
+        "androidx.compose.ui.text.style.TextAlign",
+        "androidx.compose.ui.text.style.TextOverflow",
+        "androidx.compose.ui.unit.Dp",
+        "androidx.compose.ui.unit.coerceIn",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.unit.sp",
+        "androidx.compose.ui.viewinterop.AndroidView",
+        "androidx.hilt.navigation.compose.hiltViewModel",
+        "androidx.navigation.NavController",
+        "com.github.mikephil.charting.charts.PieChart",
+        "com.github.mikephil.charting.data.PieData",
+        "com.github.mikephil.charting.data.PieDataSet",
+        "com.github.mikephil.charting.data.PieEntry",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.core.formatCurrency",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.ui.navigation.AppScreens",
+        "com.onedeepath.balanccapp.ui.presentation.model.TabItem",
+        "com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.MonthsChartUiState",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.MonthsDetailUiState",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.MyMonthsChartUiState",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData",
+        "com.onedeepath.balanccapp.ui.screens.detail.viewmodel.MonthsDetailViewModel",
+        "java.time.Month",
+        "kotlin.collections.component1",
+        "kotlin.collections.component2"
+      ],
+      "symbols": [
+        {
+          "name": "ChartType",
+          "kind": "class",
+          "line": 86,
+          "modifiers": [
+            "enum"
+          ]
+        },
+        {
+          "name": "MonthsDetailScreen",
+          "kind": "fun",
+          "line": 93
+        },
+        {
+          "name": "MainContentSheet",
+          "kind": "fun",
+          "line": 129
+        },
+        {
+          "name": "HeaderSection",
+          "kind": "fun",
+          "line": 193
+        },
+        {
+          "name": "DonutChart",
+          "kind": "fun",
+          "line": 219
+        },
+        {
+          "name": "DateHeader",
+          "kind": "fun",
+          "line": 283
+        },
+        {
+          "name": "IncomePage",
+          "kind": "fun",
+          "line": 296
+        },
+        {
+          "name": "onPreScroll",
+          "kind": "fun",
+          "line": 305,
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "ExpensePage",
+          "kind": "fun",
+          "line": 347
+        },
+        {
+          "name": "onPreScroll",
+          "kind": "fun",
+          "line": 356,
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "IncomeList",
+          "kind": "fun",
+          "line": 401
+        },
+        {
+          "name": "ExpenseList",
+          "kind": "fun",
+          "line": 450
+        },
+        {
+          "name": "IncomeCard",
+          "kind": "fun",
+          "line": 490
+        },
+        {
+          "name": "ExpenseCard",
+          "kind": "fun",
+          "line": 561
+        },
+        {
+          "name": "AddIncomeOrExpenseFAB",
+          "kind": "fun",
+          "line": 632
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/detail/model/MonthsChartUiState.kt",
+      "language": "kotlin",
+      "lines": 9,
+      "imports": [
+        "com.github.mikephil.charting.data.PieEntry"
+      ],
+      "symbols": [
+        {
+          "name": "MonthsChartUiState",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/detail/model/MonthsDetailUiState.kt",
+      "language": "kotlin",
+      "lines": 22,
+      "imports": [
+        "androidx.compose.ui.graphics.Color",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel"
+      ],
+      "symbols": [
+        {
+          "name": "MonthsDetailUiState",
+          "kind": "class",
+          "line": 6,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/detail/model/MyMonthsChartUiState.kt",
+      "language": "kotlin",
+      "lines": 9,
+      "imports": [
+        "com.github.mikephil.charting.data.PieEntry"
+      ],
+      "symbols": [
+        {
+          "name": "MyMonthsChartUiState",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/detail/model/PieChartData.kt",
+      "language": "kotlin",
+      "lines": 8,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.Category"
+      ],
+      "symbols": [
+        {
+          "name": "PieChartData",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/detail/viewmodel/MonthsDetailViewModel.kt",
+      "language": "kotlin",
+      "lines": 142,
+      "imports": [
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.graphics.toArgb",
+        "androidx.lifecycle.ViewModel",
+        "androidx.lifecycle.viewModelScope",
+        "com.onedeepath.balanccapp.core.CurrencyHelper",
+        "com.onedeepath.balanccapp.di.IoDispatcher",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.usecases.DeleteBalanceUseCase",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalanceByExpense",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalanceByIncome",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.MonthsDetailUiState",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.MyMonthsChartUiState",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData",
+        "dagger.hilt.android.lifecycle.HiltViewModel",
+        "kotlinx.coroutines.CoroutineDispatcher",
+        "kotlinx.coroutines.flow.MutableStateFlow",
+        "kotlinx.coroutines.flow.StateFlow",
+        "kotlinx.coroutines.flow.asStateFlow",
+        "kotlinx.coroutines.flow.combine",
+        "kotlinx.coroutines.flow.flowOn",
+        "kotlinx.coroutines.flow.update",
+        "kotlinx.coroutines.launch",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "MonthsDetailViewModel",
+          "kind": "class",
+          "line": 28
+        },
+        {
+          "name": "load",
+          "kind": "fun",
+          "line": 39
+        },
+        {
+          "name": "buildTotalBalance",
+          "kind": "fun",
+          "line": 70,
+          "modifiers": [
+            "private"
+          ]
+        },
+        {
+          "name": "deleteBalance",
+          "kind": "fun",
+          "line": 84
+        },
+        {
+          "name": "MyBuildIncomeChart",
+          "kind": "fun",
+          "line": 90,
+          "modifiers": [
+            "private"
+          ]
+        },
+        {
+          "name": "MyBuildExpenseChart",
+          "kind": "fun",
+          "line": 102,
+          "modifiers": [
+            "private"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/main/MainScreen.kt",
+      "language": "kotlin",
+      "lines": 446,
+      "imports": [
+        "android.annotation.SuppressLint",
+        "androidx.compose.animation.animateColorAsState",
+        "androidx.compose.animation.core.tween",
+        "androidx.compose.foundation.background",
+        "androidx.compose.foundation.clickable",
+        "androidx.compose.foundation.interaction.MutableInteractionSource",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxHeight",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.statusBarsPadding",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.lazy.LazyColumn",
+        "androidx.compose.foundation.lazy.items",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.Add",
+        "androidx.compose.material.icons.filled.ArrowDropDown",
+        "androidx.compose.material.icons.filled.DateRange",
+        "androidx.compose.material.icons.filled.Settings",
+        "androidx.compose.material3.Card",
+        "androidx.compose.material3.CardDefaults",
+        "androidx.compose.material3.CircularProgressIndicator",
+        "androidx.compose.material3.ExperimentalMaterial3Api",
+        "androidx.compose.material3.FloatingActionButton",
+        "androidx.compose.material3.HorizontalDivider",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.IconButton",
+        "androidx.compose.material3.LocalTextStyle",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Scaffold",
+        "androidx.compose.material3.SnackbarHost",
+        "androidx.compose.material3.SnackbarHostState",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Text",
+        "androidx.compose.material3.TextField",
+        "androidx.compose.material3.TextFieldDefaults",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.LaunchedEffect",
+        "androidx.compose.runtime.collectAsState",
+        "androidx.compose.runtime.getValue",
+        "androidx.compose.runtime.mutableStateOf",
+        "androidx.compose.runtime.remember",
+        "androidx.compose.runtime.setValue",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.draw.clip",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.text.style.TextAlign",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.unit.sp",
+        "androidx.compose.ui.window.Dialog",
+        "androidx.hilt.navigation.compose.hiltViewModel",
+        "androidx.navigation.NavController",
+        "com.google.androidgamesdk.gametextinput.Settings",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.core.formatCurrency",
+        "com.onedeepath.balanccapp.ui.navigation.AppScreens",
+        "com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel",
+        "com.onedeepath.balanccapp.ui.screens.main.model.MonthsBalanceUi",
+        "com.onedeepath.balanccapp.ui.screens.main.viewmodel.MainViewModel"
+      ],
+      "symbols": [
+        {
+          "name": "MainScreen",
+          "kind": "fun",
+          "line": 77
+        },
+        {
+          "name": "AddBalanceFAB",
+          "kind": "fun",
+          "line": 150
+        },
+        {
+          "name": "HeaderBalanccApp",
+          "kind": "fun",
+          "line": 171
+        },
+        {
+          "name": "BalanceCardItem",
+          "kind": "fun",
+          "line": 214
+        },
+        {
+          "name": "BalanceStat",
+          "kind": "fun",
+          "line": 284
+        },
+        {
+          "name": "MonthsCards",
+          "kind": "fun",
+          "line": 292
+        },
+        {
+          "name": "YearFilterChip",
+          "kind": "fun",
+          "line": 317
+        },
+        {
+          "name": "YearPickerDialog",
+          "kind": "fun",
+          "line": 350
+        },
+        {
+          "name": "YearItem",
+          "kind": "fun",
+          "line": 410
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/main/mapper/BalanceByMonthUiMapper.kt",
+      "language": "kotlin",
+      "lines": 28,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceByMonth",
+        "com.onedeepath.balanccapp.ui.screens.main.model.MonthsBalanceUi"
+      ],
+      "symbols": []
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/main/model/MainUiState.kt",
+      "language": "kotlin",
+      "lines": 8,
+      "imports": [],
+      "symbols": [
+        {
+          "name": "MainUiState",
+          "kind": "class",
+          "line": 3,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/main/model/MonthsBalanceUi.kt",
+      "language": "kotlin",
+      "lines": 9,
+      "imports": [],
+      "symbols": [
+        {
+          "name": "MonthsBalanceUi",
+          "kind": "class",
+          "line": 3,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/main/viewmodel/MainViewModel.kt",
+      "language": "kotlin",
+      "lines": 74,
+      "imports": [
+        "androidx.lifecycle.ViewModel",
+        "androidx.lifecycle.viewModelScope",
+        "com.onedeepath.balanccapp.di.IoDispatcher",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalancesByYearUseCase",
+        "com.onedeepath.balanccapp.ui.screens.main.mapper.toMonthsBalanceUi",
+        "com.onedeepath.balanccapp.ui.screens.main.model.MainUiState",
+        "dagger.hilt.android.lifecycle.HiltViewModel",
+        "kotlinx.coroutines.CoroutineDispatcher",
+        "kotlinx.coroutines.flow.MutableStateFlow",
+        "kotlinx.coroutines.flow.StateFlow",
+        "kotlinx.coroutines.flow.asStateFlow",
+        "kotlinx.coroutines.flow.catch",
+        "kotlinx.coroutines.flow.collectLatest",
+        "kotlinx.coroutines.flow.flowOn",
+        "kotlinx.coroutines.flow.update",
+        "kotlinx.coroutines.launch",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "MainViewModel",
+          "kind": "class",
+          "line": 22
+        },
+        {
+          "name": "onErrorShown",
+          "kind": "fun",
+          "line": 35
+        },
+        {
+          "name": "onYearSelected",
+          "kind": "fun",
+          "line": 39
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/settings/SettingsScreen.kt",
+      "language": "kotlin",
+      "lines": 268,
+      "imports": [
+        "android.annotation.SuppressLint",
+        "androidx.appcompat.app.AppCompatDelegate",
+        "androidx.compose.foundation.clickable",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.lazy.LazyColumn",
+        "androidx.compose.foundation.lazy.items",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.AddCircle",
+        "androidx.compose.material.icons.filled.ArrowBack",
+        "androidx.compose.material.icons.filled.Check",
+        "androidx.compose.material.icons.filled.CheckCircle",
+        "androidx.compose.material.icons.filled.Create",
+        "androidx.compose.material3.AlertDialog",
+        "androidx.compose.material3.ExperimentalMaterial3Api",
+        "androidx.compose.material3.HorizontalDivider",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.IconButton",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Scaffold",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Switch",
+        "androidx.compose.material3.SwitchDefaults",
+        "androidx.compose.material3.Text",
+        "androidx.compose.material3.TopAppBar",
+        "androidx.compose.material3.TopAppBarDefaults",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.collectAsState",
+        "androidx.compose.runtime.getValue",
+        "androidx.compose.runtime.mutableStateOf",
+        "androidx.compose.runtime.remember",
+        "androidx.compose.runtime.rememberCoroutineScope",
+        "androidx.compose.runtime.setValue",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.graphics.vector.ImageVector",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.dp",
+        "androidx.core.os.LocaleListCompat",
+        "androidx.navigation.NavController",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.data.datastore.SettingsPreferences",
+        "kotlinx.coroutines.launch"
+      ],
+      "symbols": [
+        {
+          "name": "SettingsScreen",
+          "kind": "fun",
+          "line": 62
+        },
+        {
+          "name": "SettingItem",
+          "kind": "fun",
+          "line": 180
+        },
+        {
+          "name": "LanguagePickerDialog",
+          "kind": "fun",
+          "line": 231
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/screens/splash/SplashScreen.kt",
+      "language": "kotlin",
+      "lines": 52,
+      "imports": [
+        "androidx.compose.foundation.Image",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.LaunchedEffect",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.res.painterResource",
+        "androidx.compose.ui.tooling.preview.Preview",
+        "androidx.compose.ui.unit.dp",
+        "androidx.navigation.NavController",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.ui.navigation.AppScreens"
+      ],
+      "symbols": [
+        {
+          "name": "SplashScreen",
+          "kind": "fun",
+          "line": 20
+        },
+        {
+          "name": "Splash",
+          "kind": "fun",
+          "line": 34
+        },
+        {
+          "name": "SplashScreenPreview",
+          "kind": "fun",
+          "line": 50
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/theme/AppTheme.kt",
+      "language": "kotlin",
+      "lines": 18,
+      "imports": [
+        "androidx.compose.foundation.isSystemInDarkTheme",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.runtime.Composable"
+      ],
+      "symbols": [
+        {
+          "name": "AppTheme",
+          "kind": "fun",
+          "line": 8
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/theme/Color.kt",
+      "language": "kotlin",
+      "lines": 64,
+      "imports": [
+        "androidx.compose.ui.graphics.Color"
+      ],
+      "symbols": []
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/theme/Theme.kt",
+      "language": "kotlin",
+      "lines": 67,
+      "imports": [
+        "android.app.Activity",
+        "android.os.Build",
+        "androidx.compose.foundation.isSystemInDarkTheme",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.darkColorScheme",
+        "androidx.compose.material3.dynamicDarkColorScheme",
+        "androidx.compose.material3.dynamicLightColorScheme",
+        "androidx.compose.material3.lightColorScheme",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.platform.LocalContext"
+      ],
+      "symbols": [
+        {
+          "name": "BalanccAppTheme",
+          "kind": "fun",
+          "line": 46
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/main/java/com/onedeepath/balanccapp/ui/theme/Type.kt",
+      "language": "kotlin",
+      "lines": 34,
+      "imports": [
+        "androidx.compose.material3.Typography",
+        "androidx.compose.ui.text.TextStyle",
+        "androidx.compose.ui.text.font.FontFamily",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.sp"
+      ],
+      "symbols": []
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/test/java/com/onedeepath/balanccapp/ExampleUnitTest.kt",
+      "language": "kotlin",
+      "lines": 17,
+      "imports": [
+        "org.junit.Test",
+        "org.junit.Assert.*"
+      ],
+      "symbols": [
+        {
+          "name": "ExampleUnitTest",
+          "kind": "class",
+          "line": 12
+        },
+        {
+          "name": "addition_isCorrect",
+          "kind": "fun",
+          "line": 14,
+          "container": "ExampleUnitTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/test/java/com/onedeepath/balanccapp/data/repository/BalanceRepositoryImplTest.kt",
+      "language": "kotlin",
+      "lines": 130,
+      "imports": [
+        "app.cash.turbine.test",
+        "com.onedeepath.balanccapp.data.database.dao.BalanceDao",
+        "com.onedeepath.balanccapp.data.database.entity.BalanceEntity",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "io.mockk.Runs",
+        "io.mockk.coEvery",
+        "io.mockk.coVerify",
+        "io.mockk.just",
+        "io.mockk.mockk",
+        "io.mockk.verify",
+        "kotlinx.coroutines.flow.MutableStateFlow",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Assert.*",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceRepositoryImplTest",
+          "kind": "class",
+          "line": 21
+        },
+        {
+          "name": "setUp",
+          "kind": "fun",
+          "line": 27,
+          "container": "BalanceRepositoryImplTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/test/java/com/onedeepath/balanccapp/domain/usecases/DeleteBalanceUseCaseTest.kt",
+      "language": "kotlin",
+      "lines": 41,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.coJustRun",
+        "io.mockk.coVerify",
+        "io.mockk.impl.annotations.RelaxedMockK",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Assert.*",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "DeleteBalanceUseCaseTest",
+          "kind": "class",
+          "line": 13
+        },
+        {
+          "name": "onBefore",
+          "kind": "fun",
+          "line": 22,
+          "container": "DeleteBalanceUseCaseTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/test/java/com/onedeepath/balanccapp/domain/usecases/GetAllBalancesUseCaseTest.kt",
+      "language": "kotlin",
+      "lines": 61,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.every",
+        "io.mockk.impl.annotations.RelaxedMockK",
+        "io.mockk.mockk",
+        "io.mockk.verify",
+        "kotlinx.coroutines.flow.first",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.runBlocking",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "GetAllBalancesUseCaseTest",
+          "kind": "class",
+          "line": 16
+        },
+        {
+          "name": "onBefore",
+          "kind": "fun",
+          "line": 24,
+          "container": "GetAllBalancesUseCaseTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/test/java/com/onedeepath/balanccapp/domain/usecases/GetBalanceByExpenseTest.kt",
+      "language": "kotlin",
+      "lines": 83,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.every",
+        "io.mockk.impl.annotations.RelaxedMockK",
+        "io.mockk.mockk",
+        "io.mockk.verify",
+        "kotlinx.coroutines.flow.first",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Assert.assertTrue",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "GetBalanceByExpenseTest",
+          "kind": "class",
+          "line": 17
+        },
+        {
+          "name": "onBefore",
+          "kind": "fun",
+          "line": 26,
+          "container": "GetBalanceByExpenseTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/test/java/com/onedeepath/balanccapp/domain/usecases/GetBalanceByIncomeTest.kt",
+      "language": "kotlin",
+      "lines": 82,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.every",
+        "io.mockk.impl.annotations.RelaxedMockK",
+        "io.mockk.mockk",
+        "io.mockk.verify",
+        "kotlinx.coroutines.flow.first",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Assert.*",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "GetBalanceByIncomeTest",
+          "kind": "class",
+          "line": 17
+        },
+        {
+          "name": "onBefore",
+          "kind": "fun",
+          "line": 26,
+          "container": "GetBalanceByIncomeTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/test/java/com/onedeepath/balanccapp/domain/usecases/GetBalancesByYearUseCaseTest.kt",
+      "language": "kotlin",
+      "lines": 74,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceByMonth",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.every",
+        "io.mockk.impl.annotations.RelaxedMockK",
+        "io.mockk.mockk",
+        "io.mockk.verify",
+        "junit.framework.TestCase.assertTrue",
+        "kotlinx.coroutines.flow.first",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "GetBalancesByYearUseCaseTest",
+          "kind": "class",
+          "line": 17
+        },
+        {
+          "name": "onBefore",
+          "kind": "fun",
+          "line": 24,
+          "container": "GetBalancesByYearUseCaseTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/test/java/com/onedeepath/balanccapp/domain/usecases/InsertBalanceUseCaseTest.kt",
+      "language": "kotlin",
+      "lines": 44,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.coJustRun",
+        "io.mockk.coVerify",
+        "io.mockk.impl.annotations.RelaxedMockK",
+        "io.mockk.mockk",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Assert.*",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "InsertBalanceUseCaseTest",
+          "kind": "class",
+          "line": 15
+        },
+        {
+          "name": "onBefore",
+          "kind": "fun",
+          "line": 23,
+          "container": "InsertBalanceUseCaseTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/test/java/com/onedeepath/balanccapp/ui/screens/addbalance/viewmodel/AddBalanceViewModelTest.kt",
+      "language": "kotlin",
+      "lines": 159,
+      "imports": [
+        "app.cash.turbine.test",
+        "com.onedeepath.balanccapp.domain.usecases.InsertBalanceUseCase",
+        "com.onedeepath.balanccapp.utils.MainDispatcherRule",
+        "io.mockk.coEvery",
+        "io.mockk.coVerify",
+        "io.mockk.mockk",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Assert.*",
+        "org.junit.Before",
+        "org.junit.Rule",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "AddBalanceViewModelTest",
+          "kind": "class",
+          "line": 15
+        },
+        {
+          "name": "setup",
+          "kind": "fun",
+          "line": 24,
+          "container": "AddBalanceViewModelTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/test/java/com/onedeepath/balanccapp/ui/screens/detail/viewmodel/MonthsDetailViewModelTest.kt",
+      "language": "kotlin",
+      "lines": 233,
+      "imports": [
+        "androidx.compose.ui.graphics.Color",
+        "app.cash.turbine.test",
+        "com.onedeepath.balanccapp.core.CurrencyHelper",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.domain.usecases.DeleteBalanceUseCase",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalanceByExpense",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalanceByIncome",
+        "io.mockk.coEvery",
+        "io.mockk.coVerify",
+        "io.mockk.every",
+        "io.mockk.mockk",
+        "junit.framework.TestCase.assertEquals",
+        "kotlinx.coroutines.Dispatchers",
+        "kotlinx.coroutines.ExperimentalCoroutinesApi",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.test.UnconfinedTestDispatcher",
+        "kotlinx.coroutines.test.resetMain",
+        "kotlinx.coroutines.test.runTest",
+        "kotlinx.coroutines.test.setMain",
+        "org.junit.After",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "MonthsDetailViewModelTest",
+          "kind": "class",
+          "line": 27
+        },
+        {
+          "name": "setup",
+          "kind": "fun",
+          "line": 39,
+          "container": "MonthsDetailViewModelTest"
+        },
+        {
+          "name": "tearDown",
+          "kind": "fun",
+          "line": 53,
+          "container": "MonthsDetailViewModelTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/test/java/com/onedeepath/balanccapp/ui/screens/main/viewmodel/MainViewModelTest.kt",
+      "language": "kotlin",
+      "lines": 155,
+      "imports": [
+        "app.cash.turbine.test",
+        "com.onedeepath.balanccapp.domain.model.BalanceByMonth",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalancesByYearUseCase",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.every",
+        "io.mockk.mockk",
+        "kotlinx.coroutines.Dispatchers",
+        "kotlinx.coroutines.ExperimentalCoroutinesApi",
+        "kotlinx.coroutines.flow.flow",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.test.StandardTestDispatcher",
+        "kotlinx.coroutines.test.advanceUntilIdle",
+        "kotlinx.coroutines.test.resetMain",
+        "kotlinx.coroutines.test.runTest",
+        "kotlinx.coroutines.test.setMain",
+        "org.junit.After",
+        "org.junit.Assert.assertEquals",
+        "org.junit.Assert.assertFalse",
+        "org.junit.Assert.assertNull",
+        "org.junit.Assert.assertTrue",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "MainViewModelTest",
+          "kind": "class",
+          "line": 26
+        },
+        {
+          "name": "setUp",
+          "kind": "fun",
+          "line": 31,
+          "container": "MainViewModelTest"
+        },
+        {
+          "name": "tearDown",
+          "kind": "fun",
+          "line": 37,
+          "container": "MainViewModelTest"
+        }
+      ]
+    },
+    {
+      "path": ".kilo/worktrees/elegant-dart/app/src/test/java/com/onedeepath/balanccapp/utils/MainDispatcherRule.kt",
+      "language": "kotlin",
+      "lines": 25,
+      "imports": [
+        "kotlinx.coroutines.Dispatchers",
+        "kotlinx.coroutines.test.TestDispatcher",
+        "kotlinx.coroutines.test.UnconfinedTestDispatcher",
+        "kotlinx.coroutines.test.resetMain",
+        "kotlinx.coroutines.test.setMain",
+        "org.junit.rules.TestWatcher",
+        "org.junit.runner.Description"
+      ],
+      "symbols": [
+        {
+          "name": "MainDispatcherRule",
+          "kind": "class",
+          "line": 11
+        },
+        {
+          "name": "starting",
+          "kind": "fun",
+          "line": 15,
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "finished",
+          "kind": "fun",
+          "line": 20,
+          "modifiers": [
+            "override"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/androidTest/java/com/onedeepath/balanccapp/ExampleInstrumentedTest.kt",
+      "language": "kotlin",
+      "lines": 24,
+      "imports": [
+        "androidx.test.platform.app.InstrumentationRegistry",
+        "androidx.test.ext.junit.runners.AndroidJUnit4",
+        "org.junit.Test",
+        "org.junit.runner.RunWith",
+        "org.junit.Assert.*"
+      ],
+      "symbols": [
+        {
+          "name": "ExampleInstrumentedTest",
+          "kind": "class",
+          "line": 17
+        },
+        {
+          "name": "useAppContext",
+          "kind": "fun",
+          "line": 19,
+          "container": "ExampleInstrumentedTest"
+        }
+      ]
+    },
+    {
+      "path": "app/src/androidTest/java/com/onedeepath/balanccapp/data/dao/BalanceDaoTest.kt",
+      "language": "kotlin",
+      "lines": 133,
+      "imports": [
+        "android.content.Context",
+        "androidx.room.Room.inMemoryDatabaseBuilder",
+        "androidx.test.core.app.ApplicationProvider",
+        "androidx.test.ext.junit.runners.AndroidJUnit4",
+        "com.onedeepath.balanccapp.data.database.BalanceDatabase",
+        "com.onedeepath.balanccapp.data.database.dao.BalanceDao",
+        "com.onedeepath.balanccapp.data.database.entity.BalanceEntity",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "kotlinx.coroutines.flow.first",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.After",
+        "org.junit.Before",
+        "org.junit.Test",
+        "org.junit.runner.RunWith"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceDaoTest",
+          "kind": "class",
+          "line": 19
+        },
+        {
+          "name": "setUp",
+          "kind": "fun",
+          "line": 25,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "tearDown",
+          "kind": "fun",
+          "line": 36,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "getAllBalances_shouldReturnOrderedByIdDesc",
+          "kind": "fun",
+          "line": 41,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "getBalancesByYear_shouldSumCorrectlyAndOrderMonths",
+          "kind": "fun",
+          "line": 57,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "deleteBalance_shouldRemoveCorrectItem",
+          "kind": "fun",
+          "line": 81,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "getBalanceByIncome_shouldOnlyReturnIncomeType",
+          "kind": "fun",
+          "line": 92,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "getBalanceByExpense_shouldReturnEmptyWhenNoMatch",
+          "kind": "fun",
+          "line": 107,
+          "container": "BalanceDaoTest"
+        },
+        {
+          "name": "getBalancesByYear_shouldSeparateIncomeAndExpenseSameMonth",
+          "kind": "fun",
+          "line": 118,
+          "container": "BalanceDaoTest"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/BalanceApp.kt",
+      "language": "kotlin",
+      "lines": 8,
+      "imports": [
+        "android.app.Application",
+        "dagger.hilt.android.HiltAndroidApp"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceApp",
+          "kind": "class",
+          "line": 7
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/core/AndroidCurrencyHelper.kt",
+      "language": "kotlin",
+      "lines": 44,
+      "imports": [
+        "java.text.DecimalFormat",
+        "java.text.DecimalFormatSymbols",
+        "java.util.Locale",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "AndroidCurrencyHelper",
+          "kind": "class",
+          "line": 8
+        },
+        {
+          "name": "formatAmountForDisplay",
+          "kind": "fun",
+          "line": 24,
+          "container": "AndroidCurrencyHelper",
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "cleanAmountForStorage",
+          "kind": "fun",
+          "line": 36,
+          "container": "AndroidCurrencyHelper",
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "formatCurrency",
+          "kind": "fun",
+          "line": 40,
+          "container": "AndroidCurrencyHelper",
+          "modifiers": [
+            "override"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/core/CategoryConverter.kt",
+      "language": "kotlin",
+      "lines": 18,
+      "imports": [
+        "androidx.room.TypeConverter",
+        "com.onedeepath.balanccapp.domain.model.Category"
+      ],
+      "symbols": [
+        {
+          "name": "CategoryConverter",
+          "kind": "class",
+          "line": 6
+        },
+        {
+          "name": "fromCategory",
+          "kind": "fun",
+          "line": 9,
+          "container": "CategoryConverter"
+        },
+        {
+          "name": "toCategory",
+          "kind": "fun",
+          "line": 14,
+          "container": "CategoryConverter"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/core/Charts.kt",
+      "language": "kotlin",
+      "lines": 106,
+      "imports": [
+        "android.view.ViewGroup",
+        "android.widget.LinearLayout",
+        "androidx.compose.animation.Crossfade",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.wrapContentSize",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.viewinterop.AndroidView",
+        "com.github.mikephil.charting.charts.PieChart",
+        "com.github.mikephil.charting.components.Legend",
+        "com.github.mikephil.charting.data.PieData",
+        "com.github.mikephil.charting.data.PieDataSet"
+      ],
+      "symbols": [
+        {
+          "name": "ChartValue",
+          "kind": "class",
+          "line": 23,
+          "modifiers": [
+            "data"
+          ]
+        },
+        {
+          "name": "CreatePieChart",
+          "kind": "fun",
+          "line": 36
+        },
+        {
+          "name": "updatePieChartWithData",
+          "kind": "fun",
+          "line": 80
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/core/CurrencyHelper.kt",
+      "language": "kotlin",
+      "lines": 7,
+      "imports": [],
+      "symbols": [
+        {
+          "name": "CurrencyHelper",
+          "kind": "interface",
+          "line": 3
+        },
+        {
+          "name": "formatCurrency",
+          "kind": "fun",
+          "line": 4,
+          "container": "CurrencyHelper"
+        },
+        {
+          "name": "formatAmountForDisplay",
+          "kind": "fun",
+          "line": 5,
+          "container": "CurrencyHelper"
+        },
+        {
+          "name": "cleanAmountForStorage",
+          "kind": "fun",
+          "line": 6,
+          "container": "CurrencyHelper"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/core/FormatCurrency.kt",
+      "language": "kotlin",
+      "lines": 41,
+      "imports": [
+        "java.text.DecimalFormat",
+        "java.text.DecimalFormatSymbols",
+        "java.util.Locale"
+      ],
+      "symbols": [
+        {
+          "name": "formatAmountForDisplay",
+          "kind": "fun",
+          "line": 14
+        },
+        {
+          "name": "cleanAmountForStorage",
+          "kind": "fun",
+          "line": 26
+        },
+        {
+          "name": "formatCurrency",
+          "kind": "fun",
+          "line": 32
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/core/Months.kt",
+      "language": "kotlin",
+      "lines": 16,
+      "imports": [],
+      "symbols": [
+        {
+          "name": "shiftedMonth",
+          "kind": "fun",
+          "line": 13
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/data/database/BalanceDatabase.kt",
+      "language": "kotlin",
+      "lines": 16,
+      "imports": [
+        "androidx.room.Database",
+        "androidx.room.RoomDatabase",
+        "androidx.room.TypeConverters",
+        "com.onedeepath.balanccapp.core.CategoryConverter",
+        "com.onedeepath.balanccapp.data.database.dao.BalanceDao",
+        "com.onedeepath.balanccapp.data.database.entity.BalanceEntity"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceDatabase",
+          "kind": "class",
+          "line": 12,
+          "modifiers": [
+            "abstract"
+          ]
+        },
+        {
+          "name": "getBalanceDao",
+          "kind": "fun",
+          "line": 14,
+          "container": "BalanceDatabase",
+          "modifiers": [
+            "abstract"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/data/database/dao/BalanceDao.kt",
+      "language": "kotlin",
+      "lines": 55,
+      "imports": [
+        "androidx.room.Dao",
+        "androidx.room.Insert",
+        "androidx.room.OnConflictStrategy",
+        "androidx.room.Query",
+        "com.onedeepath.balanccapp.data.database.entity.BalanceEntity",
+        "com.onedeepath.balanccapp.data.model.BalanceByMonthEntity",
+        "kotlinx.coroutines.flow.Flow"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceDao",
+          "kind": "interface",
+          "line": 12
+        },
+        {
+          "name": "getAllBalances",
+          "kind": "fun",
+          "line": 15,
+          "container": "BalanceDao"
+        },
+        {
+          "name": "getBalanceByIncome",
+          "kind": "fun",
+          "line": 18,
+          "container": "BalanceDao"
+        },
+        {
+          "name": "getBalanceByExpense",
+          "kind": "fun",
+          "line": 21,
+          "container": "BalanceDao"
+        },
+        {
+          "name": "getBalancesByYear",
+          "kind": "fun",
+          "line": 46,
+          "container": "BalanceDao"
+        },
+        {
+          "name": "insertAll",
+          "kind": "fun",
+          "line": 49,
+          "container": "BalanceDao",
+          "modifiers": [
+            "suspend"
+          ]
+        },
+        {
+          "name": "deleteBalance",
+          "kind": "fun",
+          "line": 52,
+          "container": "BalanceDao",
+          "modifiers": [
+            "suspend"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/data/database/entity/BalanceEntity.kt",
+      "language": "kotlin",
+      "lines": 22,
+      "imports": [
+        "androidx.room.ColumnInfo",
+        "androidx.room.Entity",
+        "androidx.room.PrimaryKey",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceEntity",
+          "kind": "class",
+          "line": 10,
+          "modifiers": [
+            "data"
+          ]
+        },
+        {
+          "name": "toEntity",
+          "kind": "fun",
+          "line": 22
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/data/datastore/SettingsPreferencesRepostory.kt",
+      "language": "kotlin",
+      "lines": 33,
+      "imports": [
+        "android.content.Context",
+        "androidx.datastore.preferences.core.booleanPreferencesKey",
+        "androidx.datastore.preferences.core.edit",
+        "androidx.datastore.preferences.core.stringPreferencesKey",
+        "androidx.datastore.preferences.preferencesDataStore",
+        "kotlinx.coroutines.flow.Flow",
+        "kotlinx.coroutines.flow.map"
+      ],
+      "symbols": [
+        {
+          "name": "SettingsPreferences",
+          "kind": "class",
+          "line": 11
+        },
+        {
+          "name": "setDarkMode",
+          "kind": "fun",
+          "line": 18,
+          "container": "SettingsPreferences",
+          "modifiers": [
+            "suspend"
+          ]
+        },
+        {
+          "name": "setLanguage",
+          "kind": "fun",
+          "line": 30,
+          "container": "SettingsPreferences",
+          "modifiers": [
+            "suspend"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/data/model/BalanceByMonthEntity.kt",
+      "language": "kotlin",
+      "lines": 15,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceByMonth"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceByMonthEntity",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        },
+        {
+          "name": "toDomain",
+          "kind": "fun",
+          "line": 11
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/data/repository/BalanceRepositoryImpl.kt",
+      "language": "kotlin",
+      "lines": 45,
+      "imports": [
+        "com.onedeepath.balanccapp.data.database.dao.BalanceDao",
+        "com.onedeepath.balanccapp.data.database.entity.toEntity",
+        "com.onedeepath.balanccapp.domain.model.BalanceByMonth",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.model.toDomain",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "com.onedeepath.balanccapp.data.model.toDomain",
+        "kotlinx.coroutines.flow.Flow",
+        "kotlinx.coroutines.flow.map",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceRepositoryImpl",
+          "kind": "class",
+          "line": 14
+        },
+        {
+          "name": "getAllBalances",
+          "kind": "fun",
+          "line": 17,
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "getIncomeByMonth",
+          "kind": "fun",
+          "line": 22,
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "getExpenseByMonth",
+          "kind": "fun",
+          "line": 27,
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "getBalanceByYear",
+          "kind": "fun",
+          "line": 32,
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "insertBalance",
+          "kind": "fun",
+          "line": 37,
+          "modifiers": [
+            "override",
+            "suspend"
+          ]
+        },
+        {
+          "name": "deleteBalance",
+          "kind": "fun",
+          "line": 41,
+          "modifiers": [
+            "override",
+            "suspend"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/di/BalanceModule.kt",
+      "language": "kotlin",
+      "lines": 21,
+      "imports": [
+        "com.onedeepath.balanccapp.data.repository.BalanceRepositoryImpl",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "dagger.Binds",
+        "dagger.Module",
+        "dagger.hilt.InstallIn",
+        "dagger.hilt.components.SingletonComponent",
+        "javax.inject.Singleton"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceModule",
+          "kind": "class",
+          "line": 14,
+          "modifiers": [
+            "abstract"
+          ]
+        },
+        {
+          "name": "bindBalanceRepository",
+          "kind": "fun",
+          "line": 18,
+          "container": "BalanceModule",
+          "modifiers": [
+            "abstract"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/di/CurrencyModel.kt",
+      "language": "kotlin",
+      "lines": 18,
+      "imports": [
+        "com.onedeepath.balanccapp.core.AndroidCurrencyHelper",
+        "com.onedeepath.balanccapp.core.CurrencyHelper",
+        "dagger.Binds",
+        "dagger.Module",
+        "dagger.hilt.InstallIn",
+        "dagger.hilt.components.SingletonComponent"
+      ],
+      "symbols": [
+        {
+          "name": "CurrencyModel",
+          "kind": "class",
+          "line": 12,
+          "modifiers": [
+            "abstract"
+          ]
+        },
+        {
+          "name": "bindCurrencyHelper",
+          "kind": "fun",
+          "line": 15,
+          "container": "CurrencyModel",
+          "modifiers": [
+            "abstract"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/di/DateModule.kt",
+      "language": "kotlin",
+      "lines": 30,
+      "imports": [
+        "dagger.Module",
+        "dagger.Provides",
+        "dagger.hilt.InstallIn",
+        "dagger.hilt.components.SingletonComponent",
+        "java.time.LocalDate",
+        "java.time.format.TextStyle",
+        "java.util.Locale",
+        "javax.inject.Qualifier"
+      ],
+      "symbols": [
+        {
+          "name": "DateModule",
+          "kind": "object",
+          "line": 14
+        },
+        {
+          "name": "provideDefaultYearProvider",
+          "kind": "fun",
+          "line": 17,
+          "container": "DateModule"
+        },
+        {
+          "name": "provideDefaultMonthProvider",
+          "kind": "fun",
+          "line": 23,
+          "container": "DateModule"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/di/DispatcherModule.kt",
+      "language": "kotlin",
+      "lines": 22,
+      "imports": [
+        "dagger.Module",
+        "dagger.Provides",
+        "dagger.hilt.InstallIn",
+        "dagger.hilt.components.SingletonComponent",
+        "kotlinx.coroutines.CoroutineDispatcher",
+        "kotlinx.coroutines.Dispatchers",
+        "javax.inject.Qualifier"
+      ],
+      "symbols": [
+        {
+          "name": "DispatcherModule",
+          "kind": "object",
+          "line": 13
+        },
+        {
+          "name": "provideIoDispatcher",
+          "kind": "fun",
+          "line": 17,
+          "container": "DispatcherModule"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/di/RoomModule.kt",
+      "language": "kotlin",
+      "lines": 33,
+      "imports": [
+        "android.content.Context",
+        "androidx.room.Room",
+        "com.onedeepath.balanccapp.data.database.BalanceDatabase",
+        "dagger.Module",
+        "dagger.Provides",
+        "dagger.hilt.InstallIn",
+        "dagger.hilt.android.qualifiers.ApplicationContext",
+        "dagger.hilt.components.SingletonComponent",
+        "javax.inject.Singleton"
+      ],
+      "symbols": [
+        {
+          "name": "RoomModule",
+          "kind": "object",
+          "line": 16
+        },
+        {
+          "name": "provideRoom",
+          "kind": "fun",
+          "line": 22,
+          "container": "RoomModule"
+        },
+        {
+          "name": "provideBalanceDao",
+          "kind": "fun",
+          "line": 29,
+          "container": "RoomModule"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/domain/model/BalanceByMonth.kt",
+      "language": "kotlin",
+      "lines": 16,
+      "imports": [
+        "com.onedeepath.balanccapp.data.model.BalanceByMonthEntity"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceByMonth",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        },
+        {
+          "name": "toEntity",
+          "kind": "fun",
+          "line": 11
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/domain/model/BalanceModel.kt",
+      "language": "kotlin",
+      "lines": 16,
+      "imports": [
+        "com.onedeepath.balanccapp.data.database.entity.BalanceEntity"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceModel",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        },
+        {
+          "name": "toDomain",
+          "kind": "fun",
+          "line": 16
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/domain/model/Category.kt",
+      "language": "kotlin",
+      "lines": 42,
+      "imports": [
+        "androidx.compose.ui.graphics.Color",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.ui.theme.EducationColor",
+        "com.onedeepath.balanccapp.ui.theme.EntertainmentColor",
+        "com.onedeepath.balanccapp.ui.theme.FoodColor",
+        "com.onedeepath.balanccapp.ui.theme.GiftColor",
+        "com.onedeepath.balanccapp.ui.theme.GroceryColor",
+        "com.onedeepath.balanccapp.ui.theme.HealthColor",
+        "com.onedeepath.balanccapp.ui.theme.InvestmentColor",
+        "com.onedeepath.balanccapp.ui.theme.OtherColor",
+        "com.onedeepath.balanccapp.ui.theme.PetColor",
+        "com.onedeepath.balanccapp.ui.theme.RentColor",
+        "com.onedeepath.balanccapp.ui.theme.TransportColor",
+        "com.onedeepath.balanccapp.ui.theme.TravelColor",
+        "com.onedeepath.balanccapp.ui.theme.UtilitiesColor",
+        "com.onedeepath.balanccapp.ui.theme.WorkColor"
+      ],
+      "symbols": [
+        {
+          "name": "Category",
+          "kind": "class",
+          "line": 20,
+          "modifiers": [
+            "enum"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/domain/repository/BalanceRepository.kt",
+      "language": "kotlin",
+      "lines": 27,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceByMonth",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "kotlinx.coroutines.flow.Flow"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceRepository",
+          "kind": "interface",
+          "line": 7
+        },
+        {
+          "name": "getAllBalances",
+          "kind": "fun",
+          "line": 9,
+          "container": "BalanceRepository"
+        },
+        {
+          "name": "getIncomeByMonth",
+          "kind": "fun",
+          "line": 11,
+          "container": "BalanceRepository"
+        },
+        {
+          "name": "getExpenseByMonth",
+          "kind": "fun",
+          "line": 16,
+          "container": "BalanceRepository"
+        },
+        {
+          "name": "getBalanceByYear",
+          "kind": "fun",
+          "line": 21,
+          "container": "BalanceRepository"
+        },
+        {
+          "name": "insertBalance",
+          "kind": "fun",
+          "line": 23,
+          "container": "BalanceRepository",
+          "modifiers": [
+            "suspend"
+          ]
+        },
+        {
+          "name": "deleteBalance",
+          "kind": "fun",
+          "line": 25,
+          "container": "BalanceRepository",
+          "modifiers": [
+            "suspend"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/domain/usecases/DeleteBalanceUseCase.kt",
+      "language": "kotlin",
+      "lines": 15,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "DeleteBalanceUseCase",
+          "kind": "class",
+          "line": 6
+        },
+        {
+          "name": "invoke",
+          "kind": "fun",
+          "line": 10,
+          "modifiers": [
+            "suspend",
+            "operator"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/domain/usecases/GetAllBalancesUseCase.kt",
+      "language": "kotlin",
+      "lines": 12,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "kotlinx.coroutines.flow.Flow",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "GetAllBalancesUseCase",
+          "kind": "class",
+          "line": 8
+        },
+        {
+          "name": "invoke",
+          "kind": "fun",
+          "line": 11,
+          "modifiers": [
+            "operator"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/domain/usecases/GetBalanceByExpense.kt",
+      "language": "kotlin",
+      "lines": 19,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "kotlinx.coroutines.flow.Flow",
+        "kotlinx.coroutines.flow.flowOf",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "GetBalanceByExpense",
+          "kind": "class",
+          "line": 9
+        },
+        {
+          "name": "getExpenses",
+          "kind": "fun",
+          "line": 12
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/domain/usecases/GetBalanceByIncome.kt",
+      "language": "kotlin",
+      "lines": 20,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "kotlinx.coroutines.flow.Flow",
+        "kotlinx.coroutines.flow.flowOf",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "GetBalanceByIncome",
+          "kind": "class",
+          "line": 9
+        },
+        {
+          "name": "getIncomes",
+          "kind": "fun",
+          "line": 13
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/domain/usecases/GetBalancesByYearUseCase.kt",
+      "language": "kotlin",
+      "lines": 21,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceByMonth",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "kotlinx.coroutines.flow.Flow",
+        "kotlinx.coroutines.flow.flowOf",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "GetBalancesByYearUseCase",
+          "kind": "class",
+          "line": 9
+        },
+        {
+          "name": "invoke",
+          "kind": "fun",
+          "line": 13,
+          "modifiers": [
+            "operator"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/domain/usecases/InsertBalanceUseCase.kt",
+      "language": "kotlin",
+      "lines": 14,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "InsertBalanceUseCase",
+          "kind": "class",
+          "line": 7
+        },
+        {
+          "name": "invoke",
+          "kind": "fun",
+          "line": 10,
+          "modifiers": [
+            "suspend",
+            "operator"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/MainActivity.kt",
+      "language": "kotlin",
+      "lines": 47,
+      "imports": [
+        "android.os.Bundle",
+        "androidx.activity.ComponentActivity",
+        "androidx.activity.compose.setContent",
+        "androidx.activity.enableEdgeToEdge",
+        "androidx.appcompat.app.AppCompatDelegate",
+        "androidx.compose.runtime.collectAsState",
+        "androidx.compose.runtime.getValue",
+        "androidx.core.os.LocaleListCompat",
+        "androidx.lifecycle.lifecycleScope",
+        "com.onedeepath.balanccapp.data.datastore.SettingsPreferences",
+        "com.onedeepath.balanccapp.ui.navigation.AppNavigation",
+        "com.onedeepath.balanccapp.ui.theme.AppTheme",
+        "dagger.hilt.android.AndroidEntryPoint",
+        "kotlinx.coroutines.flow.first",
+        "kotlinx.coroutines.launch"
+      ],
+      "symbols": [
+        {
+          "name": "MainActivity",
+          "kind": "class",
+          "line": 20
+        },
+        {
+          "name": "onCreate",
+          "kind": "fun",
+          "line": 21,
+          "container": "MainActivity",
+          "modifiers": [
+            "override"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/BalanccFab.kt",
+      "language": "kotlin",
+      "lines": 37,
+      "imports": [
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.Add",
+        "androidx.compose.material3.FloatingActionButton",
+        "androidx.compose.material3.FloatingActionButtonDefaults",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.unit.dp",
+        "com.onedeepath.balanccapp.ui.theme.BalanccCornerRadius",
+        "com.onedeepath.balanccapp.ui.theme.BalanccElevation"
+      ],
+      "symbols": [
+        {
+          "name": "BalanccFab",
+          "kind": "fun",
+          "line": 18
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/BalanccTopBar.kt",
+      "language": "kotlin",
+      "lines": 41,
+      "imports": [
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.automirrored.filled.ArrowBack",
+        "androidx.compose.material3.ExperimentalMaterial3Api",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.IconButton",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Text",
+        "androidx.compose.material3.TopAppBar",
+        "androidx.compose.material3.TopAppBarDefaults",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Modifier"
+      ],
+      "symbols": [
+        {
+          "name": "BalanccTopBar",
+          "kind": "fun",
+          "line": 17
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/BalanceHeroCard.kt",
+      "language": "kotlin",
+      "lines": 134,
+      "imports": [
+        "androidx.compose.foundation.background",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.shape.CircleShape",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.KeyboardArrowDown",
+        "androidx.compose.material.icons.filled.KeyboardArrowUp",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.draw.clip",
+        "androidx.compose.ui.graphics.Brush",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.unit.sp",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.core.formatCurrency",
+        "com.onedeepath.balanccapp.ui.theme.BalanccCornerRadius",
+        "com.onedeepath.balanccapp.ui.theme.BalanccSpacing",
+        "com.onedeepath.balanccapp.ui.theme.BalanceHeroGradientEnd",
+        "com.onedeepath.balanccapp.ui.theme.BalanceHeroGradientStart"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceHeroCard",
+          "kind": "fun",
+          "line": 45
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/CategorySelectionDialog.kt",
+      "language": "kotlin",
+      "lines": 126,
+      "imports": [
+        "androidx.compose.foundation.BorderStroke",
+        "androidx.compose.foundation.background",
+        "androidx.compose.foundation.clickable",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.heightIn",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.lazy.LazyColumn",
+        "androidx.compose.foundation.lazy.items",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.Check",
+        "androidx.compose.material3.Card",
+        "androidx.compose.material3.CardDefaults",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.draw.clip",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.window.Dialog",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.ui.presentation.mapper.getDisplayNameRes",
+        "com.onedeepath.balanccapp.ui.theme.BalanccCornerRadius",
+        "com.onedeepath.balanccapp.ui.theme.BalanccSpacing",
+        "com.onedeepath.balanccapp.ui.theme.financialColors"
+      ],
+      "symbols": [
+        {
+          "name": "CategorySelectionDialog",
+          "kind": "fun",
+          "line": 42
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/FinancialAmount.kt",
+      "language": "kotlin",
+      "lines": 38,
+      "imports": [
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.text.TextStyle",
+        "com.onedeepath.balanccapp.core.formatCurrency",
+        "com.onedeepath.balanccapp.ui.theme.financialColors"
+      ],
+      "symbols": [
+        {
+          "name": "FinancialAmount",
+          "kind": "fun",
+          "line": 13
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/FinancialDonutChart.kt",
+      "language": "kotlin",
+      "lines": 98,
+      "imports": [
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.graphics.toArgb",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.unit.sp",
+        "androidx.compose.ui.viewinterop.AndroidView",
+        "com.github.mikephil.charting.charts.PieChart",
+        "com.github.mikephil.charting.data.PieData",
+        "com.github.mikephil.charting.data.PieDataSet",
+        "com.github.mikephil.charting.data.PieEntry",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData",
+        "com.onedeepath.balanccapp.ui.theme.financialColors"
+      ],
+      "symbols": [
+        {
+          "name": "FinancialDonutChart",
+          "kind": "fun",
+          "line": 28
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/FinancialSegmentedControl.kt",
+      "language": "kotlin",
+      "lines": 98,
+      "imports": [
+        "androidx.compose.foundation.background",
+        "androidx.compose.foundation.clickable",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.RowScope",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.heightIn",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.KeyboardArrowDown",
+        "androidx.compose.material.icons.filled.KeyboardArrowUp",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.draw.clip",
+        "androidx.compose.ui.graphics.vector.ImageVector",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.dp",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.ui.theme.BalanccCornerRadius",
+        "com.onedeepath.balanccapp.ui.theme.BalanccSpacing"
+      ],
+      "symbols": [
+        {
+          "name": "FinancialSegmentedControl",
+          "kind": "fun",
+          "line": 34
+        },
+        {
+          "name": "FinancialSegment",
+          "kind": "fun",
+          "line": 66,
+          "modifiers": [
+            "private"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/HomeAmountCard.kt",
+      "language": "kotlin",
+      "lines": 92,
+      "imports": [
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.KeyboardArrowDown",
+        "androidx.compose.material.icons.filled.KeyboardArrowUp",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.unit.sp",
+        "com.onedeepath.balanccapp.core.formatCurrency",
+        "com.onedeepath.balanccapp.ui.theme.BalanccCornerRadius",
+        "com.onedeepath.balanccapp.ui.theme.BalanccSpacing",
+        "com.onedeepath.balanccapp.ui.theme.financialColors"
+      ],
+      "symbols": [
+        {
+          "name": "HomeAmountCard",
+          "kind": "fun",
+          "line": 34
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/HomeBottomBar.kt",
+      "language": "kotlin",
+      "lines": 173,
+      "imports": [
+        "androidx.compose.foundation.Canvas",
+        "androidx.compose.foundation.background",
+        "androidx.compose.foundation.clickable",
+        "androidx.compose.foundation.interaction.MutableInteractionSource",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.foundation.layout.navigationBarsPadding",
+        "androidx.compose.foundation.layout.offset",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.shape.CircleShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.Add",
+        "androidx.compose.material.icons.filled.Home",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.remember",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.draw.clip",
+        "androidx.compose.ui.geometry.CornerRadius",
+        "androidx.compose.ui.geometry.Offset",
+        "androidx.compose.ui.geometry.Size",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.unit.sp",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.ui.theme.BrandPurple",
+        "com.onedeepath.balanccapp.ui.theme.financialColors"
+      ],
+      "symbols": [
+        {
+          "name": "HomeBottomBar",
+          "kind": "fun",
+          "line": 47
+        },
+        {
+          "name": "BottomBarItem",
+          "kind": "fun",
+          "line": 119,
+          "modifiers": [
+            "private"
+          ]
+        },
+        {
+          "name": "StatisticsBarsIcon",
+          "kind": "fun",
+          "line": 157,
+          "modifiers": [
+            "private"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/MonthYearPickerRow.kt",
+      "language": "kotlin",
+      "lines": 113,
+      "imports": [
+        "androidx.compose.foundation.clickable",
+        "androidx.compose.foundation.interaction.MutableInteractionSource",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft",
+        "androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight",
+        "androidx.compose.material.icons.filled.ArrowDropDown",
+        "androidx.compose.material.icons.filled.DateRange",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.IconButton",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.remember",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.text.style.TextAlign",
+        "androidx.compose.ui.text.style.TextOverflow",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.unit.sp"
+      ],
+      "symbols": [
+        {
+          "name": "MonthYearPickerRow",
+          "kind": "fun",
+          "line": 35
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/PrimaryButton.kt",
+      "language": "kotlin",
+      "lines": 40,
+      "imports": [
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.heightIn",
+        "androidx.compose.material3.Button",
+        "androidx.compose.material3.ButtonDefaults",
+        "androidx.compose.material3.CircularProgressIndicator",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.unit.dp",
+        "com.onedeepath.balanccapp.ui.theme.financialColors"
+      ],
+      "symbols": [
+        {
+          "name": "PrimaryButton",
+          "kind": "fun",
+          "line": 16
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/SelectionComponents.kt",
+      "language": "kotlin",
+      "lines": 135,
+      "imports": [
+        "androidx.compose.foundation.BorderStroke",
+        "androidx.compose.foundation.clickable",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.heightIn",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.res.painterResource",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.dp",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.ui.theme.BalanccCornerRadius",
+        "com.onedeepath.balanccapp.ui.theme.BalanccSpacing",
+        "com.onedeepath.balanccapp.ui.theme.financialColors"
+      ],
+      "symbols": [
+        {
+          "name": "SelectionField",
+          "kind": "fun",
+          "line": 34
+        },
+        {
+          "name": "CategoryIcon",
+          "kind": "fun",
+          "line": 76
+        },
+        {
+          "name": "SectionHeader",
+          "kind": "fun",
+          "line": 98
+        },
+        {
+          "name": "EmptyState",
+          "kind": "fun",
+          "line": 112
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/SelectionDialog.kt",
+      "language": "kotlin",
+      "lines": 67,
+      "imports": [
+        "androidx.compose.foundation.clickable",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.heightIn",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.lazy.LazyColumn",
+        "androidx.compose.foundation.lazy.items",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material3.Card",
+        "androidx.compose.material3.CardDefaults",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.window.Dialog",
+        "androidx.compose.ui.unit.dp",
+        "com.onedeepath.balanccapp.ui.theme.BalanccCornerRadius",
+        "com.onedeepath.balanccapp.ui.theme.BalanccSpacing"
+      ],
+      "symbols": [
+        {
+          "name": "SelectionDialog",
+          "kind": "fun",
+          "line": 24
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/components/TransactionCard.kt",
+      "language": "kotlin",
+      "lines": 102,
+      "imports": [
+        "androidx.compose.foundation.BorderStroke",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material3.Card",
+        "androidx.compose.material3.CardDefaults",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.IconButton",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.res.painterResource",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.text.style.TextOverflow",
+        "androidx.compose.ui.unit.dp",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.ui.presentation.mapper.getDisplayNameRes",
+        "com.onedeepath.balanccapp.ui.theme.BalanccCornerRadius",
+        "com.onedeepath.balanccapp.ui.theme.BalanccElevation",
+        "com.onedeepath.balanccapp.ui.theme.BalanccSpacing",
+        "com.onedeepath.balanccapp.ui.theme.financialColors"
+      ],
+      "symbols": [
+        {
+          "name": "TransactionCard",
+          "kind": "fun",
+          "line": 35
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/navigation/AppNavigation.kt",
+      "language": "kotlin",
+      "lines": 72,
+      "imports": [
+        "android.annotation.SuppressLint",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.remember",
+        "androidx.hilt.navigation.compose.hiltViewModel",
+        "androidx.navigation.compose.NavHost",
+        "androidx.navigation.compose.composable",
+        "androidx.navigation.compose.rememberNavController",
+        "com.onedeepath.balanccapp.data.datastore.SettingsPreferences",
+        "com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel",
+        "com.onedeepath.balanccapp.ui.screens.addbalance.AddIncomeOrExpenseScreen",
+        "com.onedeepath.balanccapp.ui.screens.detail.MonthsDetailScreen",
+        "com.onedeepath.balanccapp.ui.screens.main.MainScreen",
+        "com.onedeepath.balanccapp.ui.screens.settings.SettingsScreen",
+        "com.onedeepath.balanccapp.ui.screens.splash.SplashScreen"
+      ],
+      "symbols": [
+        {
+          "name": "AppNavigation",
+          "kind": "fun",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/navigation/AppScreens.kt",
+      "language": "kotlin",
+      "lines": 9,
+      "imports": [],
+      "symbols": [
+        {
+          "name": "AppScreens",
+          "kind": "class",
+          "line": 3,
+          "modifiers": [
+            "sealed"
+          ]
+        },
+        {
+          "name": "SplashScreens",
+          "kind": "object",
+          "line": 4,
+          "container": "AppScreens"
+        },
+        {
+          "name": "MainScreen",
+          "kind": "object",
+          "line": 5,
+          "container": "AppScreens"
+        },
+        {
+          "name": "DetailScreen",
+          "kind": "object",
+          "line": 6,
+          "container": "AppScreens"
+        },
+        {
+          "name": "AddIncomeOrExpenseScreen",
+          "kind": "object",
+          "line": 7,
+          "container": "AppScreens"
+        },
+        {
+          "name": "SettingsScreen",
+          "kind": "object",
+          "line": 8,
+          "container": "AppScreens"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/presentation/mapper/CategoryExtensions.kt",
+      "language": "kotlin",
+      "lines": 23,
+      "imports": [
+        "androidx.annotation.StringRes",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.domain.model.Category"
+      ],
+      "symbols": [
+        {
+          "name": "getDisplayNameRes",
+          "kind": "fun",
+          "line": 8
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/presentation/model/TabItem.kt",
+      "language": "kotlin",
+      "lines": 8,
+      "imports": [
+        "android.graphics.drawable.Icon",
+        "androidx.compose.ui.graphics.vector.ImageVector"
+      ],
+      "symbols": [
+        {
+          "name": "TabItem",
+          "kind": "class",
+          "line": 6,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/presentation/viewmodel/YearMonthViewModel.kt",
+      "language": "kotlin",
+      "lines": 66,
+      "imports": [
+        "androidx.lifecycle.ViewModel",
+        "com.onedeepath.balanccapp.di.DefaultMonth",
+        "dagger.hilt.android.lifecycle.HiltViewModel",
+        "kotlinx.coroutines.flow.MutableStateFlow",
+        "kotlinx.coroutines.flow.StateFlow",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "YearMonthViewModel",
+          "kind": "class",
+          "line": 11
+        },
+        {
+          "name": "setIsFastAddBalance",
+          "kind": "fun",
+          "line": 28
+        },
+        {
+          "name": "setYear",
+          "kind": "fun",
+          "line": 33
+        },
+        {
+          "name": "setMonth",
+          "kind": "fun",
+          "line": 38
+        },
+        {
+          "name": "setMonthIndex",
+          "kind": "fun",
+          "line": 45
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/addbalance/AddBalanceScreen.kt",
+      "language": "kotlin",
+      "lines": 707,
+      "imports": [
+        "android.widget.Toast",
+        "androidx.compose.foundation.BorderStroke",
+        "androidx.compose.foundation.background",
+        "androidx.compose.foundation.clickable",
+        "androidx.compose.foundation.interaction.MutableInteractionSource",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.rememberScrollState",
+        "androidx.compose.foundation.shape.CircleShape",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.foundation.text.BasicTextField",
+        "androidx.compose.foundation.text.KeyboardOptions",
+        "androidx.compose.foundation.verticalScroll",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight",
+        "androidx.compose.material.icons.filled.ArrowDropDown",
+        "androidx.compose.material.icons.filled.DateRange",
+        "androidx.compose.material.icons.filled.Edit",
+        "androidx.compose.material3.Button",
+        "androidx.compose.material3.ButtonDefaults",
+        "androidx.compose.material3.CircularProgressIndicator",
+        "androidx.compose.material3.ExperimentalMaterial3Api",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Scaffold",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.LaunchedEffect",
+        "androidx.compose.runtime.collectAsState",
+        "androidx.compose.runtime.getValue",
+        "androidx.compose.runtime.mutableStateOf",
+        "androidx.compose.runtime.remember",
+        "androidx.compose.runtime.setValue",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.draw.clip",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.graphics.SolidColor",
+        "androidx.compose.ui.platform.LocalContext",
+        "androidx.compose.ui.res.painterResource",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.TextStyle",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.text.input.KeyboardType",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.unit.sp",
+        "androidx.hilt.navigation.compose.hiltViewModel",
+        "androidx.navigation.NavController",
+        "com.maxkeppeker.sheets.core.models.base.UseCaseState",
+        "com.maxkeppeler.sheets.calendar.CalendarDialog",
+        "com.maxkeppeler.sheets.calendar.models.CalendarConfig",
+        "com.maxkeppeler.sheets.calendar.models.CalendarSelection",
+        "com.maxkeppeler.sheets.calendar.models.CalendarStyle",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.core.ENGLISH_MONTHS",
+        "com.onedeepath.balanccapp.core.cleanAmountForStorage",
+        "com.onedeepath.balanccapp.core.formatAmountForDisplay",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.ui.components.BalanccTopBar",
+        "com.onedeepath.balanccapp.ui.components.CategorySelectionDialog",
+        "com.onedeepath.balanccapp.ui.components.SelectionDialog",
+        "com.onedeepath.balanccapp.ui.presentation.mapper.getDisplayNameRes",
+        "com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel",
+        "com.onedeepath.balanccapp.ui.screens.addbalance.viewmodel.AddBalanceViewModel",
+        "com.onedeepath.balanccapp.ui.theme.financialColors",
+        "java.time.LocalDate",
+        "java.time.Month",
+        "java.time.YearMonth",
+        "java.util.Locale"
+      ],
+      "symbols": [
+        {
+          "name": "AddIncomeOrExpenseScreen",
+          "kind": "fun",
+          "line": 90
+        },
+        {
+          "name": "AddTypeSegmentedControl",
+          "kind": "fun",
+          "line": 247
+        },
+        {
+          "name": "AddAmountCard",
+          "kind": "fun",
+          "line": 320
+        },
+        {
+          "name": "AddCategoryCard",
+          "kind": "fun",
+          "line": 399
+        },
+        {
+          "name": "AddDateCard",
+          "kind": "fun",
+          "line": 471
+        },
+        {
+          "name": "AddDescriptionCard",
+          "kind": "fun",
+          "line": 634
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/addbalance/model/AddBalanceUiState.kt",
+      "language": "kotlin",
+      "lines": 17,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.Category"
+      ],
+      "symbols": [
+        {
+          "name": "AddBalanceUiState",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/addbalance/viewmodel/AddBalanceViewModel.kt",
+      "language": "kotlin",
+      "lines": 84,
+      "imports": [
+        "androidx.lifecycle.ViewModel",
+        "androidx.lifecycle.viewModelScope",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.domain.usecases.InsertBalanceUseCase",
+        "com.onedeepath.balanccapp.ui.screens.addbalance.model.AddBalanceUiState",
+        "dagger.hilt.android.lifecycle.HiltViewModel",
+        "kotlinx.coroutines.flow.MutableStateFlow",
+        "kotlinx.coroutines.flow.StateFlow",
+        "kotlinx.coroutines.flow.update",
+        "kotlinx.coroutines.launch",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "AddBalanceViewModel",
+          "kind": "class",
+          "line": 17
+        },
+        {
+          "name": "onAmountChange",
+          "kind": "fun",
+          "line": 24
+        },
+        {
+          "name": "onCategoryChange",
+          "kind": "fun",
+          "line": 28
+        },
+        {
+          "name": "onTypeChange",
+          "kind": "fun",
+          "line": 32
+        },
+        {
+          "name": "onDaySelected",
+          "kind": "fun",
+          "line": 36
+        },
+        {
+          "name": "onDetailsChange",
+          "kind": "fun",
+          "line": 41
+        },
+        {
+          "name": "save",
+          "kind": "fun",
+          "line": 45
+        },
+        {
+          "name": "resetSaveEvent",
+          "kind": "fun",
+          "line": 80
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/detail/MonthsDetailScreen.kt",
+      "language": "kotlin",
+      "lines": 562,
+      "imports": [
+        "androidx.compose.foundation.BorderStroke",
+        "androidx.compose.foundation.background",
+        "androidx.compose.foundation.clickable",
+        "androidx.compose.foundation.interaction.MutableInteractionSource",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.PaddingValues",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.lazy.LazyColumn",
+        "androidx.compose.foundation.lazy.items",
+        "androidx.compose.foundation.shape.CircleShape",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.filled.ArrowDropDown",
+        "androidx.compose.material.icons.filled.DateRange",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Scaffold",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.LaunchedEffect",
+        "androidx.compose.runtime.collectAsState",
+        "androidx.compose.runtime.getValue",
+        "androidx.compose.runtime.mutableIntStateOf",
+        "androidx.compose.runtime.mutableStateOf",
+        "androidx.compose.runtime.remember",
+        "androidx.compose.runtime.saveable.rememberSaveable",
+        "androidx.compose.runtime.setValue",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.draw.clip",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.graphics.toArgb",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.unit.sp",
+        "androidx.hilt.navigation.compose.hiltViewModel",
+        "androidx.navigation.NavController",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.core.ENGLISH_MONTHS",
+        "com.onedeepath.balanccapp.core.formatCurrency",
+        "com.onedeepath.balanccapp.core.shiftedMonth",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.ui.components.BalanccFab",
+        "com.onedeepath.balanccapp.ui.components.BalanccTopBar",
+        "com.onedeepath.balanccapp.ui.components.EmptyState",
+        "com.onedeepath.balanccapp.ui.components.FinancialAmount",
+        "com.onedeepath.balanccapp.ui.components.FinancialDonutChart",
+        "com.onedeepath.balanccapp.ui.components.MonthYearPickerRow",
+        "com.onedeepath.balanccapp.ui.components.SelectionDialog",
+        "com.onedeepath.balanccapp.ui.components.TransactionCard",
+        "com.onedeepath.balanccapp.ui.navigation.AppScreens",
+        "com.onedeepath.balanccapp.ui.presentation.mapper.getDisplayNameRes",
+        "com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.MonthsDetailUiState",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData",
+        "com.onedeepath.balanccapp.ui.screens.detail.viewmodel.MonthsDetailViewModel",
+        "com.onedeepath.balanccapp.ui.theme.financialColors"
+      ],
+      "symbols": [
+        {
+          "name": "CategoryBreakdownItem",
+          "kind": "class",
+          "line": 75,
+          "modifiers": [
+            "data"
+          ]
+        },
+        {
+          "name": "MonthsDetailScreen",
+          "kind": "fun",
+          "line": 82
+        },
+        {
+          "name": "DetailBodyContent",
+          "kind": "fun",
+          "line": 166
+        },
+        {
+          "name": "DetailTypeSwitcher",
+          "kind": "fun",
+          "line": 348
+        },
+        {
+          "name": "MonthBalanceCard",
+          "kind": "fun",
+          "line": 419
+        },
+        {
+          "name": "CategoryBreakdownRow",
+          "kind": "fun",
+          "line": 509
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/detail/model/MonthsChartUiState.kt",
+      "language": "kotlin",
+      "lines": 9,
+      "imports": [
+        "com.github.mikephil.charting.data.PieEntry"
+      ],
+      "symbols": [
+        {
+          "name": "MonthsChartUiState",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/detail/model/MonthsDetailUiState.kt",
+      "language": "kotlin",
+      "lines": 21,
+      "imports": [
+        "androidx.compose.ui.graphics.Color",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel"
+      ],
+      "symbols": [
+        {
+          "name": "MonthsDetailUiState",
+          "kind": "class",
+          "line": 6,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/detail/model/MyMonthsChartUiState.kt",
+      "language": "kotlin",
+      "lines": 9,
+      "imports": [
+        "com.github.mikephil.charting.data.PieEntry"
+      ],
+      "symbols": [
+        {
+          "name": "MyMonthsChartUiState",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/detail/model/PieChartData.kt",
+      "language": "kotlin",
+      "lines": 8,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.Category"
+      ],
+      "symbols": [
+        {
+          "name": "PieChartData",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/detail/viewmodel/MonthsDetailViewModel.kt",
+      "language": "kotlin",
+      "lines": 142,
+      "imports": [
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.graphics.toArgb",
+        "androidx.lifecycle.ViewModel",
+        "androidx.lifecycle.viewModelScope",
+        "com.onedeepath.balanccapp.core.CurrencyHelper",
+        "com.onedeepath.balanccapp.di.IoDispatcher",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.usecases.DeleteBalanceUseCase",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalanceByExpense",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalanceByIncome",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.MonthsDetailUiState",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.MyMonthsChartUiState",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData",
+        "dagger.hilt.android.lifecycle.HiltViewModel",
+        "kotlinx.coroutines.CoroutineDispatcher",
+        "kotlinx.coroutines.flow.MutableStateFlow",
+        "kotlinx.coroutines.flow.StateFlow",
+        "kotlinx.coroutines.flow.asStateFlow",
+        "kotlinx.coroutines.flow.combine",
+        "kotlinx.coroutines.flow.flowOn",
+        "kotlinx.coroutines.flow.update",
+        "kotlinx.coroutines.launch",
+        "javax.inject.Inject"
+      ],
+      "symbols": [
+        {
+          "name": "MonthsDetailViewModel",
+          "kind": "class",
+          "line": 28
+        },
+        {
+          "name": "load",
+          "kind": "fun",
+          "line": 39
+        },
+        {
+          "name": "buildTotalBalance",
+          "kind": "fun",
+          "line": 70,
+          "modifiers": [
+            "private"
+          ]
+        },
+        {
+          "name": "deleteBalance",
+          "kind": "fun",
+          "line": 84
+        },
+        {
+          "name": "MyBuildIncomeChart",
+          "kind": "fun",
+          "line": 90,
+          "modifiers": [
+            "private"
+          ]
+        },
+        {
+          "name": "MyBuildExpenseChart",
+          "kind": "fun",
+          "line": 102,
+          "modifiers": [
+            "private"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/main/MainScreen.kt",
+      "language": "kotlin",
+      "lines": 432,
+      "imports": [
+        "androidx.compose.foundation.background",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.PaddingValues",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.lazy.LazyColumn",
+        "androidx.compose.foundation.shape.CircleShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight",
+        "androidx.compose.material.icons.filled.Settings",
+        "androidx.compose.material3.CircularProgressIndicator",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.IconButton",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Scaffold",
+        "androidx.compose.material3.SnackbarHost",
+        "androidx.compose.material3.SnackbarHostState",
+        "androidx.compose.material3.Text",
+        "androidx.compose.material3.TextButton",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.LaunchedEffect",
+        "androidx.compose.runtime.collectAsState",
+        "androidx.compose.runtime.getValue",
+        "androidx.compose.runtime.mutableStateOf",
+        "androidx.compose.runtime.remember",
+        "androidx.compose.runtime.setValue",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.draw.clip",
+        "androidx.compose.ui.graphics.Color",
+        "androidx.compose.ui.graphics.toArgb",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.dp",
+        "androidx.compose.ui.unit.sp",
+        "androidx.hilt.navigation.compose.hiltViewModel",
+        "androidx.navigation.NavController",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.core.ENGLISH_MONTHS",
+        "com.onedeepath.balanccapp.core.formatCurrency",
+        "com.onedeepath.balanccapp.core.shiftedMonth",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.ui.components.BalanceHeroCard",
+        "com.onedeepath.balanccapp.ui.components.EmptyState",
+        "com.onedeepath.balanccapp.ui.components.FinancialDonutChart",
+        "com.onedeepath.balanccapp.ui.components.HomeAmountCard",
+        "com.onedeepath.balanccapp.ui.components.HomeBottomBar",
+        "com.onedeepath.balanccapp.ui.components.MonthYearPickerRow",
+        "com.onedeepath.balanccapp.ui.components.SelectionDialog",
+        "com.onedeepath.balanccapp.ui.navigation.AppScreens",
+        "com.onedeepath.balanccapp.ui.presentation.mapper.getDisplayNameRes",
+        "com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel",
+        "com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData",
+        "com.onedeepath.balanccapp.ui.screens.main.model.HomeCategoryItem",
+        "com.onedeepath.balanccapp.ui.screens.main.viewmodel.MainViewModel",
+        "com.onedeepath.balanccapp.ui.theme.BalanccSpacing",
+        "com.onedeepath.balanccapp.ui.theme.BrandPurple",
+        "com.onedeepath.balanccapp.ui.theme.financialColors"
+      ],
+      "symbols": [
+        {
+          "name": "MainScreen",
+          "kind": "fun",
+          "line": 73
+        },
+        {
+          "name": "HomeDashboardContent",
+          "kind": "fun",
+          "line": 177,
+          "modifiers": [
+            "private"
+          ]
+        },
+        {
+          "name": "HomeHeader",
+          "kind": "fun",
+          "line": 300,
+          "modifiers": [
+            "private"
+          ]
+        },
+        {
+          "name": "MonthSummaryRow",
+          "kind": "fun",
+          "line": 328,
+          "modifiers": [
+            "private"
+          ]
+        },
+        {
+          "name": "groupBreakdownForHome",
+          "kind": "fun",
+          "line": 380,
+          "modifiers": [
+            "private"
+          ]
+        },
+        {
+          "name": "HomeCategoryLegendRow",
+          "kind": "fun",
+          "line": 394,
+          "modifiers": [
+            "private"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/main/model/MainUiState.kt",
+      "language": "kotlin",
+      "lines": 20,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.Category"
+      ],
+      "symbols": [
+        {
+          "name": "HomeCategoryItem",
+          "kind": "class",
+          "line": 5,
+          "modifiers": [
+            "data"
+          ]
+        },
+        {
+          "name": "MainUiState",
+          "kind": "class",
+          "line": 11,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/main/viewmodel/MainViewModel.kt",
+      "language": "kotlin",
+      "lines": 105,
+      "imports": [
+        "androidx.lifecycle.ViewModel",
+        "androidx.lifecycle.viewModelScope",
+        "com.onedeepath.balanccapp.core.ENGLISH_MONTHS",
+        "com.onedeepath.balanccapp.di.IoDispatcher",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalanceByExpense",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalanceByIncome",
+        "com.onedeepath.balanccapp.ui.screens.main.model.HomeCategoryItem",
+        "com.onedeepath.balanccapp.ui.screens.main.model.MainUiState",
+        "dagger.hilt.android.lifecycle.HiltViewModel",
+        "kotlinx.coroutines.CoroutineDispatcher",
+        "kotlinx.coroutines.Job",
+        "kotlinx.coroutines.flow.MutableStateFlow",
+        "kotlinx.coroutines.flow.StateFlow",
+        "kotlinx.coroutines.flow.asStateFlow",
+        "kotlinx.coroutines.flow.catch",
+        "kotlinx.coroutines.flow.combine",
+        "kotlinx.coroutines.flow.flowOn",
+        "kotlinx.coroutines.flow.update",
+        "kotlinx.coroutines.launch",
+        "javax.inject.Inject",
+        "kotlin.math.abs",
+        "kotlin.math.roundToInt"
+      ],
+      "symbols": [
+        {
+          "name": "MainViewModel",
+          "kind": "class",
+          "line": 28
+        },
+        {
+          "name": "onErrorShown",
+          "kind": "fun",
+          "line": 39
+        },
+        {
+          "name": "load",
+          "kind": "fun",
+          "line": 43
+        },
+        {
+          "name": "previousMonthYear",
+          "kind": "fun",
+          "line": 78,
+          "modifiers": [
+            "private"
+          ]
+        },
+        {
+          "name": "balanceChangePercent",
+          "kind": "fun",
+          "line": 87,
+          "modifiers": [
+            "private"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/settings/SettingsScreen.kt",
+      "language": "kotlin",
+      "lines": 233,
+      "imports": [
+        "androidx.appcompat.app.AppCompatDelegate",
+        "androidx.compose.foundation.BorderStroke",
+        "androidx.compose.foundation.clickable",
+        "androidx.compose.foundation.layout.Box",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.Row",
+        "androidx.compose.foundation.layout.Spacer",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.fillMaxWidth",
+        "androidx.compose.foundation.layout.height",
+        "androidx.compose.foundation.layout.heightIn",
+        "androidx.compose.foundation.layout.padding",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.foundation.layout.width",
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material.icons.Icons",
+        "androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight",
+        "androidx.compose.material.icons.filled.Build",
+        "androidx.compose.material.icons.filled.DateRange",
+        "androidx.compose.material.icons.filled.Settings",
+        "androidx.compose.material3.HorizontalDivider",
+        "androidx.compose.material3.Icon",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.material3.Scaffold",
+        "androidx.compose.material3.Surface",
+        "androidx.compose.material3.Switch",
+        "androidx.compose.material3.SwitchDefaults",
+        "androidx.compose.material3.Text",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.collectAsState",
+        "androidx.compose.runtime.getValue",
+        "androidx.compose.runtime.mutableStateOf",
+        "androidx.compose.runtime.remember",
+        "androidx.compose.runtime.rememberCoroutineScope",
+        "androidx.compose.runtime.setValue",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.graphics.vector.ImageVector",
+        "androidx.compose.ui.res.stringResource",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.dp",
+        "androidx.core.os.LocaleListCompat",
+        "androidx.navigation.NavController",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.data.datastore.SettingsPreferences",
+        "com.onedeepath.balanccapp.ui.components.BalanccTopBar",
+        "com.onedeepath.balanccapp.ui.components.SectionHeader",
+        "com.onedeepath.balanccapp.ui.components.SelectionDialog",
+        "com.onedeepath.balanccapp.ui.theme.BalanccCornerRadius",
+        "com.onedeepath.balanccapp.ui.theme.BalanccSpacing",
+        "com.onedeepath.balanccapp.ui.theme.financialColors",
+        "kotlinx.coroutines.launch"
+      ],
+      "symbols": [
+        {
+          "name": "SettingsScreen",
+          "kind": "fun",
+          "line": 57
+        },
+        {
+          "name": "SettingItem",
+          "kind": "fun",
+          "line": 173
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/screens/splash/SplashScreen.kt",
+      "language": "kotlin",
+      "lines": 53,
+      "imports": [
+        "androidx.compose.foundation.Image",
+        "androidx.compose.foundation.background",
+        "androidx.compose.foundation.layout.Arrangement",
+        "androidx.compose.foundation.layout.Column",
+        "androidx.compose.foundation.layout.fillMaxSize",
+        "androidx.compose.foundation.layout.size",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.LaunchedEffect",
+        "androidx.compose.ui.Alignment",
+        "androidx.compose.ui.Modifier",
+        "androidx.compose.ui.res.painterResource",
+        "androidx.compose.ui.tooling.preview.Preview",
+        "androidx.compose.ui.unit.dp",
+        "androidx.navigation.NavController",
+        "com.onedeepath.balanccapp.R",
+        "com.onedeepath.balanccapp.ui.navigation.AppScreens"
+      ],
+      "symbols": [
+        {
+          "name": "SplashScreen",
+          "kind": "fun",
+          "line": 22
+        },
+        {
+          "name": "Splash",
+          "kind": "fun",
+          "line": 33
+        },
+        {
+          "name": "SplashScreenPreview",
+          "kind": "fun",
+          "line": 51
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/theme/AppTheme.kt",
+      "language": "kotlin",
+      "lines": 31,
+      "imports": [
+        "androidx.compose.foundation.isSystemInDarkTheme",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.CompositionLocalProvider"
+      ],
+      "symbols": [
+        {
+          "name": "AppTheme",
+          "kind": "fun",
+          "line": 9
+        },
+        {
+          "name": "BalanccAppTheme",
+          "kind": "fun",
+          "line": 28
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/theme/Color.kt",
+      "language": "kotlin",
+      "lines": 66,
+      "imports": [
+        "androidx.compose.ui.graphics.Color"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/theme/Dimensions.kt",
+      "language": "kotlin",
+      "lines": 18,
+      "imports": [
+        "androidx.compose.ui.unit.dp"
+      ],
+      "symbols": [
+        {
+          "name": "BalanccSpacing",
+          "kind": "object",
+          "line": 5
+        },
+        {
+          "name": "BalanccElevation",
+          "kind": "object",
+          "line": 15
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/theme/Shape.kt",
+      "language": "kotlin",
+      "lines": 22,
+      "imports": [
+        "androidx.compose.foundation.shape.RoundedCornerShape",
+        "androidx.compose.material3.Shapes",
+        "androidx.compose.ui.unit.dp"
+      ],
+      "symbols": [
+        {
+          "name": "BalanccCornerRadius",
+          "kind": "object",
+          "line": 15
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/theme/Theme.kt",
+      "language": "kotlin",
+      "lines": 120,
+      "imports": [
+        "androidx.compose.material3.darkColorScheme",
+        "androidx.compose.material3.lightColorScheme",
+        "androidx.compose.material3.MaterialTheme",
+        "androidx.compose.runtime.Composable",
+        "androidx.compose.runtime.Immutable",
+        "androidx.compose.runtime.staticCompositionLocalOf",
+        "androidx.compose.ui.graphics.Color"
+      ],
+      "symbols": [
+        {
+          "name": "FinancialColorScheme",
+          "kind": "class",
+          "line": 66,
+          "modifiers": [
+            "data"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/com/onedeepath/balanccapp/ui/theme/Type.kt",
+      "language": "kotlin",
+      "lines": 90,
+      "imports": [
+        "androidx.compose.material3.Typography",
+        "androidx.compose.ui.text.TextStyle",
+        "androidx.compose.ui.text.font.FontFamily",
+        "androidx.compose.ui.text.font.FontWeight",
+        "androidx.compose.ui.unit.sp"
+      ],
+      "symbols": []
+    },
+    {
+      "path": "app/src/test/java/com/onedeepath/balanccapp/ExampleUnitTest.kt",
+      "language": "kotlin",
+      "lines": 17,
+      "imports": [
+        "org.junit.Test",
+        "org.junit.Assert.*"
+      ],
+      "symbols": [
+        {
+          "name": "ExampleUnitTest",
+          "kind": "class",
+          "line": 12
+        },
+        {
+          "name": "addition_isCorrect",
+          "kind": "fun",
+          "line": 14,
+          "container": "ExampleUnitTest"
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/com/onedeepath/balanccapp/data/repository/BalanceRepositoryImplTest.kt",
+      "language": "kotlin",
+      "lines": 130,
+      "imports": [
+        "app.cash.turbine.test",
+        "com.onedeepath.balanccapp.data.database.dao.BalanceDao",
+        "com.onedeepath.balanccapp.data.database.entity.BalanceEntity",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "io.mockk.Runs",
+        "io.mockk.coEvery",
+        "io.mockk.coVerify",
+        "io.mockk.just",
+        "io.mockk.mockk",
+        "io.mockk.verify",
+        "kotlinx.coroutines.flow.MutableStateFlow",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Assert.*",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "BalanceRepositoryImplTest",
+          "kind": "class",
+          "line": 21
+        },
+        {
+          "name": "setUp",
+          "kind": "fun",
+          "line": 27,
+          "container": "BalanceRepositoryImplTest"
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/com/onedeepath/balanccapp/domain/usecases/DeleteBalanceUseCaseTest.kt",
+      "language": "kotlin",
+      "lines": 41,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.coJustRun",
+        "io.mockk.coVerify",
+        "io.mockk.impl.annotations.RelaxedMockK",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Assert.*",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "DeleteBalanceUseCaseTest",
+          "kind": "class",
+          "line": 13
+        },
+        {
+          "name": "onBefore",
+          "kind": "fun",
+          "line": 22,
+          "container": "DeleteBalanceUseCaseTest"
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/com/onedeepath/balanccapp/domain/usecases/GetAllBalancesUseCaseTest.kt",
+      "language": "kotlin",
+      "lines": 61,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.every",
+        "io.mockk.impl.annotations.RelaxedMockK",
+        "io.mockk.mockk",
+        "io.mockk.verify",
+        "kotlinx.coroutines.flow.first",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.runBlocking",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "GetAllBalancesUseCaseTest",
+          "kind": "class",
+          "line": 16
+        },
+        {
+          "name": "onBefore",
+          "kind": "fun",
+          "line": 24,
+          "container": "GetAllBalancesUseCaseTest"
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/com/onedeepath/balanccapp/domain/usecases/GetBalanceByExpenseTest.kt",
+      "language": "kotlin",
+      "lines": 83,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.every",
+        "io.mockk.impl.annotations.RelaxedMockK",
+        "io.mockk.mockk",
+        "io.mockk.verify",
+        "kotlinx.coroutines.flow.first",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Assert.assertTrue",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "GetBalanceByExpenseTest",
+          "kind": "class",
+          "line": 17
+        },
+        {
+          "name": "onBefore",
+          "kind": "fun",
+          "line": 26,
+          "container": "GetBalanceByExpenseTest"
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/com/onedeepath/balanccapp/domain/usecases/GetBalanceByIncomeTest.kt",
+      "language": "kotlin",
+      "lines": 82,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.every",
+        "io.mockk.impl.annotations.RelaxedMockK",
+        "io.mockk.mockk",
+        "io.mockk.verify",
+        "kotlinx.coroutines.flow.first",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Assert.*",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "GetBalanceByIncomeTest",
+          "kind": "class",
+          "line": 17
+        },
+        {
+          "name": "onBefore",
+          "kind": "fun",
+          "line": 26,
+          "container": "GetBalanceByIncomeTest"
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/com/onedeepath/balanccapp/domain/usecases/GetBalancesByYearUseCaseTest.kt",
+      "language": "kotlin",
+      "lines": 74,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceByMonth",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.every",
+        "io.mockk.impl.annotations.RelaxedMockK",
+        "io.mockk.mockk",
+        "io.mockk.verify",
+        "junit.framework.TestCase.assertTrue",
+        "kotlinx.coroutines.flow.first",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "GetBalancesByYearUseCaseTest",
+          "kind": "class",
+          "line": 17
+        },
+        {
+          "name": "onBefore",
+          "kind": "fun",
+          "line": 24,
+          "container": "GetBalancesByYearUseCaseTest"
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/com/onedeepath/balanccapp/domain/usecases/InsertBalanceUseCaseTest.kt",
+      "language": "kotlin",
+      "lines": 44,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.repository.BalanceRepository",
+        "io.mockk.MockKAnnotations",
+        "io.mockk.coJustRun",
+        "io.mockk.coVerify",
+        "io.mockk.impl.annotations.RelaxedMockK",
+        "io.mockk.mockk",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Assert.*",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "InsertBalanceUseCaseTest",
+          "kind": "class",
+          "line": 15
+        },
+        {
+          "name": "onBefore",
+          "kind": "fun",
+          "line": 23,
+          "container": "InsertBalanceUseCaseTest"
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/com/onedeepath/balanccapp/ui/screens/addbalance/viewmodel/AddBalanceViewModelTest.kt",
+      "language": "kotlin",
+      "lines": 159,
+      "imports": [
+        "app.cash.turbine.test",
+        "com.onedeepath.balanccapp.domain.usecases.InsertBalanceUseCase",
+        "com.onedeepath.balanccapp.utils.MainDispatcherRule",
+        "io.mockk.coEvery",
+        "io.mockk.coVerify",
+        "io.mockk.mockk",
+        "kotlinx.coroutines.test.runTest",
+        "org.junit.Assert.*",
+        "org.junit.Before",
+        "org.junit.Rule",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "AddBalanceViewModelTest",
+          "kind": "class",
+          "line": 15
+        },
+        {
+          "name": "setup",
+          "kind": "fun",
+          "line": 24,
+          "container": "AddBalanceViewModelTest"
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/com/onedeepath/balanccapp/ui/screens/detail/viewmodel/MonthsDetailViewModelTest.kt",
+      "language": "kotlin",
+      "lines": 233,
+      "imports": [
+        "androidx.compose.ui.graphics.Color",
+        "app.cash.turbine.test",
+        "com.onedeepath.balanccapp.core.CurrencyHelper",
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.domain.usecases.DeleteBalanceUseCase",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalanceByExpense",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalanceByIncome",
+        "io.mockk.coEvery",
+        "io.mockk.coVerify",
+        "io.mockk.every",
+        "io.mockk.mockk",
+        "junit.framework.TestCase.assertEquals",
+        "kotlinx.coroutines.Dispatchers",
+        "kotlinx.coroutines.ExperimentalCoroutinesApi",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.test.UnconfinedTestDispatcher",
+        "kotlinx.coroutines.test.resetMain",
+        "kotlinx.coroutines.test.runTest",
+        "kotlinx.coroutines.test.setMain",
+        "org.junit.After",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "MonthsDetailViewModelTest",
+          "kind": "class",
+          "line": 27
+        },
+        {
+          "name": "setup",
+          "kind": "fun",
+          "line": 39,
+          "container": "MonthsDetailViewModelTest"
+        },
+        {
+          "name": "tearDown",
+          "kind": "fun",
+          "line": 53,
+          "container": "MonthsDetailViewModelTest"
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/com/onedeepath/balanccapp/ui/screens/main/viewmodel/MainViewModelTest.kt",
+      "language": "kotlin",
+      "lines": 225,
+      "imports": [
+        "com.onedeepath.balanccapp.domain.model.BalanceModel",
+        "com.onedeepath.balanccapp.domain.model.Category",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalanceByExpense",
+        "com.onedeepath.balanccapp.domain.usecases.GetBalanceByIncome",
+        "io.mockk.every",
+        "io.mockk.mockk",
+        "kotlinx.coroutines.Dispatchers",
+        "kotlinx.coroutines.ExperimentalCoroutinesApi",
+        "kotlinx.coroutines.flow.flow",
+        "kotlinx.coroutines.flow.flowOf",
+        "kotlinx.coroutines.test.StandardTestDispatcher",
+        "kotlinx.coroutines.test.advanceUntilIdle",
+        "kotlinx.coroutines.test.resetMain",
+        "kotlinx.coroutines.test.runTest",
+        "kotlinx.coroutines.test.setMain",
+        "org.junit.After",
+        "org.junit.Assert.assertEquals",
+        "org.junit.Assert.assertFalse",
+        "org.junit.Assert.assertNull",
+        "org.junit.Assert.assertTrue",
+        "org.junit.Before",
+        "org.junit.Test"
+      ],
+      "symbols": [
+        {
+          "name": "MainViewModelTest",
+          "kind": "class",
+          "line": 27
+        },
+        {
+          "name": "setUp",
+          "kind": "fun",
+          "line": 73,
+          "container": "MainViewModelTest"
+        },
+        {
+          "name": "tearDown",
+          "kind": "fun",
+          "line": 78,
+          "container": "MainViewModelTest"
+        },
+        {
+          "name": "buildViewModel",
+          "kind": "fun",
+          "line": 82,
+          "container": "MainViewModelTest",
+          "modifiers": [
+            "private"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/com/onedeepath/balanccapp/utils/MainDispatcherRule.kt",
+      "language": "kotlin",
+      "lines": 25,
+      "imports": [
+        "kotlinx.coroutines.Dispatchers",
+        "kotlinx.coroutines.test.TestDispatcher",
+        "kotlinx.coroutines.test.UnconfinedTestDispatcher",
+        "kotlinx.coroutines.test.resetMain",
+        "kotlinx.coroutines.test.setMain",
+        "org.junit.rules.TestWatcher",
+        "org.junit.runner.Description"
+      ],
+      "symbols": [
+        {
+          "name": "MainDispatcherRule",
+          "kind": "class",
+          "line": 11
+        },
+        {
+          "name": "starting",
+          "kind": "fun",
+          "line": 15,
+          "modifiers": [
+            "override"
+          ]
+        },
+        {
+          "name": "finished",
+          "kind": "fun",
+          "line": 20,
+          "modifiers": [
+            "override"
+          ]
+        }
+      ]
+    }
+  ]
+}

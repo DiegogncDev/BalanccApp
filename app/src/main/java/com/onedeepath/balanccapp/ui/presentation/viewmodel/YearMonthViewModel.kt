@@ -1,23 +1,24 @@
 package com.onedeepath.balanccapp.ui.presentation.viewmodel
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.onedeepath.balanccapp.di.DefaultMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class YearMonthViewModel @Inject constructor() : ViewModel() {
+class YearMonthViewModel @Inject constructor(
+    defaultYearProvider: () -> String,
+    @DefaultMonth defaultMonthProvider: () -> String,
+) : ViewModel() {
 
-    private val _selectedMonthByFastAdd = MutableStateFlow("January")
+    private val _selectedMonthByFastAdd = MutableStateFlow(defaultMonthProvider())
     val selectedMonthByFastAdd: StateFlow<String> = _selectedMonthByFastAdd
 
-    private val _selectedYear = MutableStateFlow("2025")
+    private val _selectedYear = MutableStateFlow(defaultYearProvider())
     val selectedYear: StateFlow<String> = _selectedYear
-    private val _selectedMonthIndex = MutableStateFlow("January")
+    private val _selectedMonthIndex = MutableStateFlow(defaultMonthProvider())
     val selectedMonthIndex: StateFlow<String> = _selectedMonthIndex
 
     private val _isFastAddBalance = MutableStateFlow(false)

@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "project_name": "BalanccApp",
+  "project_type": "android",
+  "platforms": [
+    "android"
+  ],
+  "build_systems": [
+    "gradle"
+  ],
+  "ui": [
+    "compose"
+  ],
+  "di": [
+    "hilt"
+  ],
+  "network": [],
+  "persistence": [
+    "datastore",
+    "room"
+  ],
+  "serialization": [
+    "gson"
+  ],
+  "testing": [
+    "espresso",
+    "mockk",
+    "turbine"
+  ],
+  "integrations": [],
+  "ci_cd": [],
+  "detected_files": {
+    "android_manifest": "app/src/main/AndroidManifest.xml",
+    "settings_gradle": "settings.gradle.kts"
+  },
+  "warnings": [],
+  "created_at": "2026-09-22T21:35:39Z",
+  "updated_at": "2026-09-22T21:35:39Z"
+}

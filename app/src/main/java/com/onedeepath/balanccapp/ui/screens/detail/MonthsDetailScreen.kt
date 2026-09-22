@@ -49,7 +49,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.onedeepath.balanccapp.R
+import com.onedeepath.balanccapp.core.ENGLISH_MONTHS
 import com.onedeepath.balanccapp.core.formatCurrency
+import com.onedeepath.balanccapp.core.shiftedMonth
 import com.onedeepath.balanccapp.domain.model.BalanceModel
 import com.onedeepath.balanccapp.domain.model.Category
 import com.onedeepath.balanccapp.ui.components.BalanccFab
@@ -57,6 +59,7 @@ import com.onedeepath.balanccapp.ui.components.BalanccTopBar
 import com.onedeepath.balanccapp.ui.components.EmptyState
 import com.onedeepath.balanccapp.ui.components.FinancialAmount
 import com.onedeepath.balanccapp.ui.components.FinancialDonutChart
+import com.onedeepath.balanccapp.ui.components.MonthYearPickerRow
 import com.onedeepath.balanccapp.ui.components.SelectionDialog
 import com.onedeepath.balanccapp.ui.components.TransactionCard
 import com.onedeepath.balanccapp.ui.navigation.AppScreens
@@ -65,9 +68,9 @@ import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.detail.model.MonthsDetailUiState
 import com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData
 import com.onedeepath.balanccapp.ui.screens.detail.viewmodel.MonthsDetailViewModel
+import com.onedeepath.balanccapp.ui.theme.BrandGreen
+import com.onedeepath.balanccapp.ui.theme.BrandRed
 import com.onedeepath.balanccapp.ui.theme.financialColors
-
-private val BrandPurple = Color(0xFF5B5CE5)
 
 data class CategoryBreakdownItem(
     val category: Category,
@@ -87,11 +90,6 @@ fun MonthsDetailScreen(
 
     var showMonthPicker by remember { mutableStateOf(false) }
 
-    val englishMonthNames = listOf(
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    )
-
     val monthResourceIds = listOf(
         R.string.january, R.string.february, R.string.march, R.string.april,
         R.string.may, R.string.june, R.string.july, R.string.august,
@@ -99,7 +97,7 @@ fun MonthsDetailScreen(
     )
 
     val localizedMonthNames = monthResourceIds.map { stringResource(it) }
-    val currentMonthIndex = englishMonthNames.indexOf(month).coerceAtLeast(0)
+    val currentMonthIndex = ENGLISH_MONTHS.indexOf(month).coerceAtLeast(0)
     val localizedMonth = localizedMonthNames.getOrElse(currentMonthIndex) { month }
 
     LaunchedEffect(year, month) {
@@ -130,6 +128,16 @@ fun MonthsDetailScreen(
             localizedMonth = localizedMonth,
             year = year,
             onMonthPickerClick = { showMonthPicker = true },
+            onPreviousMonth = {
+                val (index, newYear) = shiftedMonth(currentMonthIndex, year, -1)
+                yearMonthViewModel.setMonthIndex(index)
+                yearMonthViewModel.setYear(newYear)
+            },
+            onNextMonth = {
+                val (index, newYear) = shiftedMonth(currentMonthIndex, year, 1)
+                yearMonthViewModel.setMonthIndex(index)
+                yearMonthViewModel.setYear(newYear)
+            },
             onDelete = viewModel::deleteBalance,
             modifier = Modifier
                 .fillMaxSize()
@@ -160,6 +168,8 @@ fun DetailBodyContent(
     localizedMonth: String,
     year: String,
     onMonthPickerClick: () -> Unit,
+    onPreviousMonth: () -> Unit,
+    onNextMonth: () -> Unit,
     onDelete: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -228,6 +238,8 @@ fun DetailBodyContent(
                 monthName = localizedMonth,
                 year = year,
                 onClick = onMonthPickerClick,
+                onPreviousMonth = onPreviousMonth,
+                onNextMonth = onNextMonth,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
@@ -355,7 +367,7 @@ fun DetailTypeSwitcher(
                     .weight(1f)
                     .fillMaxSize()
                     .clip(CircleShape)
-                    .background(if (selectedTab == 0) BrandPurple else Color.Transparent)
+                    .background(if (selectedTab == 0) BrandRed else Color.Transparent)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
@@ -379,7 +391,7 @@ fun DetailTypeSwitcher(
                     .weight(1f)
                     .fillMaxSize()
                     .clip(CircleShape)
-                    .background(if (selectedTab == 1) BrandPurple else Color.Transparent)
+                    .background(if (selectedTab == 1) BrandGreen else Color.Transparent)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
@@ -397,51 +409,6 @@ fun DetailTypeSwitcher(
                 )
             }
         }
-    }
-}
-
-/**
- * Month Year selector row: [Calendar icon] Enero 2025 [Dropdown arrow]
- */
-@Composable
-fun MonthYearPickerRow(
-    monthName: String,
-    year: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick,
-            )
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            imageVector = Icons.Default.DateRange,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.size(20.dp),
-        )
-        Spacer(Modifier.width(8.dp))
-        Text(
-            text = "$monthName $year",
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold,
-                fontSize = 17.sp,
-                color = MaterialTheme.colorScheme.onSurface,
-            ),
-        )
-        Spacer(Modifier.width(4.dp))
-        Icon(
-            imageVector = Icons.Default.ArrowDropDown,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.size(20.dp),
-        )
     }
 }
 

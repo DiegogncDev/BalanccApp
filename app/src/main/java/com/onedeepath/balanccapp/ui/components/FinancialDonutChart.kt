@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,8 +32,9 @@ fun FinancialDonutChart(
     subtitleText: String,
     isIncome: Boolean,
     modifier: Modifier = Modifier,
+    holeColor: Color? = null,
 ) {
-    val surfaceColor = MaterialTheme.colorScheme.surface.toArgb()
+    val effectiveHoleColor = (holeColor ?: MaterialTheme.colorScheme.surface).toArgb()
 
     Box(
         modifier = modifier,
@@ -47,7 +49,9 @@ fun FinancialDonutChart(
                     isDrawHoleEnabled = true
                     holeRadius = 72f
                     transparentCircleRadius = 0f
-                    setHoleColor(surfaceColor)
+                    minOffset = 0f
+                    setExtraOffsets(0f, 0f, 0f, 0f)
+                    setHoleColor(effectiveHoleColor)
                     setDrawEntryLabels(false)
                     setDrawCenterText(false)
                     legend.isEnabled = false
@@ -55,7 +59,7 @@ fun FinancialDonutChart(
                 }
             },
             update = { chart ->
-                chart.setHoleColor(surfaceColor)
+                chart.setHoleColor(effectiveHoleColor)
 
                 val pieEntries = entries.map { PieEntry(it.value, "") }
                 val dataSet = PieDataSet(pieEntries, "").apply {

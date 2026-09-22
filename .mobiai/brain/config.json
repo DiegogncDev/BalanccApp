@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "project_name": "BalanccApp",
+  "project_type": "android",
+  "platforms": [
+    "android"
+  ],
+  "rules": [
+    "Prioritize clean architecture",
+    "Prepare code for testing",
+    "Do not introduce hacks",
+    "Respect existing project conventions"
+  ],
+  "created_at": "2026-09-22T21:35:20Z",
+  "updated_at": "2026-09-22T21:35:39Z"
+}

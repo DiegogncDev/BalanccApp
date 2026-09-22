@@ -63,6 +63,7 @@ import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import com.onedeepath.balanccapp.R
+import com.onedeepath.balanccapp.core.ENGLISH_MONTHS
 import com.onedeepath.balanccapp.core.cleanAmountForStorage
 import com.onedeepath.balanccapp.core.formatAmountForDisplay
 import com.onedeepath.balanccapp.domain.model.Category
@@ -72,6 +73,9 @@ import com.onedeepath.balanccapp.ui.components.SelectionDialog
 import com.onedeepath.balanccapp.ui.presentation.mapper.getDisplayNameRes
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.addbalance.viewmodel.AddBalanceViewModel
+import com.onedeepath.balanccapp.ui.theme.BrandGreen
+import com.onedeepath.balanccapp.ui.theme.BrandPurple
+import com.onedeepath.balanccapp.ui.theme.BrandRed
 import com.onedeepath.balanccapp.ui.theme.financialColors
 import java.time.LocalDate
 import java.time.Month
@@ -79,9 +83,6 @@ import java.time.YearMonth
 import java.time.format.TextStyle as DateTextStyle
 import java.util.Locale
 
-private val BrandPurple = Color(0xFF5B5CE5)
-private val BrandGreen = Color(0xFF48C78E)
-private val BrandRed = Color(0xFFE27676)
 private val IconContainerColor = Color(0xFFEDE9FE)
 private val AmountTextColor = Color(0xFF6D7993)
 
@@ -93,10 +94,11 @@ fun AddIncomeOrExpenseScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val balanceAddedMessage = stringResource(R.string.balance_added)
 
     LaunchedEffect(uiState.saveSuccess, uiState.error) {
         if (uiState.saveSuccess) {
-            Toast.makeText(context, context.getString(R.string.balance_added), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, balanceAddedMessage, Toast.LENGTH_SHORT).show()
             viewModel.resetSaveEvent()
             navController?.popBackStack()
         }
@@ -164,10 +166,15 @@ fun AddIncomeOrExpenseScreen(
             AddDateCard(
                 selectedYear = selectedYear.toIntOrNull() ?: LocalDate.now().year,
                 selectedMonth = currentSelectedMonth,
-                isFastAddBalance = isFastAddBalance,
                 selectedDay = uiState.selectedDay,
                 onDaySelected = { date -> viewModel.onDaySelected(date.dayOfMonth.toString()) },
-                onMonthSelected = yearMonthViewModel::setMonth,
+                onMonthSelected = { selectedMonth ->
+                    if (isFastAddBalance) {
+                        yearMonthViewModel.setMonth(selectedMonth)
+                    } else {
+                        yearMonthViewModel.setMonthIndex(ENGLISH_MONTHS.indexOf(selectedMonth))
+                    }
+                },
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -464,7 +471,6 @@ fun AddCategoryCard(
 fun AddDateCard(
     selectedYear: Int,
     selectedMonth: String,
-    isFastAddBalance: Boolean,
     selectedDay: String,
     onDaySelected: (LocalDate) -> Unit,
     onMonthSelected: (String) -> Unit,
@@ -479,8 +485,9 @@ fun AddDateCard(
         R.string.september, R.string.october, R.string.november, R.string.december,
     )
 
-    val monthNames = monthResourceIds.map { stringResource(it) }
-    val selectedMonthIndex = monthNames.indexOf(selectedMonth).coerceAtLeast(0)
+    val localizedMonthNames = monthResourceIds.map { stringResource(it) }
+    val selectedMonthIndex = ENGLISH_MONTHS.indexOf(selectedMonth).coerceAtLeast(0)
+    val localizedSelectedMonth = localizedMonthNames.getOrElse(selectedMonthIndex) { selectedMonth }
 
     val startDate = LocalDate.of(selectedYear, selectedMonthIndex + 1, 1)
     val endDate = YearMonth.of(selectedYear, selectedMonthIndex + 1).atEndOfMonth()
@@ -521,7 +528,7 @@ fun AddDateCard(
     val formattedDateText = if (selectedDay.isNotBlank()) {
         "$selectedDay $shortMonthName $selectedYear"
     } else {
-        "$selectedMonth $selectedYear"
+        "$localizedSelectedMonth $selectedYear"
     }
 
     Surface(
@@ -576,38 +583,29 @@ fun AddDateCard(
                 )
             }
 
-            if (isFastAddBalance) {
-                Surface(
-                    onClick = { showMonthDialog = true },
-                    shape = RoundedCornerShape(12.dp),
-                    color = IconContainerColor,
+            Surface(
+                onClick = { showMonthDialog = true },
+                shape = RoundedCornerShape(12.dp),
+                color = IconContainerColor,
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            text = selectedMonth,
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontWeight = FontWeight.SemiBold,
-                                color = BrandPurple,
-                            ),
-                        )
-                        Icon(
-                            imageVector = Icons.Default.ArrowDropDown,
-                            contentDescription = null,
-                            tint = BrandPurple,
-                            modifier = Modifier.size(16.dp),
-                        )
-                    }
+                    Text(
+                        text = localizedSelectedMonth,
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            color = BrandPurple,
+                        ),
+                    )
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = null,
+                        tint = BrandPurple,
+                        modifier = Modifier.size(16.dp),
+                    )
                 }
-            } else {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = null,
-                    tint = MaterialTheme.financialColors.textTertiary,
-                    modifier = Modifier.size(20.dp),
-                )
             }
         }
     }
@@ -615,10 +613,13 @@ fun AddDateCard(
     if (showMonthDialog) {
         SelectionDialog(
             title = stringResource(R.string.select_month),
-            options = monthNames,
+            options = localizedMonthNames,
             optionLabel = { it },
             onOptionSelected = { month ->
-                onMonthSelected(month)
+                val index = localizedMonthNames.indexOf(month)
+                if (index >= 0) {
+                    onMonthSelected(ENGLISH_MONTHS[index])
+                }
                 showMonthDialog = false
             },
             onDismiss = { showMonthDialog = false },
