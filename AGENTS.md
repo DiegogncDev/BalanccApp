@@ -3,155 +3,155 @@
 Android personal-finance app (income/expense tracking by month and year).
 Package: `com.onedeepath.balanccapp` · Single Gradle module `:app`.
 
-## Tech stack
+Este repositorio usa **Spec-Driven Mobile Development (SDMD)**. Respeta el
+workflow de etapas aprobadas explícitamente; no te lo saltes.
 
-- Kotlin 2.0.21, AGP 8.10.1, Gradle 8.11.1 (wrapper), JVM target 11
-- Jetpack Compose (Material 3, BOM 2024.09.00), Navigation Compose
-- Hilt 2.51.1 (DI, via `kapt`), Room 2.7.2 (`kapt` compiler)
-- DataStore Preferences (settings/theme/language), MPAndroidChart (JitPack),
-  sheets-compose-dialogs (calendar), Gson
-- coroutines/Flow for async; no RxJava
-- compileSdk/targetSdk 35, minSdk 26
+## Required reading
 
-## Build / lint / test commands (Windows: use `gradlew.bat`)
+Antes de planificar, revisar o modificar código:
+
+1. `docs/GENERIC_RULES.md` — reglas genéricas de trabajo.
+2. `docs/CURRENT_ARCHITECTURE.md` — arquitectura real de BalanccApp.
+3. `docs/MOBILE_GUIDELINES.md` — cuando la feature toque comportamiento mobile.
+4. `docs/features/<feature>/SPEC.md`
+5. `docs/features/<feature>/PLAN.md`
+6. `docs/features/<feature>/TASKS.md`
+
+Los templates (`docs/SPEC_TEMPLATE.md`, `docs/PLAN_TEMPLATE.md`) contienen sus
+propias instrucciones en comentarios. Léalos completos antes de completarlos.
+
+## Project
+
+- App Android de finanzas personales: registro de ingresos/gastos por mes/año.
+- Kotlin 2.0.21, AGP 8.10.1, Gradle 8.11.1, JVM target 11.
+- Jetpack Compose (Material 3, BOM 2024.09.00), Navigation Compose.
+- Hilt 2.51.1 vía `kapt`; Room 2.7.2 vía `kapt`; DataStore Preferences;
+  MPAndroidChart; sheets-compose-dialogs (calendar); Gson.
+- `compileSdk`/`targetSdk` 35, `minSdk` 26.
+- Detalle completo: `docs/CURRENT_ARCHITECTURE.md`.
+
+## Commands
+
+Windows (`gradlew.bat`; en Unix `./gradlew`):
 
 ```bash
-./gradlew.bat assembleDebug              # Build debug APK
-./gradlew.bat clean assembleDebug        # Clean build
-./gradlew.bat lintDebug                  # Android lint (no ktlint/detekt configured)
-./gradlew.bat testDebugUnitTest          # All unit tests (app/src/test)
-./gradlew.bat connectedDebugAndroidTest  # Instrumented tests (needs emulator/device)
+./gradlew.bat assembleDebug              # build debug APK
+./gradlew.bat clean assembleDebug        # rebuild limpio (tras cambios kapt)
+./gradlew.bat lintDebug                  # Android lint (sin ktlint/detekt)
+./gradlew.bat testDebugUnitTest          # tests unitarios (app/src/test)
+./gradlew.bat connectedDebugAndroidTest  # instrumentados (emulador/dispositivo)
 ```
 
-### Running a single test
+Tests puntuales:
 
 ```bash
-# Single test class
 ./gradlew.bat testDebugUnitTest --tests "com.onedeepath.balanccapp.domain.usecases.GetBalancesByYearUseCaseTest"
-
-# Single test method (backtick names contain spaces — keep the full quoted string)
-./gradlew.bat testDebugUnitTest --tests "com.onedeepath.balanccapp.domain.usecases.GetBalancesByYearUseCaseTest.invoke with empty year returns empty list and does not interact with repository"
-
-# Wildcard across packages
-./gradlew.bat testDebugUnitTest --tests "com.onedeepath.balanccapp.ui.screens.main.*"
-
-# Single instrumented test class
 ./gradlew.bat connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.onedeepath.balanccapp.data.dao.BalanceDaoTest
 ```
 
-Verify changes with `lintDebug` + `testDebugUnitTest`; use `connectedDebugAndroidTest`
-when touching DAOs/Room or Compose UI behavior.
+Verifica cambios con `lintDebug` + `testDebugUnitTest`; usa
+`connectedDebugAndroidTest` al tocar DAOs/Room o UI Compose.
 
-## Architecture & package layout
+## Architecture
 
-MVVM + clean layering under `app/src/main/java/com/onedeepath/balanccapp`:
+Límites reales (ver `docs/CURRENT_ARCHITECTURE.md`):
 
-- `core/` — helpers (currency formatting, chart builders, converters)
-- `data/`
-  - `database/` — Room: `BalanceDatabase`, `dao/`, `entity/`
-  - `datastore/` — `SettingsPreferences` (theme/language)
-  - `model/` — DTO-level models (e.g. `BalanceByMonthEntity`)
-  - `repository/` — repository implementations (`*Impl`)
-- `domain/`
-  - `model/` — domain models + entity↔domain mapper extension functions
-  - `repository/` — repository interfaces
-  - `usecases/` — one use case per file, `operator fun invoke`
-- `di/` — Hilt modules (`@Module @InstallIn(SingletonComponent::class)`)
-- `ui/` — Compose UI
-  - `screens/<feature>/` — screen composable plus `viewmodel/`, `model/` (UiState),
-    `mapper/` subpackages
-  - `components/` — reusable composables (`BalanccTopBar`, `PrimaryButton`, …)
-  - `theme/` — colors, type, `BalanccSpacing`, `BalanccCornerRadius`, `financialColors`
-  - `navigation/` — `AppNavigation` + `AppScreens` sealed class (route strings)
-  - `presentation/` — shared view models (`YearMonthViewModel`) and mapper/extensions
+```
+UI (Compose) → ViewModel → UseCase → Repository (interfaz, domain)
+→ RepositoryImpl (data) → DAO (Room) / DataStore
+```
 
-Tests mirror the main tree: unit tests in `app/src/test`, instrumented/Room tests in
-`app/src/androidTest`.
+- Presentation → Domain. Data → Domain.
+- Domain **no** depende de Data, ni de Compose, ni de Room, ni de Android UI.
+- La UI nunca accede directamente a DAOs ni a DataStore.
+- Los ViewModels no contienen lógica visual; exponen `StateFlow` inmutable y
+  reciben eventos de la UI.
+- Capacidad nueva de repositorio: método en `domain/repository/`,
+  implementación en `data/repository/*Impl`, binding con `@Binds` en `di/`.
+- Use cases: `@Inject constructor` + `operator fun invoke`; validan input.
+- No mover archivos ni reestructurar capas fuera del scope aprobado.
 
-## Code style
+### Convenciones de código
 
-### General Kotlin
-
-- `kotlin.code.style=official`; 4-space indent; keep files focused (one class per file).
-- Imports: one per line, no wildcards in main code (one legacy `org.junit.Assert.*`
-  exists in a test — don't copy it into new code).
-- Naming: classes/objects `PascalCase`; functions/properties `camelCase`; private
-  backing state `_uiState`; constants `UPPER_SNAKE_CASE` in `companion object`/module.
-- Screens/features use `*Screen`, view models `*ViewModel`, states `*UiState`,
-  mappers `toDomain()/toEntity()/to*Ui()` extension functions declared at file
-  bottom/top level (see `BalanceModel.kt`, `BalanceEntity.kt`).
-- Months, days and years are modeled as `String` throughout (e.g. `"January"`,
-  `"2025"`) — follow this convention for consistency with Room queries.
-
-### Architecture rules
-
-- UI → ViewModel → use case → repository interface (domain) → repository impl (data)
-  → DAO/datastore. Never call DAOs from ViewModels; never reference Android UI from
-  `domain/` (it only depends on models/Flow).
-- New repository capability: add method to `domain/repository/` interface, implement
-  in `data/repository/*Impl`, bind with `@Binds` in `di/BalanceModule`-style module.
-- Use cases are plain classes with `@Inject constructor` and `operator fun invoke`;
-  validate input there (e.g. blank year → `flowOf(emptyList())`).
-
-### Dependency injection (Hilt)
-
-- ViewModels: `@HiltViewModel` + `@Inject constructor`; obtain in Compose with
-  `hiltViewModel()`. Modules are `object`s in `di/`, installed in
-  `SingletonComponent`; use `@Singleton` on provided singletons.
-- Inject dispatchers via the `@IoDispatcher` qualifier (`di/DispatcherModule.kt`)
-  instead of hardcoding `Dispatchers.IO` in ViewModels.
-
-### Coroutines & Flow
-
-- Expose UI state as immutable `StateFlow`: private `MutableStateFlow`, public
-  `uiState: StateFlow<...> = _uiState.asStateFlow()`; mutate exclusively with
-  `_uiState.update { it.copy(...) }`.
-- Launch work in `viewModelScope.launch`; apply `.flowOn(ioDispatcher)` to cold
-  flows from use cases and handle errors with `.catch { }` before `collectLatest`.
-- Long-running calls (Room) are `suspend` or return `Flow`; keep that pattern.
-
-### Error handling
-
-- UiState carries `error: String?` (+ `isLoading`, one-shot flags like
-  `saveSuccess`). On failure, set `error = throwable.message`/`e.message`;
-  clear it via an explicit event (`onErrorShown()`). Use `try/catch` inside
-  `viewModelScope.launch` for suspend calls, `.catch {}` for flows.
-- Validate before acting and surface "Invalid data"-style errors through UiState,
-  never crash or silently swallow.
-
-### Compose conventions
-
-- Stateless where possible: screens receive a `NavController` and a Hilt
-  `ViewModel`; collect state with `collectAsState` / `collectAsStateWithLifecycle`;
-  user actions flow up as `onXxxChange(...)`/`onXxxSelected(...)` callbacks.
-- Reusable UI lives in `ui/components`; strings via `stringResource(R.string.*)`
-  (app is localized `es`/`en` — add new strings to both); styling via
+- `kotlin.code.style=official`; 4 espacios; una clase por archivo; sin imports
+  wildcard (uno legacy `org.junit.Assert.*` en un test: no copiarlo).
+- Clases/objs `PascalCase`; funciones/propiedades `camelCase`; backing state
+  `_uiState`; constantes `UPPER_SNAKE_CASE`.
+- Screens `*Screen`, view models `*ViewModel`, estados `*UiState`; mappers
+  como extensiones `toDomain()/toEntity()/to*Ui()`.
+- Meses, días y años como `String` (`"January"`, `"2025"`): convención
+  coherente con las queries de Room.
+- Estado UI: `MutableStateFlow` privado + `uiState` público; mutar solo con
+  `_uiState.update { it.copy(...) }`; `viewModelScope.launch` +
+  `flowOn(ioDispatcher)` (@IoDispatcher) + `.catch {}` antes de
+  `collectLatest`.
+- UiState con `error: String?`, `isLoading`, flags one-shot; error limpiado con
+  evento explícito (`onErrorShown()`); errores suspend con `try/catch` y flows
+  con `.catch {}`.
+- Strings nuevos en `values-es` **y** `values-en`; estilos vía
   `MaterialTheme.colorScheme`, `financialColors`, `BalanccSpacing`,
-  `BalanccCornerRadius` — no hardcoded dp/color literals in new UI.
-- Navigation routes go in `AppScreens` (sealed class, snake_case route strings);
-  add the destination to `AppNavigation`. Shared `-screens` view models are scoped
-  to the `MainScreen` back-stack entry (see `AppNavigation.kt`).
+  `BalanccCornerRadius`; sin dp/colores hardcodeados en UI nueva.
+- Rutas de navegación en `AppScreens` (sealed, kebab/snake_case) y destinos en
+  `AppNavigation`.
+- Testing: JUnit4 + MockK + kotlinx-coroutines-test + Turbine; nombres con
+  backticks y Given/When/Then; ViewModels con `Dispatchers.setMain` en
+  `@Before`/`resetMain()` en `@After` + `advanceUntilIdle()` (ver
+  `app/src/test/.../utils/MainDispatcherRule.kt`). Test unitario por cada use
+  case/ViewModel nuevo; test instrumentado Room (in-memory) para queries
+  nuevas (modelo: `BalanceDaoTest.kt`).
 
-### Testing
+### Gotchas
 
-- JUnit4 + MockK + kotlinx-coroutines-test + Turbine (`runTest`,
-  `StandardTestDispatcher`, `flowOf`, `turbine.test {}`).
-- Test names use backticks, Given/When/Then comments, e.g.
-  `` `when useCase emits balances then uiState updates months and isLoading false` ``.
-- Mock with `mockk()` or `@RelaxedMockK` + `MockKAnnotations.init(this)`; stub with
-  `every { ... } returns ...` (suspend: `coEvery`, unit-returning: `just Runs`);
-  assert interactions with `verify(exactly = n)` / `coVerify`.
-- ViewModel tests: `Dispatchers.setMain(StandardTestDispatcher())` in `@Before`,
-  `Dispatchers.resetMain()` in `@After`, drive coroutines with `advanceUntilIdle()`;
-  see `MainViewModelTest.kt` and `utils/MainDispatcherRule.kt`.
-- Add unit tests for every new use case/ViewModel; add Room DAO instrumented tests
-  (in-memory database) for new queries — mirror `BalanceDaoTest.kt`.
+- `kapt` para Hilt + Room: tras añadir entidades/DAOs/módulos, puede requerir
+  `./gradlew.bat clean assembleDebug`.
+- No hardcodear secretos: `API_KEY` viene de `local.properties` vía
+  `buildConfigField`; `local.properties` nunca se commitea.
+- Sin ktlint/detekt: mantener estilo a mano y correr `lintDebug`.
 
-## Gotchas
+## SDMD workflow
 
-- kapt is used for Hilt + Room: after adding entities/DAOs/modules, a full rebuild
-  may be needed (`./gradlew.bat clean assembleDebug`).
-- Do not hardcode secrets/API keys in Gradle files (`buildConfigField`); use
-  `local.properties` and never commit it.
-- There is no formatter/linter plugin: keep style consistent by matching existing
-  code and run `lintDebug` before finishing.
+```
+SPEC → aprobación explícita → PLAN → aprobación explícita
+     → TASKS → autorización explícita de implementación
+     → implementación → validación → evidencia
+```
+
+- Una etapa **nunca** avanza automáticamente.
+- Completar un documento (SPEC/PLAN/TASKS) **no** significa que esté aprobado;
+  la aprobación es explícita por la persona.
+- Completar TASKS.md no autoriza a implementar: la autorización es explícita.
+- No implementar hasta la autorización de la fase de implementación.
+- Si durante la implementación surge una contradicción o un cambio de alcance,
+  volver a SPEC/PLAN y pedir confirmación antes de seguir.
+- Las features viven en `docs/features/<feature-name>/` con `SPEC.md`,
+  `PLAN.md`, `TASKS.md`. `TASKS.md` se deriva del PLAN aprobado (no existe
+  template de TASKS).
+
+## Scope control
+
+El agente no debe:
+
+- inventar requisitos;
+- añadir features no solicitadas;
+- hacer refactors no relacionados;
+- actualizar dependencias sin autorización;
+- cambiar la arquitectura global durante una feature;
+- mover archivos sin necesidad funcional;
+- modificar comportamiento fuera del alcance aprobado.
+
+## Validation
+
+Antes de declarar una feature terminada:
+
+- ejecutar los checks relevantes (`lintDebug`, `testDebugUnitTest`,
+  `connectedDebugAndroidTest` cuando corresponda);
+- reportar el estado real: PASS / FAIL / SKIPPED / BLOCKED por cada check;
+- vincular la validación con cada criterio de aceptación de la SPEC.
+
+Nunca declares una validación que no se haya ejecutado realmente.
+
+## Security
+
+Nunca incluir API keys, tokens, secretos ni credenciales en código,
+documentación, fixtures o reportes. `local.properties` y valores como
+`BuildConfig.API_KEY` se mantienen fuera de git.
