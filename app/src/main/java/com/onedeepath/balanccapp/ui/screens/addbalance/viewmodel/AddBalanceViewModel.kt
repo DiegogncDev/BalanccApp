@@ -48,7 +48,7 @@ class AddBalanceViewModel @Inject constructor(
     ) {
         val state = _uiState.value
 
-        if (!state.isValid || state.selectedDay == null) {
+        if (!state.isValid) {
             _uiState.update { it.copy(error = "Invalid data") }
             return
         }

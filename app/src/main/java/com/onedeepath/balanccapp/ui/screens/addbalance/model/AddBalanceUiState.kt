@@ -13,5 +13,5 @@ data class AddBalanceUiState(
     val error: String? = null
 ) {
     // Each change state calculate automatically
-    val isValid: Boolean get() = amount.isNotBlank() && selectedDay != null
+    val isValid: Boolean get() = amount.isNotBlank() && selectedDay.isNotBlank()
 }

@@ -13,6 +13,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -74,14 +75,14 @@ class MonthsDetailViewModelTest {
         )
         val mockExpenses = listOf(BalanceModel(id = 2, amount = 400.0,
             category = Category.EDUCATION,
-            description = "Salary",
+            description = "Books",
             day = "01",
             month = "January",
             year = "2025",
-            type = "income"))
+            type = "expense"))
 
-        coEvery { getBalanceByIncomeUseCase.getIncomes(year, month) } returns flowOf(mockIncomes)
-        coEvery { getBalanceByExpenseUseCase.getExpenses(year, month) } returns flowOf(mockExpenses)
+        every { getBalanceByIncomeUseCase.getIncomes(year, month) } returns flowOf(mockIncomes)
+        every { getBalanceByExpenseUseCase.getExpenses(year, month) } returns flowOf(mockExpenses)
         // Define for each amount because the test iterate all amount of the mock
         every { currencyHelper.formatCurrency(600.0) } returns "$600.00"
         every { currencyHelper.formatCurrency(1000.0) } returns "$1000.00"
@@ -127,13 +128,13 @@ class MonthsDetailViewModelTest {
             BalanceModel(id = 1, amount = 1000.0, category = Category.EDUCATION, month = month, day = "January", year = year, type = "income", description = ""),
             BalanceModel(id = 2, amount = 500.0, category = Category.EDUCATION, month = month, day = "January", year = year, type = "income", description = "")
         )
-        // GASTOS mayores para probar el color rojo
+        // Gastos mayores para probar el balance negativo
         val mockExpenses = listOf(
-            BalanceModel(id = 3, amount = 2000.0, category = Category.FOOD, month = month, day = "January", year = year, type = "income", description = "")
+            BalanceModel(id = 3, amount = 2000.0, category = Category.FOOD, month = month, day = "January", year = year, type = "expense", description = "")
         )
 
-        coEvery { getBalanceByIncomeUseCase.getIncomes(any(), any()) } returns flowOf(mockIncomes)
-        coEvery { getBalanceByExpenseUseCase.getExpenses(any(), any()) } returns flowOf(mockExpenses)
+        every { getBalanceByIncomeUseCase.getIncomes(any(), any()) } returns flowOf(mockIncomes)
+        every { getBalanceByExpenseUseCase.getExpenses(any(), any()) } returns flowOf(mockExpenses)
 
         // Mocks para los totales: 1500 (income), 2000 (expense), -500 (total)
         every { currencyHelper.formatCurrency(1500.0) } returns "$1,500.00"
@@ -147,7 +148,7 @@ class MonthsDetailViewModelTest {
         viewModel.uiState.test {
             val state = expectMostRecentItem()
 
-            // Verificar color rojo (negativo)
+            // Verificar signo negativo
             assertEquals(BalanceSign.NEGATIVE, state.totalBalanceSign)
 
             // Verificar que el chart de ingresos solo tenga 1 entrada (agrupada)
@@ -168,13 +169,13 @@ class MonthsDetailViewModelTest {
             BalanceModel(id = 1, amount = 1000.0, category = Category.EDUCATION, month = month, day = "January", year = year, type = "income", description = ""),
             BalanceModel(id = 2, amount = 500.0, category = Category.EDUCATION, month = month, day = "January", year = year, type = "income", description = "")
         )
-        // GASTOS mayores para probar el color rojo
+        // Gastos mayores para probar balance negativo
         val mockExpenses = listOf(
             BalanceModel(id = 3, amount = 2000.0, category = Category.FOOD, month = month, day = "January", year = year, type = "expense", description = "")
         )
 
-        coEvery { getBalanceByIncomeUseCase.getIncomes(any(), any()) } returns flowOf(mockIncomes)
-        coEvery { getBalanceByExpenseUseCase.getExpenses(any(), any()) } returns flowOf(mockExpenses)
+        every { getBalanceByIncomeUseCase.getIncomes(any(), any()) } returns flowOf(mockIncomes)
+        every { getBalanceByExpenseUseCase.getExpenses(any(), any()) } returns flowOf(mockExpenses)
 
         // Mocks for total result: 1500 (income), 2000 (expense), -500 (total)
         every { currencyHelper.formatCurrency(1500.0) } returns "$1,500.00"
@@ -189,7 +190,7 @@ class MonthsDetailViewModelTest {
         viewModel.uiState.test {
             val state = expectMostRecentItem()
 
-            // Verificar color rojo (negativo)
+            // Verificar signo negativo
             assertEquals(BalanceSign.NEGATIVE, state.totalBalanceSign)
             cancelAndIgnoreRemainingEvents()
         }
@@ -205,13 +206,13 @@ class MonthsDetailViewModelTest {
             BalanceModel(id = 1, amount = 1000.0, category = Category.EDUCATION, month = month, day = "January", year = year, type = "income", description = ""),
             BalanceModel(id = 2, amount = 500.0, category = Category.EDUCATION, month = month, day = "January", year = year, type = "income", description = "")
         )
-        // GASTOS mayores para probar el color rojo
+        // Gastos menores para probar balance positivo
         val mockExpenses = listOf(
             BalanceModel(id = 3, amount = 1000.0, category = Category.FOOD, month = month, day = "January", year = year, type = "expense", description = "")
         )
 
-        coEvery { getBalanceByIncomeUseCase.getIncomes(any(), any()) } returns flowOf(mockIncomes)
-        coEvery { getBalanceByExpenseUseCase.getExpenses(any(), any()) } returns flowOf(mockExpenses)
+        every { getBalanceByIncomeUseCase.getIncomes(any(), any()) } returns flowOf(mockIncomes)
+        every { getBalanceByExpenseUseCase.getExpenses(any(), any()) } returns flowOf(mockExpenses)
 
         // Mocks para los totales: 1500 (income), 2000 (expense), -500 (total)
         every { currencyHelper.formatCurrency(1500.0) } returns "$1,500.00"
@@ -224,8 +225,65 @@ class MonthsDetailViewModelTest {
         // THEN
         viewModel.uiState.test {
             val state = expectMostRecentItem()
-            // Verificar color rojo (negativo)
+            // Verificar signo positivo
             assertEquals(BalanceSign.POSITIVE, state.totalBalanceSign)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `when total balance is zero then sign is neutral`() = runTest {
+        val year = "2025"
+        val month = "January"
+
+        // GIVEN: ingresos iguales a gastos (total = 0)
+        val mockIncomes = listOf(
+            BalanceModel(id = 1, amount = 500.0, category = Category.WORK, month = month, day = "01", year = year, type = "income", description = "")
+        )
+        val mockExpenses = listOf(
+            BalanceModel(id = 2, amount = 500.0, category = Category.FOOD, month = month, day = "02", year = year, type = "expense", description = "")
+        )
+
+        every { getBalanceByIncomeUseCase.getIncomes(year, month) } returns flowOf(mockIncomes)
+        every { getBalanceByExpenseUseCase.getExpenses(year, month) } returns flowOf(mockExpenses)
+
+        every { currencyHelper.formatCurrency(0.0) } returns "$0.00"
+        every { currencyHelper.formatCurrency(500.0) } returns "$500.00"
+
+        // WHEN
+        viewModel.load(year, month)
+
+        // THEN
+        viewModel.uiState.test {
+            val state = expectMostRecentItem()
+            assertEquals(BalanceSign.NEUTRAL, state.totalBalanceSign)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `when no movements then lists and charts are empty and sign is neutral`() = runTest {
+        val year = "2025"
+        val month = "January"
+
+        // GIVEN: mes sin movimientos
+        every { getBalanceByIncomeUseCase.getIncomes(year, month) } returns flowOf(emptyList())
+        every { getBalanceByExpenseUseCase.getExpenses(year, month) } returns flowOf(emptyList())
+        every { currencyHelper.formatCurrency(0.0) } returns "$0.00"
+
+        // WHEN
+        viewModel.load(year, month)
+
+        // THEN
+        viewModel.uiState.test {
+            val state = expectMostRecentItem()
+            assertEquals(0, state.incomes.size)
+            assertEquals(0, state.expenses.size)
+            assertEquals(0, state.incomeChart.entries.size)
+            assertEquals(0, state.expenseChart.entries.size)
+            assertEquals(BalanceSign.NEUTRAL, state.totalBalanceSign)
+            assertFalse(state.isLoadingIncome)
+            assertFalse(state.isLoadingExpense)
             cancelAndIgnoreRemainingEvents()
         }
     }

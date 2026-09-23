@@ -207,6 +207,28 @@ class MainViewModelTest {
     }
 
     @Test
+    fun `when month has no movements then totals are zero and breakdown is empty`() = runTest {
+        // Given
+        every { getBalanceByIncomeUseCase.getIncomes(any(), any()) } returns flowOf(emptyList())
+        every { getBalanceByExpenseUseCase.getExpenses(any(), any()) } returns flowOf(emptyList())
+        val viewModel = buildViewModel()
+
+        // When
+        viewModel.load(year = year, month = month)
+        advanceUntilIdle()
+
+        // Then
+        val state = viewModel.uiState.value
+        assertFalse(state.isLoading)
+        assertEquals(0.0, state.totalIncome, 0.001)
+        assertEquals(0.0, state.totalExpense, 0.001)
+        assertEquals(0.0, state.totalBalance, 0.001)
+        assertTrue(state.expenseBreakdown.isEmpty())
+        assertNull(state.balanceChangePercent)
+        assertNull(state.error)
+    }
+
+    @Test
     fun `when loading starts then previous error is cleared and isLoading true`() = runTest {
         // Given
         every { getBalanceByIncomeUseCase.getIncomes(year, month) } returns flowOf(incomes)

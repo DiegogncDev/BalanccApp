@@ -33,12 +33,15 @@ class AddBalanceViewModelTest {
             val initialState = awaitItem()
             assertFalse(initialState.isValid)
 
-            //When
+            //When: importe válido pero sin día seleccionado → sigue siendo inválido
             viewModel.onAmountChange("100.0")
+            val amountOnlyState = awaitItem()
+            assertEquals("100.0", amountOnlyState.amount)
+            assertFalse(amountOnlyState.isValid)
 
-            //Then
+            // When: se selecciona el día → válido
+            viewModel.onDaySelected("15")
             val updatedState = awaitItem()
-            assertEquals("100.0", updatedState.amount)
             assertTrue(updatedState.isValid)
         }
     }
@@ -152,6 +155,41 @@ class AddBalanceViewModelTest {
         // THEN
         coVerify {
             insertBalanceUseCase(match { it.type == "income" })
+        }
+    }
+
+    @Test
+    fun `When onTypeChange is false, the model sent to insertBalanceUseCase is expense type`() = runTest {
+        // GIVEN
+        viewModel.onTypeChange(false) // is expense
+        viewModel.onAmountChange("100")
+        viewModel.onDaySelected("1")
+
+        // WHEN
+        viewModel.save("2025", "01")
+
+        // THEN
+        coVerify {
+            insertBalanceUseCase(match { it.type == "expense" })
+        }
+    }
+
+    @Test
+    fun `When amount is valid but day is not selected, then save does not call insert and shows error`() = runTest {
+        // GIVEN: importe válido pero sin día seleccionado
+        viewModel.onAmountChange("100")
+
+        // WHEN
+        viewModel.save("2025", "January")
+
+        // THEN
+        coVerify(exactly = 0) { insertBalanceUseCase(any()) }
+
+        viewModel.uiState.test {
+            val state = expectMostRecentItem()
+            assertEquals("Invalid data", state.error)
+            assertFalse(state.isSaving)
+            assertFalse(state.saveSuccess)
         }
     }
 

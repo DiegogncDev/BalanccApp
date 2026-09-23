@@ -130,4 +130,37 @@ class BalanceDaoTest {
         assert(result.any { it.type == "expense" && it.total == 40.0 })
     }
 
+    @Test
+    fun getAllBalances_emitsNewList_whenBalanceIsInserted() = runTest {
+        val flow = balanceDao.getAllBalances()
+
+        // GIVEN: primera emisión con DB vacía
+        val initial = flow.first()
+        assert(initial.isEmpty())
+
+        // WHEN: se inserta un balance
+        balanceDao.insertAll(
+            BalanceEntity(id = 1, amount = 10.0, category = Category.EDUCATION, month = "January", day = "01", year = "2025", type = "income", description = "")
+        )
+
+        // THEN: el Flow re-emite con el nuevo dato
+        val updated = flow.first()
+        assert(updated.size == 1)
+        assert(updated[0].amount == 10.0)
+    }
+
+    @Test
+    fun getAllBalances_emitsEmptyList_afterDelete() = runTest {
+        balanceDao.insertAll(
+            BalanceEntity(id = 1, amount = 10.0, category = Category.EDUCATION, month = "January", day = "01", year = "2025", type = "income", description = "")
+        )
+        assert(balanceDao.getAllBalances().first().isNotEmpty())
+
+        // WHEN: se elimina
+        balanceDao.deleteBalance(1)
+
+        // THEN: el Flow re-emite lista vacía
+        assert(balanceDao.getAllBalances().first().isEmpty())
+    }
+
 }
