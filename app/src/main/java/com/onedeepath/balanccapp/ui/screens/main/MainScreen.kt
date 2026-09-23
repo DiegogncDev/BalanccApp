@@ -58,6 +58,7 @@ import com.onedeepath.balanccapp.ui.components.HomeBottomBar
 import com.onedeepath.balanccapp.ui.components.MonthYearPickerRow
 import com.onedeepath.balanccapp.ui.components.SelectionDialog
 import com.onedeepath.balanccapp.ui.navigation.AppScreens
+import com.onedeepath.balanccapp.ui.presentation.mapper.getColor
 import com.onedeepath.balanccapp.ui.presentation.mapper.getDisplayNameRes
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData
@@ -341,7 +342,7 @@ private fun MonthSummaryRow(
     ) {
         FinancialDonutChart(
             entries = displayBreakdown.map { PieChartData(it.amount.toFloat(), it.category) },
-            colors = displayBreakdown.map { it.category.color.toArgb() },
+            colors = displayBreakdown.map { it.category.getColor().toArgb() },
             amountText = "$${formatCurrency(totalExpense)}",
             subtitleText = stringResource(R.string.total_expenses),
             isIncome = false,
@@ -365,7 +366,7 @@ private fun MonthSummaryRow(
                 }
                 HomeCategoryLegendRow(
                     label = label,
-                    color = item.category.color,
+                    color = item.category.getColor(),
                     percentage = item.percentage,
                 )
             }

@@ -1,7 +1,5 @@
 package com.onedeepath.balanccapp.ui.screens.detail.viewmodel
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.onedeepath.balanccapp.core.CurrencyHelper
@@ -10,6 +8,8 @@ import com.onedeepath.balanccapp.domain.model.BalanceModel
 import com.onedeepath.balanccapp.domain.usecases.DeleteBalanceUseCase
 import com.onedeepath.balanccapp.domain.usecases.GetBalanceByExpense
 import com.onedeepath.balanccapp.domain.usecases.GetBalanceByIncome
+import com.onedeepath.balanccapp.ui.presentation.mapper.getColorInt
+import com.onedeepath.balanccapp.ui.screens.detail.model.BalanceSign
 import com.onedeepath.balanccapp.ui.screens.detail.model.MonthsDetailUiState
 import com.onedeepath.balanccapp.ui.screens.detail.model.MyMonthsChartUiState
 import com.onedeepath.balanccapp.ui.screens.detail.model.PieChartData
@@ -46,7 +46,7 @@ class MonthsDetailViewModel @Inject constructor(
 
             ) { incomes, expenses ->
 
-                val (formattedBalance, formattedColor) = buildTotalBalance(incomes, expenses)
+                val (formattedBalance, balanceSign) = buildTotalBalance(incomes, expenses)
 
                 MonthsDetailUiState(
                     year = year,
@@ -54,7 +54,7 @@ class MonthsDetailViewModel @Inject constructor(
                     incomes = incomes,
                     expenses = expenses,
                     totalBalanceFormatted = formattedBalance,
-                    totalBalanceColor = formattedColor,
+                    totalBalanceSign = balanceSign,
                     incomeChart = MyBuildIncomeChart(incomes),
                     expenseChart = MyBuildExpenseChart(expenses),
                     isLoadingIncome = false,
@@ -70,15 +70,15 @@ class MonthsDetailViewModel @Inject constructor(
     private fun buildTotalBalance(
         incomes: List<BalanceModel>,
         expenses: List<BalanceModel>
-    ): Pair<String, Color> {
+    ): Pair<String, BalanceSign> {
         val total = incomes.sumOf { it.amount } - expenses.sumOf { it.amount }
         val sign = if (total > 0) "+" else ""
-        val color = when {
-            total > 0 -> Color(0xFF2E7D32)
-            total < 0 -> Color(0xFFE53757)
-            else -> Color.Black
+        val balanceSign = when {
+            total > 0 -> BalanceSign.POSITIVE
+            total < 0 -> BalanceSign.NEGATIVE
+            else -> BalanceSign.NEUTRAL
         }
-        return sign + currencyHelper.formatCurrency(total) to color
+        return sign + currencyHelper.formatCurrency(total) to balanceSign
     }
 
     fun deleteBalance(id: Int) {
@@ -94,7 +94,7 @@ class MonthsDetailViewModel @Inject constructor(
             entries = grouped.map { (category, balances) ->
                 PieChartData(balances.sumOf { balance -> balance.amount }.toFloat(), category)
             },
-            colors = grouped.keys.map { category -> category.color.toArgb() },
+            colors = grouped.keys.map { category -> category.getColorInt() },
             centerText = currencyHelper.formatCurrency(incomes.sumOf { balances -> balances.amount })
         )
     }
@@ -106,7 +106,7 @@ class MonthsDetailViewModel @Inject constructor(
             entries = grouped.map { (category, balances) ->
                 PieChartData(balances.sumOf { balance ->  balance.amount }.toFloat(), category)
             },
-            colors = grouped.keys.map { category ->  category.color.toArgb() },
+            colors = grouped.keys.map { category ->  category.getColorInt() },
             centerText = currencyHelper.formatCurrency(expenses.sumOf { balance -> balance.amount })
         )
 

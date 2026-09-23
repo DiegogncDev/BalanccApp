@@ -1,4 +1,4 @@
-package com.onedeepath.balanccapp.core
+package com.onedeepath.balanccapp.data.database.converter
 
 import androidx.room.TypeConverter
 import com.onedeepath.balanccapp.domain.model.Category

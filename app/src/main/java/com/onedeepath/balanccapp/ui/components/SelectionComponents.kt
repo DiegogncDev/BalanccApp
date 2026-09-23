@@ -26,6 +26,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.onedeepath.balanccapp.domain.model.Category
+import com.onedeepath.balanccapp.ui.presentation.mapper.getColor
+import com.onedeepath.balanccapp.ui.presentation.mapper.getIconRes
 import com.onedeepath.balanccapp.ui.theme.BalanccCornerRadius
 import com.onedeepath.balanccapp.ui.theme.BalanccSpacing
 import com.onedeepath.balanccapp.ui.theme.financialColors
@@ -81,13 +83,13 @@ fun CategoryIcon(
     Surface(
         modifier = modifier.size(40.dp),
         shape = RoundedCornerShape(BalanccCornerRadius.control),
-        color = category.color.copy(alpha = 0.16f),
+        color = category.getColor().copy(alpha = 0.16f),
     ) {
         Box(contentAlignment = Alignment.Center) {
             Icon(
-                painter = painterResource(category.icon),
+                painter = painterResource(category.getIconRes()),
                 contentDescription = contentDescription,
-                tint = category.color,
+                tint = category.getColor(),
                 modifier = Modifier.size(20.dp),
             )
         }

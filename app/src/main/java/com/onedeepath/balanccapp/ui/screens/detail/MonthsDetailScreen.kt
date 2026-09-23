@@ -63,6 +63,7 @@ import com.onedeepath.balanccapp.ui.components.MonthYearPickerRow
 import com.onedeepath.balanccapp.ui.components.SelectionDialog
 import com.onedeepath.balanccapp.ui.components.TransactionCard
 import com.onedeepath.balanccapp.ui.navigation.AppScreens
+import com.onedeepath.balanccapp.ui.presentation.mapper.getColor
 import com.onedeepath.balanccapp.ui.presentation.mapper.getDisplayNameRes
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.detail.model.MonthsDetailUiState
@@ -197,7 +198,7 @@ fun DetailBodyContent(
         categoryBreakdown.map { PieChartData(it.amount.toFloat(), it.category) }
     }
     val chartColors = remember(categoryBreakdown) {
-        categoryBreakdown.map { it.category.color.toArgb() }
+        categoryBreakdown.map { it.category.getColor().toArgb() }
     }
 
     val totalCurrentAmount = currentTransactions.sumOf { it.amount }
@@ -521,7 +522,7 @@ fun CategoryBreakdownRow(
             modifier = Modifier
                 .size(12.dp)
                 .clip(CircleShape)
-                .background(item.category.color),
+                .background(item.category.getColor()),
         )
 
         Spacer(Modifier.width(12.dp))

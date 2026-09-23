@@ -1,10 +1,10 @@
 package com.onedeepath.balanccapp.data.repository
 
 import com.onedeepath.balanccapp.data.database.dao.BalanceDao
-import com.onedeepath.balanccapp.data.database.entity.toEntity
+import com.onedeepath.balanccapp.data.mapper.toDomain
+import com.onedeepath.balanccapp.data.mapper.toEntity
 import com.onedeepath.balanccapp.domain.model.BalanceByMonth
 import com.onedeepath.balanccapp.domain.model.BalanceModel
-import com.onedeepath.balanccapp.domain.model.toDomain
 import com.onedeepath.balanccapp.domain.repository.BalanceRepository
 import com.onedeepath.balanccapp.data.model.toDomain
 import kotlinx.coroutines.flow.Flow

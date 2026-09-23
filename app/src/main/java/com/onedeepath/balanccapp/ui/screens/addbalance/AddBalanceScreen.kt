@@ -71,6 +71,7 @@ import com.onedeepath.balanccapp.ui.components.BalanccTopBar
 import com.onedeepath.balanccapp.ui.components.CategorySelectionDialog
 import com.onedeepath.balanccapp.ui.components.SelectionDialog
 import com.onedeepath.balanccapp.ui.presentation.mapper.getDisplayNameRes
+import com.onedeepath.balanccapp.ui.presentation.mapper.getIconRes
 import com.onedeepath.balanccapp.ui.presentation.viewmodel.YearMonthViewModel
 import com.onedeepath.balanccapp.ui.screens.addbalance.viewmodel.AddBalanceViewModel
 import com.onedeepath.balanccapp.ui.theme.BrandGreen
@@ -424,7 +425,7 @@ fun AddCategoryCard(
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
-                        painter = painterResource(category.icon),
+                        painter = painterResource(category.getIconRes()),
                         contentDescription = null,
                         tint = BrandPurple,
                         modifier = Modifier.size(22.dp),

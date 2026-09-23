@@ -1,6 +1,5 @@
 package com.onedeepath.balanccapp.ui.screens.detail.viewmodel
 
-import androidx.compose.ui.graphics.Color
 import app.cash.turbine.test
 import com.onedeepath.balanccapp.core.CurrencyHelper
 import com.onedeepath.balanccapp.domain.model.BalanceModel
@@ -8,6 +7,7 @@ import com.onedeepath.balanccapp.domain.model.Category
 import com.onedeepath.balanccapp.domain.usecases.DeleteBalanceUseCase
 import com.onedeepath.balanccapp.domain.usecases.GetBalanceByExpense
 import com.onedeepath.balanccapp.domain.usecases.GetBalanceByIncome
+import com.onedeepath.balanccapp.ui.screens.detail.model.BalanceSign
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -99,7 +99,7 @@ class MonthsDetailViewModelTest {
             assertEquals(mockIncomes, state.incomes)
             assertEquals(mockExpenses, state.expenses)
             assertEquals("+$600.00", state.totalBalanceFormatted)
-            assertEquals(Color(0xFF2E7D32), state.totalBalanceColor)
+            assertEquals(BalanceSign.POSITIVE, state.totalBalanceSign)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -148,7 +148,7 @@ class MonthsDetailViewModelTest {
             val state = expectMostRecentItem()
 
             // Verificar color rojo (negativo)
-            assertEquals(Color(0xFFE53757), state.totalBalanceColor)
+            assertEquals(BalanceSign.NEGATIVE, state.totalBalanceSign)
 
             // Verificar que el chart de ingresos solo tenga 1 entrada (agrupada)
             assertEquals(1, state.incomeChart.entries.size)
@@ -190,7 +190,7 @@ class MonthsDetailViewModelTest {
             val state = expectMostRecentItem()
 
             // Verificar color rojo (negativo)
-            assertEquals(Color(0xFFE53757), state.totalBalanceColor)
+            assertEquals(BalanceSign.NEGATIVE, state.totalBalanceSign)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -225,7 +225,7 @@ class MonthsDetailViewModelTest {
         viewModel.uiState.test {
             val state = expectMostRecentItem()
             // Verificar color rojo (negativo)
-            assertEquals(Color(0xFF2E7D32), state.totalBalanceColor)
+            assertEquals(BalanceSign.POSITIVE, state.totalBalanceSign)
             cancelAndIgnoreRemainingEvents()
         }
     }
