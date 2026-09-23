@@ -12,7 +12,6 @@ navigationCompose = "2.7.5"
 appcompat = "1.7.1"
 datastorePreferences = "1.1.1"
 mpAndroidChart = "v3.1.0"
-gson = "2.10.1"
 sheetsComposeDialogs = "1.3.0"
 room = "2.7.2"
 hilt = "2.51.1"
@@ -42,7 +41,6 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
 mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpAndroidChart" }
-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 sheets-compose-dialogs-core = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "core", version.ref = "sheetsComposeDialogs" }
 sheets-compose-dialogs-calendar = { group = "com.maxkeppeler.sheets-compose-dialogs", name = "calendar", version.ref = "sheetsComposeDialogs" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }

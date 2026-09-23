@@ -59,9 +59,6 @@ dependencies {
     // MPAndroidCharts
     implementation(libs.mpandroidchart)
 
-    // gson
-    implementation(libs.gson)
-
     // Material 3 Calendar / Core
     implementation(libs.sheets.compose.dialogs.core)
     implementation(libs.sheets.compose.dialogs.calendar)
