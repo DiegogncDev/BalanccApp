@@ -22,26 +22,31 @@ class AddBalanceViewModelTest {
 
     @Before
     fun setup() {
-        viewModel = AddBalanceViewModel(insertBalanceUseCase)
+        viewModel = AddBalanceViewModel(
+            insertBalanceUseCase = insertBalanceUseCase,
+            defaultDayProvider = { "15" }
+        )
     }
 
     @Test
     fun `when onAmountChange is called, then state is updated and valid`() = runTest {
         // Given
         viewModel.uiState.test {
-            // Initial state
+            // Initial state (amount empty -> not valid)
             val initialState = awaitItem()
             assertFalse(initialState.isValid)
+            assertEquals("15", initialState.selectedDay)
 
-            //When: importe válido pero sin día seleccionado → sigue siendo inválido
+            // When: importe válido con día por defecto → válido
             viewModel.onAmountChange("100.0")
             val amountOnlyState = awaitItem()
             assertEquals("100.0", amountOnlyState.amount)
-            assertFalse(amountOnlyState.isValid)
+            assertTrue(amountOnlyState.isValid)
 
-            // When: se selecciona el día → válido
-            viewModel.onDaySelected("15")
+            // When: se cambia el día → sigue siendo válido
+            viewModel.onDaySelected("20")
             val updatedState = awaitItem()
+            assertEquals("20", updatedState.selectedDay)
             assertTrue(updatedState.isValid)
         }
     }
@@ -178,6 +183,7 @@ class AddBalanceViewModelTest {
     fun `When amount is valid but day is not selected, then save does not call insert and shows error`() = runTest {
         // GIVEN: importe válido pero sin día seleccionado
         viewModel.onAmountChange("100")
+        viewModel.onDaySelected("")
 
         // WHEN
         viewModel.save("2025", "January")

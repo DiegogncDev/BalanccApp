@@ -23,8 +23,18 @@ object DateModule {
     fun provideDefaultMonthProvider(): () -> String = {
         LocalDate.now().month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
     }
+
+    @Provides
+    @DefaultDay
+    fun provideDefaultDayProvider(): () -> String = {
+        LocalDate.now().dayOfMonth.toString()
+    }
 }
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class DefaultMonth
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class DefaultDay

@@ -1,7 +1,7 @@
 package com.onedeepath.balanccapp.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -9,13 +9,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
@@ -41,7 +43,8 @@ import com.onedeepath.balanccapp.ui.theme.BrandPurple
 import com.onedeepath.balanccapp.ui.theme.financialColors
 
 /**
- * Bottom navigation bar: Inicio | big centered add button | Estadísticas.
+ * Floating bottom navigation bar with rounded corners:
+ * Inicio | circular centered add button | Estadísticas.
  */
 @Composable
 fun HomeBottomBar(
@@ -51,20 +54,31 @@ fun HomeBottomBar(
     onStatisticsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.fillMaxWidth()) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .padding(start = 20.dp, end = 20.dp, bottom = 12.dp, top = 4.dp),
+        contentAlignment = Alignment.Center,
+    ) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter),
+                .height(68.dp),
+            shape = RoundedCornerShape(34.dp),
             color = MaterialTheme.colorScheme.surface,
+            border = BorderStroke(1.dp, MaterialTheme.financialColors.border.copy(alpha = 0.5f)),
+            shadowElevation = 8.dp,
+            tonalElevation = 3.dp,
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .height(64.dp),
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
+                // Tab 1: Inicio
                 BottomBarItem(
                     label = stringResource(R.string.home),
                     selected = selectedIndex == 0,
@@ -79,6 +93,25 @@ fun HomeBottomBar(
                     )
                 }
 
+                // Botón central de agregar (en el medio, circular, con su propio color BrandPurple)
+                Surface(
+                    onClick = onAddClick,
+                    modifier = Modifier.size(50.dp),
+                    shape = CircleShape,
+                    color = BrandPurple,
+                    shadowElevation = 4.dp,
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = stringResource(R.string.add),
+                            tint = Color.White,
+                            modifier = Modifier.size(26.dp),
+                        )
+                    }
+                }
+
+                // Tab 2: Estadísticas
                 BottomBarItem(
                     label = stringResource(R.string.statistics),
                     selected = selectedIndex == 1,
@@ -88,29 +121,6 @@ fun HomeBottomBar(
                     StatisticsBarsIcon(tint = tint, modifier = Modifier.size(24.dp))
                 }
             }
-        }
-
-        // Central add button, overlapping the bar like in the mockup.
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .offset(y = (-18).dp)
-                .size(58.dp)
-                .clip(CircleShape)
-                .background(BrandPurple)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = onAddClick,
-                ),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = stringResource(R.string.add),
-                tint = Color.White,
-                modifier = Modifier.size(30.dp),
-            )
         }
     }
 }
@@ -127,22 +137,24 @@ private fun BottomBarItem(
 
     Column(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxHeight()
+            .clip(CircleShape)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = onClick,
-            ),
+            )
+            .padding(vertical = 8.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         icon(tint)
-        Spacer(Modifier.height(2.dp))
+        Spacer(Modifier.height(3.dp))
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall.copy(
                 fontSize = 11.sp,
-                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
                 color = tint,
             ),
         )

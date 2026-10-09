@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,6 +54,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -263,31 +265,7 @@ fun AddTypeSegmentedControl(
                 .padding(4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Option 1: Ingreso
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
-                    .clip(CircleShape)
-                    .background(if (isIncome) BrandGreen else Color.Transparent)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = { onCheckedChange(true) },
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = stringResource(R.string.income_singular),
-                    style = MaterialTheme.typography.labelLarge.copy(
-                        fontWeight = if (isIncome) FontWeight.Bold else FontWeight.Medium,
-                        fontSize = 15.sp,
-                    ),
-                    color = if (isIncome) Color.White else MaterialTheme.financialColors.textSecondary,
-                )
-            }
-
-            // Option 2: Gasto
+            // Option 1: Gasto
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -308,6 +286,30 @@ fun AddTypeSegmentedControl(
                         fontSize = 15.sp,
                     ),
                     color = if (!isIncome) Color.White else MaterialTheme.financialColors.textSecondary,
+                )
+            }
+
+            // Option 2: Ingreso
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize()
+                    .clip(CircleShape)
+                    .background(if (isIncome) BrandGreen else Color.Transparent)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = { onCheckedChange(true) },
+                    ),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = stringResource(R.string.income_singular),
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontWeight = if (isIncome) FontWeight.Bold else FontWeight.Medium,
+                        fontSize = 15.sp,
+                    ),
+                    color = if (isIncome) Color.White else MaterialTheme.financialColors.textSecondary,
                 )
             }
         }
@@ -465,7 +467,7 @@ fun AddCategoryCard(
 }
 
 /**
- * Card 3: Fecha
+ * Card 3: Fecha (Selectores independientes de Día y Mes)
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -518,95 +520,134 @@ fun AddDateCard(
         )
     }
 
-    // Short month name (e.g., "ene", "feb", "mar", ...)
-    val shortMonthName = try {
-        val monthEnum = Month.of(selectedMonthIndex + 1)
-        monthEnum.getDisplayName(DateTextStyle.SHORT, Locale.getDefault()).replace(".", "")
-    } catch (e: Exception) {
-        selectedMonth.take(3)
-    }
+    val displayDay = selectedDay.ifBlank { LocalDate.now().dayOfMonth.toString() }
 
-    val formattedDateText = if (selectedDay.isNotBlank()) {
-        "$selectedDay $shortMonthName $selectedYear"
-    } else {
-        "$localizedSelectedMonth $selectedYear"
-    }
-
-    Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { calendarState.show() },
-        shape = RoundedCornerShape(22.dp),
-        color = MaterialTheme.colorScheme.surface,
-        border = BorderStroke(1.dp, MaterialTheme.financialColors.border.copy(alpha = 0.5f)),
-        shadowElevation = 0.5.dp,
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Row(
+        // Selector 1: Día
+        Surface(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 14.dp),
-            verticalAlignment = Alignment.CenterVertically,
+                .weight(1f)
+                .clickable { calendarState.show() },
+            shape = RoundedCornerShape(22.dp),
+            color = MaterialTheme.colorScheme.surface,
+            border = BorderStroke(1.dp, MaterialTheme.financialColors.border.copy(alpha = 0.5f)),
+            shadowElevation = 0.5.dp,
         ) {
-            // Icon container badge
-            Surface(
-                modifier = Modifier.size(44.dp),
-                shape = RoundedCornerShape(14.dp),
-                color = IconContainerColor,
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        imageVector = Icons.Default.DateRange,
-                        contentDescription = null,
-                        tint = BrandPurple,
-                        modifier = Modifier.size(22.dp),
-                    )
-                }
-            }
-
-            Spacer(Modifier.width(14.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = stringResource(R.string.date),
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        fontSize = 12.sp,
-                        color = MaterialTheme.financialColors.textSecondary,
-                    ),
-                )
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = formattedDateText,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    ),
-                )
-            }
-
-            Surface(
-                onClick = { showMonthDialog = true },
-                shape = RoundedCornerShape(12.dp),
-                color = IconContainerColor,
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
+                Surface(
+                    modifier = Modifier.size(40.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    color = IconContainerColor,
                 ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange,
+                            contentDescription = null,
+                            tint = BrandPurple,
+                            modifier = Modifier.size(20.dp),
+                        )
+                    }
+                }
+
+                Spacer(Modifier.width(10.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = localizedSelectedMonth,
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontWeight = FontWeight.SemiBold,
-                            color = BrandPurple,
+                        text = stringResource(R.string.day),
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontSize = 12.sp,
+                            color = MaterialTheme.financialColors.textSecondary,
                         ),
                     )
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = null,
-                        tint = BrandPurple,
-                        modifier = Modifier.size(16.dp),
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = displayDay,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        ),
+                        maxLines = 1,
                     )
                 }
+
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = null,
+                    tint = MaterialTheme.financialColors.textTertiary,
+                    modifier = Modifier.size(18.dp),
+                )
+            }
+        }
+
+        // Selector 2: Mes
+        Surface(
+            modifier = Modifier
+                .weight(1f)
+                .clickable { showMonthDialog = true },
+            shape = RoundedCornerShape(22.dp),
+            color = MaterialTheme.colorScheme.surface,
+            border = BorderStroke(1.dp, MaterialTheme.financialColors.border.copy(alpha = 0.5f)),
+            shadowElevation = 0.5.dp,
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Surface(
+                    modifier = Modifier.size(40.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    color = IconContainerColor,
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange,
+                            contentDescription = null,
+                            tint = BrandPurple,
+                            modifier = Modifier.size(20.dp),
+                        )
+                    }
+                }
+
+                Spacer(Modifier.width(10.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.month),
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontSize = 12.sp,
+                            color = MaterialTheme.financialColors.textSecondary,
+                        ),
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = localizedSelectedMonth,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = null,
+                    tint = MaterialTheme.financialColors.textTertiary,
+                    modifier = Modifier.size(18.dp),
+                )
             }
         }
     }
@@ -620,6 +661,13 @@ fun AddDateCard(
                 val index = localizedMonthNames.indexOf(month)
                 if (index >= 0) {
                     onMonthSelected(ENGLISH_MONTHS[index])
+
+                    // Check if current day exceeds month's max days and adjust if needed
+                    val maxDays = YearMonth.of(selectedYear, index + 1).lengthOfMonth()
+                    val currentDayInt = selectedDay.toIntOrNull() ?: displayDay.toIntOrNull() ?: 1
+                    if (currentDayInt > maxDays) {
+                        onDaySelected(LocalDate.of(selectedYear, index + 1, maxDays))
+                    }
                 }
                 showMonthDialog = false
             },

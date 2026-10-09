@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -119,42 +118,31 @@ fun MainScreen(
             )
         },
     ) { padding ->
-        if (uiState.isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-            }
-        } else {
-            HomeDashboardContent(
-                totalBalance = uiState.totalBalance,
-                balanceChangePercent = uiState.balanceChangePercent,
-                totalIncome = uiState.totalIncome,
-                totalExpense = uiState.totalExpense,
-                expenseBreakdown = uiState.expenseBreakdown,
-                localizedMonth = localizedMonth,
-                year = year,
-                onMonthPickerClick = { showMonthPicker = true },
-                onSettingsClick = { navController.navigate(AppScreens.SettingsScreen.route) },
-                onViewDetailClick = { navController.navigate(AppScreens.DetailScreen.route) },
-                onPreviousMonth = {
-                    val (index, newYear) = shiftedMonth(currentMonthIndex, year, -1)
-                    yearMonthViewModel.setMonthIndex(index)
-                    yearMonthViewModel.setYear(newYear)
-                },
-                onNextMonth = {
-                    val (index, newYear) = shiftedMonth(currentMonthIndex, year, 1)
-                    yearMonthViewModel.setMonthIndex(index)
-                    yearMonthViewModel.setYear(newYear)
-                },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-            )
-        }
+        HomeDashboardContent(
+            totalBalance = uiState.totalBalance,
+            balanceChangePercent = uiState.balanceChangePercent,
+            totalIncome = uiState.totalIncome,
+            totalExpense = uiState.totalExpense,
+            expenseBreakdown = uiState.expenseBreakdown,
+            localizedMonth = localizedMonth,
+            year = year,
+            onMonthPickerClick = { showMonthPicker = true },
+            onSettingsClick = { navController.navigate(AppScreens.SettingsScreen.route) },
+            onViewDetailClick = { navController.navigate(AppScreens.DetailScreen.route) },
+            onPreviousMonth = {
+                val (index, newYear) = shiftedMonth(currentMonthIndex, year, -1)
+                yearMonthViewModel.setMonthIndex(index)
+                yearMonthViewModel.setYear(newYear)
+            },
+            onNextMonth = {
+                val (index, newYear) = shiftedMonth(currentMonthIndex, year, 1)
+                yearMonthViewModel.setMonthIndex(index)
+                yearMonthViewModel.setYear(newYear)
+            },
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+        )
     }
 
     if (showMonthPicker) {

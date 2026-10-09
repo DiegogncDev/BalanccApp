@@ -2,6 +2,7 @@ package com.onedeepath.balanccapp.ui.screens.addbalance.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.onedeepath.balanccapp.di.DefaultDay
 import com.onedeepath.balanccapp.domain.model.BalanceModel
 import com.onedeepath.balanccapp.domain.model.Category
 import com.onedeepath.balanccapp.domain.usecases.InsertBalanceUseCase
@@ -11,14 +12,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class AddBalanceViewModel @Inject constructor(
-    private val insertBalanceUseCase: InsertBalanceUseCase
+    private val insertBalanceUseCase: InsertBalanceUseCase,
+    @DefaultDay private val defaultDayProvider: () -> String = { LocalDate.now().dayOfMonth.toString() },
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(AddBalanceUiState())
+    private val _uiState = MutableStateFlow(AddBalanceUiState(selectedDay = defaultDayProvider()))
     val uiState: StateFlow<AddBalanceUiState> = _uiState
 
     fun onAmountChange(value: String) {

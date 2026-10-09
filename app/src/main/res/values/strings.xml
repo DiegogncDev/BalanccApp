@@ -44,6 +44,8 @@
     <string name="select_date">Select date</string>
     <string name="category">Category</string>
     <string name="date">Date</string>
+    <string name="day">Day</string>
+    <string name="month">Month</string>
 
     <!--- Buttons -->
     <string name="select_day">day</string>
